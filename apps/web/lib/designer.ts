@@ -86,6 +86,15 @@ export const REPORTER_BY_GENE: Record<string, string> = {
   lacZ: "lacz",
 };
 
+// Clean short label for a part: take the leading symbol (first token, e.g.
+// "Pars" from "Pars promoter/operator", "ArsR" from "ArsR repressor") rather
+// than truncating mid-word. Falls back to a length cap for long single tokens.
+export function shortName(s: string | undefined, n = 14): string {
+  if (!s) return "";
+  const first = s.split(/\s+/)[0];
+  return first.length > n ? first.slice(0, n - 1) + "…" : first;
+}
+
 function kebab(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "design";
 }

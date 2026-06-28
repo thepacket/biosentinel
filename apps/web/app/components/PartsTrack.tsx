@@ -1,6 +1,6 @@
 "use client";
 
-import type { CircuitProps } from "@/lib/designer";
+import { shortName, type CircuitProps } from "@/lib/designer";
 import ZoomableSvg from "./ZoomableSvg";
 
 const C = {
@@ -36,7 +36,7 @@ export default function PartsTrack(p: CircuitProps) {
   const outColor = OUT_COLOR[p.outputType] ?? C.accent;
   const casName = activate ? "dCas9-ω" : "dCas9";
   const repProm = activate ? "Pmin" : "Pconst";
-  const sensorProm = trunc(p.sensorPromoter ?? "Psensor", 9);
+  const sensorProm = shortName(p.sensorPromoter ?? "Psensor", 12);
 
   const Promoter = ({ x, y, color, mark }: { x: number; y: number; color: string; mark?: "bar" | "arrow" }) => (
     <g>

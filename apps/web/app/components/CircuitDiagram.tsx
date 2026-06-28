@@ -1,6 +1,6 @@
 "use client";
 
-import type { CircuitProps } from "@/lib/designer";
+import { shortName, type CircuitProps } from "@/lib/designer";
 import ZoomableSvg from "./ZoomableSvg";
 
 // Palette (matches globals.css). SVG presentation attributes don't reliably
@@ -125,7 +125,7 @@ export default function CircuitDiagram(p: CircuitProps) {
 
       {/* nodes */}
       <Node cx={CX[0]} stripe={catColor} kicker="INPUT" title={trunc(p.analyte, 14)} sub={p.category.replace("-", " / ")} />
-      <Node cx={CX[1]} stripe={C.accent} kicker="SENSOR" title={trunc(p.regulator ?? "sensor", 13)} sub={trunc(p.sensorPromoter ?? "promoter", 16)} />
+      <Node cx={CX[1]} stripe={C.accent} kicker="SENSOR" title={shortName(p.regulator ?? "sensor", 14)} sub={shortName(p.sensorPromoter ?? "promoter", 14)} />
       <Node cx={CX[2]} stripe={C.accent} kicker="GUIDE" title="sgRNA" sub="spacer + scaffold" />
       <Node cx={CX[3]} stripe={C.accent2} kicker="CRISPR" title={casName} sub="catalytically dead" />
       <Node cx={CX[4]} stripe={outColor} kicker="REPORTER" title={trunc(p.reporterGene ?? "reporter", 13)} sub={activate ? "activated" : "repressed"} />
