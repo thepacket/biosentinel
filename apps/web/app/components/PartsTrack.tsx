@@ -59,13 +59,13 @@ export default function PartsTrack(p: CircuitProps) {
   const Y = [58, 138, 218];
 
   const svg = (
-    <svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg" role="img" style={{ width: "100%", height: "auto", display: "block" }}>
+    <svg viewBox="0 0 900 288" xmlns="http://www.w3.org/2000/svg" role="img" style={{ width: "100%", height: "auto", display: "block" }}>
       <title>SBOL genetic construct for the {p.analyte} biosensor</title>
       <desc>
         Three transcription units: a sensing unit producing an sgRNA, a {casName} unit, and a reporter unit
         ({p.reporterGene}) whose promoter is {activate ? "activated" : "repressed"} by {casName}.
       </desc>
-      <rect x={0} y={0} width={900} height={250} rx={14} fill={C.bg} />
+      <rect x={0} y={0} width={900} height={288} rx={14} fill={C.bg} />
       <defs>
         <marker id="pt-ah" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
           <path d="M0,0 L5,3 L0,6 Z" fill={C.accent} />
@@ -107,7 +107,7 @@ export default function PartsTrack(p: CircuitProps) {
       <Term x={420} y={Y[2]} />
 
       {/* caption */}
-      <text x={120} y={244} fontSize={10} fill={C.muted}>
+      <text x={120} y={274} fontSize={10} fill={C.muted}>
         {casName} + sgRNA <tspan fill={action} fontWeight={700}>{activate ? "activate" : "repress"}</tspan> the reporter promoter ({activate ? "CRISPRa" : "CRISPRi"}). Glyphs follow SBOL Visual.
       </text>
     </svg>
