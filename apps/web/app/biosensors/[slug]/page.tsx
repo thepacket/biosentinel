@@ -4,6 +4,7 @@ import { getAllBiosensors, getBiosensorBySlug } from "@/lib/data";
 import { circuitPropsFromBiosensor, REPORTER_BY_GENE } from "@/lib/designer";
 import CloneButton from "../../components/CloneButton";
 import CircuitDiagram from "../../components/CircuitDiagram";
+import PartsTrack from "../../components/PartsTrack";
 
 export function generateStaticParams() {
   return getAllBiosensors().map((b) => ({ slug: b.slug }));
@@ -90,6 +91,10 @@ export default function BiosensorPage({ params }: { params: { slug: string } }) 
         <section className="block">
           <h2>Genetic circuit</h2>
           <CircuitDiagram {...circuitPropsFromBiosensor(b)} />
+          <h3 style={{ fontSize: 13, color: "var(--muted)", margin: "20px 0 6px", textTransform: "uppercase", letterSpacing: ".6px" }}>
+            Genetic construct (SBOL)
+          </h3>
+          <PartsTrack {...circuitPropsFromBiosensor(b)} />
         </section>
 
         {/* Sensing mechanism */}

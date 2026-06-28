@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { CircuitProps } from "@/lib/designer";
+import ZoomableSvg from "./ZoomableSvg";
 
 // Palette (matches globals.css). SVG presentation attributes don't reliably
 // resolve CSS var(), so the fixed dark-theme hexes are used directly.
@@ -68,7 +68,6 @@ function Node({
 }
 
 export default function CircuitDiagram(p: CircuitProps) {
-  const [open, setOpen] = useState(false);
   const activate = /crispra|activation/i.test(p.strategy);
   const actionColor = activate ? C.activate : C.repress;
   const outColor = OUT_COLOR[p.outputType] ?? C.accent;
@@ -77,13 +76,6 @@ export default function CircuitDiagram(p: CircuitProps) {
 
   // thin connectors at indices 0-1, 1-2, 2-3, 4-5; the 3-4 edge is the action
   const thin = [0, 1, 2, 4];
-
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
 
   const svg = (
     <svg viewBox="0 0 900 215" xmlns="http://www.w3.org/2000/svg" role="img" style={{ width: "100%", height: "auto", display: "block" }}>
@@ -150,44 +142,5 @@ export default function CircuitDiagram(p: CircuitProps) {
     </svg>
   );
 
-  return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Enlarge genetic circuit diagram"
-        style={{ display: "block", width: "100%", padding: 0, border: "none", background: "none", cursor: "zoom-in" }}
-      >
-        {svg}
-      </button>
-      <div style={{ textAlign: "right", marginTop: 4 }}>
-        <span style={{ fontSize: 11, color: C.muted }}>⤢ click to enlarge</span>
-      </div>
-
-      {open && (
-        <div
-          onClick={() => setOpen(false)}
-          role="dialog"
-          aria-modal="true"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 60,
-            background: "rgba(2,6,12,0.85)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "4vw",
-          }}
-        >
-          <div style={{ width: "min(96vw, 1180px)" }} onClick={(e) => e.stopPropagation()}>
-            {svg}
-            <div style={{ textAlign: "center", marginTop: 14 }}>
-              <button className="btn secondary" onClick={() => setOpen(false)}>Close (Esc)</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
+  return <ZoomableSvg label="genetic circuit diagram">{svg}</ZoomableSvg>;
 }
