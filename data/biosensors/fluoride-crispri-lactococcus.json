@@ -1,0 +1,67 @@
+{
+  "id": "fluoride-crispri-lactococcus",
+  "name": "Fluoride sensor (riboswitch + CRISPRa)",
+  "slug": "fluoride-crispri-lactococcus",
+  "shortDescription": "Detects fluoride in drinking water using a natural fluoride riboswitch as the sensor, gating a CRISPRa circuit driving a fluorescent reporter, in the food-grade GRAS chassis Lactococcus lactis.",
+  "status": "template",
+  "tags": ["fluoride", "water-quality", "riboswitch", "environmental", "GRAS", "CRISPRa"],
+  "chassisSlug": "lactococcus-lactis",
+  "input": {
+    "analyte": "Fluoride (F-)",
+    "category": "environmental",
+    "detects": "Fluoride in drinking water (relevant to the ~1.5 mg/L WHO guideline)",
+    "operatingRange": "Fluoride riboswitches respond over the high-µM to mM range"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-ω (CRISPRa activator)",
+    "sensorMechanism": "A natural fluoride (crcB) riboswitch in the 5' UTR binds fluoride and switches expression of its downstream gene ON.",
+    "signalFlow": "F- -> fluoride riboswitch turns ON expression of an sgRNA -> dCas9-activator amplifies a weak reporter promoter (CRISPRa) -> fluorescence rises with fluoride.",
+    "logicType": "BUFFER"
+  },
+  "parts": [
+    { "name": "Fluoride riboswitch (crcB class)", "role": "rbs", "source": "Natural fluoride riboswitch (Baker et al. 2012, Science)", "notes": "RNA aptamer in the 5' UTR; fluoride binding switches expression on. Place upstream of the sgRNA." },
+    { "name": "sgRNA (under riboswitch control)", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "Constitutive promoter (P32)", "role": "promoter", "source": "L. lactis constitutive promoter", "notes": "Drives the riboswitch-sgRNA transcript." },
+    { "name": "mCherry reporter", "role": "reporter", "source": "standard fluorophore", "notes": "Food-compatible fluorescent readout." }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "mCherry",
+    "readout": "Fluorescence (plate reader)",
+    "result": "Fluorescence increases with fluoride concentration."
+  },
+  "performance": {
+    "limitOfDetection": "Fluoride riboswitch: high-µM to mM (module-validated).",
+    "dynamicRange": "~0.1-5 mM fluoride",
+    "responseTimeMin": 180,
+    "validated": false,
+    "notes": "Uses an RNA riboswitch sensor rather than a protein regulator; the riboswitch and CRISPRa are validated separately and integration is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "thyA-based containment in L. lactis; food-grade host.",
+    "fieldDeployable": false,
+    "notes": "GRAS / food-grade chassis (no LPS endotoxin); relevant to drinking-water fluoride monitoring."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design riboswitch-sgRNA transcript", "description": "Place the fluoride riboswitch 5' of the sgRNA; design the CRISPRa spacer." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: P32 -> riboswitch -> sgRNA. TU2: dCas9-omega. TU3: weak promoter -> mCherry. Use NICE-compatible vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform L. lactis MG1363", "description": "Electroporate; select; add thyA containment." },
+    { "order": 4, "stage": "induction", "title": "Expose to fluoride", "description": "Validate across a fluoride standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate fluoride from the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining a natural fluoride riboswitch with L. lactis CRISPRa",
+    "partsSources": [
+      "Baker et al. 2012, Science (fluoride riboswitch)",
+      "Bikard et al. 2013, NAR (CRISPRa)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

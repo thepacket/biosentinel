@@ -1,0 +1,67 @@
+{
+  "id": "peroxide-crispri-nissle",
+  "name": "Oxidative-stress sensor (OxyR + CRISPRa)",
+  "slug": "peroxide-crispri-nissle",
+  "shortDescription": "An ingestible sensor for hydrogen peroxide / oxidative stress, a marker of gut inflammation. The native OxyR peroxide sensor gates a CRISPRa circuit driving a fluorescent reporter, in the probiotic E. coli Nissle 1917.",
+  "status": "template",
+  "tags": ["clinical-gut", "inflammation", "hydrogen-peroxide", "oxidative-stress", "probiotic", "Nissle", "CRISPRa"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": {
+    "analyte": "Hydrogen peroxide (H2O2) / oxidative stress",
+    "category": "clinical-gut",
+    "detects": "Luminal hydrogen peroxide and reactive oxygen produced during gut inflammation",
+    "operatingRange": "OxyR responds to low-µM H2O2"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-ω (CRISPRa activator)",
+    "sensorMechanism": "OxyR is oxidized by H2O2 and, in its oxidized form, activates antioxidant promoters such as PkatG / PahpC.",
+    "signalFlow": "H2O2 -> oxidized OxyR activates PahpC -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence reports oxidative stress.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    { "name": "OxyR regulator", "role": "regulator", "source": "Native E. coli oxyR", "notes": "H2O2-responsive transcriptional activator; endogenous to E. coli Nissle." },
+    { "name": "PahpC / PkatG promoter", "role": "promoter", "source": "E. coli OxyR-regulated antioxidant promoter", "notes": "Activated by oxidized OxyR." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Recoverable from stool for non-invasive readout." }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Fluorescence (flow cytometry on recovered cells)",
+    "result": "Fluorescent-cell fraction rises with luminal oxidative stress."
+  },
+  "performance": {
+    "limitOfDetection": "OxyR module: low-µM H2O2 (module-validated).",
+    "dynamicRange": "~1-100 µM H2O2",
+    "responseTimeMin": 120,
+    "validated": false,
+    "notes": "OxyR peroxide sensing and CRISPRa are validated separately; integrated device is a design template. Complements the thiosulfate/tetrathionate inflammation sensors with an oxidative-stress marker."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Probiotic E. coli Nissle host; add thyA/dapA auxotrophy for gut-restricted containment.",
+    "fieldDeployable": false,
+    "notes": "Probiotic chassis with a human-safety record; research / supervised clinical use only."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target the activation window of a weak reporter promoter; check Nissle off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: PahpC -> sgRNA (native OxyR). TU2: dCas9-omega. TU3: weak promoter -> sfGFP. Use a stable low-copy vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add auxotrophic containment." },
+    { "order": 4, "stage": "induction", "title": "Validate with H2O2", "description": "Confirm peroxide-dependent activation across a standard curve before any animal work." },
+    { "order": 5, "stage": "readout", "title": "Recover and measure", "description": "Recover cells from stool; quantify fluorescence." }
+  ],
+  "provenance": {
+    "source": "Design template combining the native OxyR peroxide sensor with a dCas9 CRISPRa circuit in E. coli Nissle",
+    "partsSources": [
+      "Storz / Imlay OxyR peroxide-sensing literature",
+      "Bikard et al. 2013, NAR (CRISPRa)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

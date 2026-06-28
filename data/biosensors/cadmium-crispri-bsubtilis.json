@@ -1,0 +1,68 @@
+{
+  "id": "cadmium-crispri-bsubtilis",
+  "name": "Cadmium sensor (CadC + CRISPRi)",
+  "slug": "cadmium-crispri-bsubtilis",
+  "shortDescription": "Detects toxic cadmium Cd(II) in water and soil. The CadC metal-responsive repressor gates a CRISPRi circuit driving sfGFP, in spore-forming Bacillus subtilis 168 for field-storable testing.",
+  "status": "template",
+  "tags": ["cadmium", "heavy-metal", "water", "soil", "environmental", "CRISPRi", "spore", "field"],
+  "chassisSlug": "bacillus-subtilis-168",
+  "input": {
+    "analyte": "Cadmium Cd(II)",
+    "category": "environmental",
+    "detects": "Bioavailable cadmium in water and soil",
+    "operatingRange": "CadC sensors respond from sub-µM to µM Cd(II)"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "CadC, an ArsR/SmtB-family metalloregulator, releases its operator when it binds Cd(II), de-repressing the cad promoter.",
+    "signalFlow": "Cd(II) -> CadC releases Pcad -> transcribes an anti-reporter sgRNA -> dCas9 + sgRNA repress a constitutive sfGFP cassette (CRISPRi) -> fluorescence inverts with cadmium (NOT). Pair an inverter for turn-on.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "CadC regulator", "role": "regulator", "source": "Staphylococcus/Bacillus cad operon (ArsR/SmtB family)", "notes": "Cd(II)/Pb(II)-responsive repressor; native to Gram-positive metal-resistance systems." },
+    { "name": "Pcad promoter", "role": "promoter", "source": "cad operon operator/promoter", "notes": "De-repressed by metal-bound CadC." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the sfGFP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Peters et al. 2016 (CRISPRi in B. subtilis)" },
+    { "name": "Pveg promoter", "role": "promoter", "source": "B. subtilis vegetative promoter", "notes": "Drives sfGFP (CRISPRi target)." },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Green fluorescence (field fluorimeter)",
+    "result": "Fluorescence change scales with cadmium concentration."
+  },
+  "performance": {
+    "limitOfDetection": "CadC module: sub-µM Cd(II) (module-validated).",
+    "dynamicRange": "~0.1-10 µM Cd(II)",
+    "responseTimeMin": 150,
+    "validated": false,
+    "notes": "CadC cadmium sensors and B. subtilis CRISPRi are validated separately; integrated device is a design template. CadC also responds to Pb(II), so confirm specificity against lead."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "GRAS, spore-forming host; auxotrophic/spore containment.",
+    "fieldDeployable": true,
+    "notes": "Spores allow ambient storage and field reconstitution."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-reporter sgRNA", "description": "Target the sfGFP promoter; check B. subtilis off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: CadC. TU2: Pcad -> sgRNA. TU3: dCas9 + Pveg -> sfGFP. Integrate at amyE/thrC." },
+    { "order": 3, "stage": "transformation", "title": "Transform B. subtilis 168", "description": "Use natural competence; select integrants; confirm low background." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Reconstitute spores; add sample + cadmium standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate Cd(II) from the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining a CadC cadmium-sensing module with B. subtilis CRISPRi",
+    "partsSources": [
+      "Endo & Silver 1995 / CadC metalloregulation literature",
+      "Peters et al. 2016, Cell (CRISPRi in B. subtilis)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

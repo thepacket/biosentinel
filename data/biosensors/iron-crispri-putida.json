@@ -1,0 +1,67 @@
+{
+  "id": "iron-crispri-putida",
+  "name": "Iron sensor (Fur + CRISPRi)",
+  "slug": "iron-crispri-putida",
+  "shortDescription": "Reports bioavailable iron via the Fur ferric-uptake regulator, gating a CRISPRi circuit driving a fluorescent reporter, in the robust environmental chassis P. putida KT2440. Useful for soil/water iron and process monitoring.",
+  "status": "template",
+  "tags": ["iron", "micronutrient", "soil", "water", "chemical", "CRISPRi"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": {
+    "analyte": "Ferric/ferrous iron (Fe)",
+    "category": "chemical",
+    "detects": "Bioavailable iron in soil, water, or process samples",
+    "operatingRange": "Fur-regulated promoters report iron status across physiological ranges"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "Fur (ferric uptake regulator) binds Fe(II) and represses iron-uptake (Fur-box) promoters; under low iron it releases them.",
+    "signalFlow": "Low iron -> Fur releases a Fur-box promoter -> transcribes an sgRNA -> CRISPRi represses a constitutive reporter (signal reports iron limitation). Invert as needed so high iron reads as reporter-on.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "Fur regulator", "role": "regulator", "source": "Conserved ferric uptake regulator (native to P. putida)", "notes": "Iron-responsive master regulator." },
+    { "name": "Fur-box promoter (e.g. PfecA/PfepA)", "role": "promoter", "source": "iron-uptake gene promoter with a Fur box", "notes": "Repressed by Fe-bound Fur." },
+    { "name": "Reporter-targeting sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "CRISPRi (established in P. putida)" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Green fluorescence (plate reader / field fluorimeter)",
+    "result": "Fluorescence reflects iron availability."
+  },
+  "performance": {
+    "limitOfDetection": "Fur-regulated promoters report iron status (module-validated).",
+    "dynamicRange": "Physiological iron range",
+    "responseTimeMin": 150,
+    "validated": false,
+    "notes": "Fur is a global regulator, so context affects output; integrated CRISPRi device is a design template. Best used as a relative iron-status reporter."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "P. putida KT2440 certified HV1 safety host; add containment for field use.",
+    "fieldDeployable": true,
+    "notes": "Robust soil/water chassis."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design sgRNA", "description": "Target the reporter promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: Fur-box promoter -> sgRNA (native Fur). TU2: dCas9 + constitutive sfGFP. Clone into SEVA vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate; select; calibrate against iron-replete/limited media." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add sample + iron standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate relative iron from the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining the Fur iron-sensing module with P. putida CRISPRi",
+    "partsSources": [
+      "Bagg & Neilands 1987 / Fur ferric uptake regulation",
+      "CRISPRi literature (dCas9)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

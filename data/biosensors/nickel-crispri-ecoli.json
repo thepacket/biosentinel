@@ -1,0 +1,67 @@
+{
+  "id": "nickel-crispri-ecoli",
+  "name": "Nickel/cobalt sensor (RcnR + CRISPRi)",
+  "slug": "nickel-crispri-ecoli",
+  "shortDescription": "Detects nickel and cobalt in water. The native E. coli RcnR metal-responsive repressor gates a CRISPRi circuit driving a visible chromoprotein, in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["nickel", "cobalt", "heavy-metal", "water", "environmental", "CRISPRi", "chromoprotein"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": {
+    "analyte": "Nickel Ni(II) / Cobalt Co(II)",
+    "category": "environmental",
+    "detects": "Bioavailable nickel and cobalt in water",
+    "operatingRange": "RcnR responds from sub-µM Ni(II)/Co(II)"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "RcnR represses the rcnAB efflux promoter (PrcnA) and is released when it binds Ni(II)/Co(II).",
+    "signalFlow": "Ni/Co -> RcnR releases PrcnA -> transcribes an anti-pigment sgRNA -> dCas9 + sgRNA repress a constitutive amilCP cassette (CRISPRi) -> pigment fades with metal (NOT). Pair an inverter for colour-on.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "RcnR regulator", "role": "regulator", "source": "Native E. coli rcnR", "notes": "Ni(II)/Co(II)-responsive repressor; endogenous to E. coli." },
+    { "name": "PrcnA promoter", "role": "promoter", "source": "E. coli rcnAB promoter", "notes": "De-repressed by metal-bound RcnR." },
+    { "name": "Anti-pigment sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala", "notes": "Naked-eye pigment." }
+  ],
+  "output": {
+    "type": "pigment",
+    "reporterGene": "amilCP",
+    "readout": "Visible pigment (naked eye / smartphone)",
+    "result": "Pigment change reports nickel/cobalt concentration."
+  },
+  "performance": {
+    "limitOfDetection": "RcnR module: sub-µM Ni(II)/Co(II) (module-validated).",
+    "dynamicRange": "~0.1-10 µM",
+    "responseTimeMin": 180,
+    "validated": false,
+    "notes": "RcnR senses both nickel and cobalt; integrated CRISPRi device is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Lab/contained; add kill-switch for field use.",
+    "fieldDeployable": true,
+    "notes": "E. coli K-12 non-pathogenic BSL-1 host; instrument-free pigment readout."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-pigment sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: PrcnA -> sgRNA (native RcnR). TU2: dCas9 + constitutive amilCP." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; confirm baseline pigment without metal." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add water sample + Ni/Co standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining the native E. coli RcnR nickel/cobalt sensor with CRISPRi",
+    "partsSources": [
+      "Iwig et al. 2006 / RcnR nickel-cobalt sensing (E. coli)",
+      "Qi et al. 2013, Cell (CRISPRi)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}
