@@ -2,6 +2,33 @@
 // Produces an object conforming to packages/schema/biosensor.schema.json.
 import type { Biosensor, ChassisSummary, SensorModule } from "./types";
 
+// Props for the circuit diagram, derived from any biosensor or draft.
+export type CircuitProps = {
+  analyte: string;
+  category: string;
+  regulator?: string;
+  sensorPromoter?: string;
+  casProtein?: string;
+  strategy: string;
+  reporterGene?: string;
+  outputType: string;
+  readout?: string;
+};
+
+export function circuitPropsFromBiosensor(b: Biosensor): CircuitProps {
+  return {
+    analyte: b.input.analyte,
+    category: b.input.category,
+    regulator: b.parts?.find((p) => p.role === "regulator")?.name,
+    sensorPromoter: b.parts?.find((p) => p.role === "promoter")?.name,
+    casProtein: b.sensing.casProtein,
+    strategy: b.sensing.strategy,
+    reporterGene: b.output.reporterGene,
+    outputType: b.output.type,
+    readout: b.output.readout,
+  };
+}
+
 export const SGRNA_SCAFFOLD =
   "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC";
 

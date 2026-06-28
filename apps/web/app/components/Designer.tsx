@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import type { ChassisSummary, SensorModule } from "@/lib/types";
-import { REPORTERS, STRATEGIES, buildDraft } from "@/lib/designer";
+import { REPORTERS, STRATEGIES, buildDraft, circuitPropsFromBiosensor } from "@/lib/designer";
+import CircuitDiagram from "./CircuitDiagram";
 
 const CATEGORY_LABEL: Record<string, string> = {
   environmental: "Environmental",
@@ -161,6 +162,7 @@ export default function Designer({
             <div className="stage"><div className="label">Chassis</div><div className="value">{chassisSel.name}</div></div>
             <div className="stage"><div className="label">Output</div><div className="value">{draft.output.reporterGene}</div></div>
           </div>
+          <div style={{ margin: "8px 0 12px" }}><CircuitDiagram {...circuitPropsFromBiosensor(draft)} /></div>
           <div className="signal-flow"><div className="lbl">Signal flow</div>{draft.sensing.signalFlow}</div>
           <div className="preview-actions">
             <button className="btn" onClick={download}>Download JSON</button>

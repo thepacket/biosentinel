@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllBiosensors, getBiosensorBySlug } from "@/lib/data";
+import { circuitPropsFromBiosensor } from "@/lib/designer";
 import CloneButton from "../../components/CloneButton";
+import CircuitDiagram from "../../components/CircuitDiagram";
 
 export function generateStaticParams() {
   return getAllBiosensors().map((b) => ({ slug: b.slug }));
@@ -76,6 +78,12 @@ export default function BiosensorPage({ params }: { params: { slug: string } }) 
             {b.input.detects && (<><dt>Signal</dt><dd>{b.input.detects}</dd></>)}
             {b.input.operatingRange && (<><dt>Operating range</dt><dd>{b.input.operatingRange}</dd></>)}
           </dl>
+        </section>
+
+        {/* Circuit diagram */}
+        <section className="block">
+          <h2>Genetic circuit</h2>
+          <CircuitDiagram {...circuitPropsFromBiosensor(b)} />
         </section>
 
         {/* Sensing mechanism */}
