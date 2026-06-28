@@ -1,0 +1,30 @@
+{
+  "id": "dapg-crispri-putida",
+  "name": "DAPG biocontrol sensor (PhlF + CRISPRi)",
+  "slug": "dapg-crispri-putida",
+  "shortDescription": "Detects 2,4-diacetylphloroglucinol (DAPG), an antibiotic made by biocontrol pseudomonads in soil. The Marionette PhlF sensor gates a CRISPRi circuit driving a visible pigment, in the soil chassis P. putida KT2440 — useful for monitoring soil biocontrol activity.",
+  "status": "template",
+  "tags": ["DAPG", "biocontrol", "antibiotic", "soil", "agriculture", "chemical", "Marionette", "CRISPRi"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": { "analyte": "2,4-Diacetylphloroglucinol (DAPG)", "category": "chemical", "detects": "DAPG, an antifungal antibiotic produced by biocontrol Pseudomonas in the rhizosphere", "operatingRange": "PhlF responds across µM DAPG" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "PhlF de-represses its promoter on binding DAPG.", "signalFlow": "DAPG -> PhlF releases PphlF -> transcribes an anti-pigment sgRNA -> CRISPRi represses a constitutive amilCP cassette -> pigment fades with DAPG (NOT). Pair an inverter for colour-on.", "logicType": "NOT" },
+  "parts": [
+    { "name": "PhlF regulator", "role": "regulator", "source": "Marionette sensor (Meyer et al. 2019); Pseudomonas phl system", "notes": "DAPG-responsive repressor; a widely used orthogonal regulator." },
+    { "name": "PphlF promoter", "role": "promoter", "source": "phl operon promoter", "notes": "De-repressed by DAPG-bound PhlF." },
+    { "name": "Anti-pigment sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "CRISPRi (established in P. putida)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala" }
+  ],
+  "output": { "type": "pigment", "reporterGene": "amilCP", "readout": "Visible pigment (naked eye / smartphone)", "result": "Pigment change reports soil DAPG (biocontrol activity)." },
+  "performance": { "limitOfDetection": "PhlF Marionette sensor: µM DAPG (module-validated).", "dynamicRange": "~1-100 µM DAPG", "responseTimeMin": 180, "validated": false, "notes": "PhlF is a characterised orthogonal Marionette repressor; integrated CRISPRi device is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "P. putida KT2440 certified HV1 safety host; add containment for field use.", "fieldDeployable": true, "notes": "Soil chassis suited to rhizosphere monitoring; instrument-free readout." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-pigment sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: PhlF + PphlF -> sgRNA. TU2: dCas9 + constitutive amilCP. SEVA vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate; select; confirm baseline pigment without DAPG." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add soil eluate + DAPG standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve." }
+  ],
+  "provenance": { "source": "Design template combining the Marionette PhlF DAPG sensor with P. putida CRISPRi", "partsSources": ["Meyer et al. 2019, Nat. Chem. Biol. (Marionette sensors, PhlF)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

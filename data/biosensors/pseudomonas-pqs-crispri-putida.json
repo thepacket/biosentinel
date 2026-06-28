@@ -1,0 +1,30 @@
+{
+  "id": "pseudomonas-pqs-crispri-putida",
+  "name": "P. aeruginosa sensor (PQS/PqsR + CRISPRi)",
+  "slug": "pseudomonas-pqs-crispri-putida",
+  "shortDescription": "Detects Pseudomonas aeruginosa via its quinolone signal (PQS). The PqsR (MvfR) receptor gates a CRISPRi circuit driving a visible pigment, in the safe Pseudomonas relative P. putida KT2440.",
+  "status": "template",
+  "tags": ["pathogen", "Pseudomonas aeruginosa", "PQS", "quinolone", "quorum-sensing", "CRISPRi"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": { "analyte": "Pseudomonas quinolone signal (PQS)", "category": "pathogen", "detects": "The PQS quorum signal secreted by P. aeruginosa (complements its AHL signal)", "operatingRange": "PqsR responds from sub-µM PQS" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "PqsR (MvfR) binds PQS and activates the pqsA promoter.", "signalFlow": "PQS -> PqsR activates PpqsA -> transcribes an anti-pigment sgRNA -> CRISPRi represses a constitutive amilCP cassette -> pigment fades when the pathogen signal is present (NOT). Pair an inverter for colour-on.", "logicType": "NOT" },
+  "parts": [
+    { "name": "PqsR (MvfR) receptor", "role": "regulator", "source": "P. aeruginosa pqs system", "notes": "PQS-responsive LysR-family activator; works in the related P. putida host." },
+    { "name": "PpqsA promoter", "role": "promoter", "source": "P. aeruginosa pqsABCDE promoter", "notes": "Activated by PQS-bound PqsR." },
+    { "name": "Anti-pigment sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "CRISPRi (established in P. putida)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala" }
+  ],
+  "output": { "type": "pigment", "reporterGene": "amilCP", "readout": "Visible pigment (naked eye / smartphone)", "result": "Colour change indicates P. aeruginosa PQS in the sample." },
+  "performance": { "limitOfDetection": "PqsR PQS sensing: sub-µM (module-validated).", "dynamicRange": "~0.1-10 µM PQS", "responseTimeMin": 240, "validated": false, "notes": "Senses the pathogen's signal molecule, not the live organism; PqsR and CRISPRi are validated separately and integration is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Safe P. putida reads a secreted small molecule; no P. aeruginosa culture required.", "fieldDeployable": true, "notes": "Indirect, safe detection in a related non-pathogenic Pseudomonas." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-pigment sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: PqsR + PpqsA -> sgRNA. TU2: dCas9 + constitutive amilCP. SEVA vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate; select; confirm baseline pigment without PQS." },
+    { "order": 4, "stage": "induction", "title": "Add sample", "description": "Incubate with the filtered sample + PQS standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve." }
+  ],
+  "provenance": { "source": "Design template combining the P. aeruginosa PqsR/PQS quorum module with P. putida CRISPRi", "partsSources": ["Pesci et al. / PQS quorum sensing (P. aeruginosa)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

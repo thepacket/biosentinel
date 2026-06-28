@@ -1,0 +1,30 @@
+{
+  "id": "alkane-crispri-putida",
+  "name": "Alkane/oil sensor (AlkS + CRISPRa)",
+  "slug": "alkane-crispri-putida",
+  "shortDescription": "Detects medium-chain alkanes (diesel / crude-oil contamination). The AlkS regulator gates a CRISPRa circuit driving a fluorescent reporter, in the solvent-tolerant chassis P. putida KT2440.",
+  "status": "template",
+  "tags": ["alkane", "oil", "diesel", "hydrocarbon", "pollutant", "soil", "water", "environmental", "CRISPRa"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": { "analyte": "Medium-chain alkanes (e.g. octane)", "category": "environmental", "detects": "Alkane/oil contamination in soil and water (spill monitoring)", "operatingRange": "AlkS/PalkB responds across µM alkane" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "AlkS binds alkanes and activates the PalkB promoter of the alkane-degradation operon.", "signalFlow": "Alkane -> AlkS activates PalkB -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence rises with hydrocarbon contamination.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "AlkS regulator", "role": "regulator", "source": "Pseudomonas putida/oleovorans OCT plasmid alk operon", "notes": "Alkane-responsive activator." },
+    { "name": "PalkB promoter", "role": "promoter", "source": "alk operon promoter", "notes": "Activated by alkane-bound AlkS." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (field fluorimeter)", "result": "Fluorescence increases with alkane/oil contamination." },
+  "performance": { "limitOfDetection": "AlkS/PalkB module: µM alkane (module-validated).", "dynamicRange": "~1-100 µM alkane", "responseTimeMin": 180, "validated": false, "notes": "AlkS is a classic alkane sensor and PalkB a widely used inducible promoter; integrated CRISPRa device is a design template. P. putida natively tolerates solvents." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "P. putida KT2440 certified HV1 safety host; add containment for field use.", "fieldDeployable": true, "notes": "Solvent-tolerant chassis suited to spill sites." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target a weak reporter promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: AlkS + PalkB -> sgRNA. TU2: dCas9-omega. TU3: weak promoter -> sfGFP. SEVA vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate; select; confirm alkane-dependent activation." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add soil eluate/water + alkane standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate alkane from the curve." }
+  ],
+  "provenance": { "source": "Design template combining the AlkS alkane-sensing module with P. putida CRISPRa", "partsSources": ["de Lorenzo et al. / AlkS-PalkB alkane regulation (Pseudomonas)", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "explosives-crispri-ecoli",
+  "name": "Explosives/landmine sensor (YqjF + CRISPRa)",
+  "slug": "explosives-crispri-ecoli",
+  "shortDescription": "Detects buried explosives by sensing DNT vapour (a TNT degradation product that leaks from landmines). The YqjF sensor gates a CRISPRa circuit driving a fluorescent reporter, in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["explosives", "DNT", "TNT", "landmine", "environmental", "CRISPRa", "soil"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": { "analyte": "2,4-Dinitrotoluene (DNT) / TNT degradation products", "category": "environmental", "detects": "DNT vapour leaking from buried explosives / landmines in soil", "operatingRange": "Engineered YqjF reporters detect ppb-level DNT" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "The yqjF promoter (PyqjF) is induced by DNT degradation products; its regulator de-represses on exposure.", "signalFlow": "DNT -> PyqjF activates -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence over buried explosives.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "YqjF sensing module + PyqjF", "role": "regulator", "source": "E. coli yqjF locus; engineered as a DNT biosensor (Belkin lab)", "notes": "DNT-responsive promoter used in landmine-detection biosensors." },
+    { "name": "PyqjF promoter", "role": "promoter", "source": "E. coli yqjF promoter", "notes": "Induced by DNT degradation products." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Cells embedded in beads scattered over a minefield, scanned by laser/drone." }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (remote laser scan / drone)", "result": "Fluorescent patches mark buried explosives." },
+  "performance": { "limitOfDetection": "Engineered YqjF reporters: ppb DNT (module-validated, Belkin lab field tests).", "dynamicRange": "ppb-ppm DNT", "responseTimeMin": 360, "validated": false, "notes": "The YqjF DNT biosensor is field-validated for landmine detection; the CRISPRa amplifier integration is a design template to boost the signal." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Encapsulate cells in hydrogel beads; pair with a kill-switch for outdoor use.", "fieldDeployable": true, "notes": "E. coli K-12 non-pathogenic BSL-1 host; a humanitarian demining application." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target a weak reporter promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: PyqjF -> sgRNA. TU2: dCas9-omega. TU3: weak promoter -> sfGFP." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; confirm DNT-dependent activation." },
+    { "order": 4, "stage": "induction", "title": "Deploy/expose", "description": "Encapsulate; expose to soil headspace + DNT standard." },
+    { "order": 5, "stage": "readout", "title": "Remote scan", "description": "Scan for fluorescent patches." }
+  ],
+  "provenance": { "source": "Design template combining the YqjF DNT/landmine biosensor with E. coli CRISPRa", "partsSources": ["Belkin et al. 2017, Nat. Biotechnol. (microbial landmine detection, yqjF)", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

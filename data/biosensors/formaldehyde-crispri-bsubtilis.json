@@ -1,0 +1,30 @@
+{
+  "id": "formaldehyde-crispri-bsubtilis",
+  "name": "Formaldehyde sensor (HxlR + CRISPRa)",
+  "slug": "formaldehyde-crispri-bsubtilis",
+  "shortDescription": "Detects toxic formaldehyde in water, air, and materials. The native B. subtilis HxlR formaldehyde regulator gates a CRISPRa circuit driving a fluorescent reporter, in spore-forming Bacillus subtilis 168.",
+  "status": "template",
+  "tags": ["formaldehyde", "indoor-air", "pollutant", "chemical", "CRISPRa", "spore"],
+  "chassisSlug": "bacillus-subtilis-168",
+  "input": { "analyte": "Formaldehyde (HCHO)", "category": "chemical", "detects": "Formaldehyde in water, off-gassing materials, and indoor air", "operatingRange": "HxlR responds across µM formaldehyde" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "HxlR activates the hxlAB formaldehyde-detoxification operon in response to formaldehyde.", "signalFlow": "HCHO -> HxlR activates PhxlA -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence rises with formaldehyde.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "HxlR regulator", "role": "regulator", "source": "Native B. subtilis hxlR", "notes": "Formaldehyde-responsive activator (RIPSU/MerR-like)." },
+    { "name": "PhxlA promoter", "role": "promoter", "source": "B. subtilis hxlAB promoter", "notes": "Activated by HxlR under formaldehyde." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (field fluorimeter)", "result": "Fluorescence increases with formaldehyde." },
+  "performance": { "limitOfDetection": "HxlR module: µM formaldehyde (module-validated).", "dynamicRange": "~1-100 µM formaldehyde", "responseTimeMin": 180, "validated": false, "notes": "HxlR formaldehyde sensing and CRISPRa are validated separately; integrated device is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": true, "biocontainment": "GRAS, spore-forming host; auxotrophic/spore containment.", "fieldDeployable": true, "notes": "Spores allow ambient storage and field reconstitution." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target a weak reporter promoter; check B. subtilis off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: PhxlA -> sgRNA (native HxlR). TU2: dCas9-omega. TU3: weak promoter -> sfGFP. Integrate at amyE." },
+    { "order": 3, "stage": "transformation", "title": "Transform B. subtilis 168", "description": "Natural competence; select; confirm formaldehyde-dependent activation." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Reconstitute spores; add sample + formaldehyde standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate formaldehyde from the curve." }
+  ],
+  "provenance": { "source": "Design template combining the native B. subtilis HxlR formaldehyde sensor with CRISPRa", "partsSources": ["Yurimoto et al. / B. subtilis HxlR formaldehyde regulation", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

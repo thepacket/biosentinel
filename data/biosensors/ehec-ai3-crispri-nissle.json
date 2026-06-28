@@ -1,0 +1,30 @@
+{
+  "id": "ehec-ai3-crispri-nissle",
+  "name": "EHEC sensor (AI-3/QseC + CRISPRi)",
+  "slug": "ehec-ai3-crispri-nissle",
+  "shortDescription": "Detects enterohemorrhagic E. coli (EHEC) signalling via the AI-3 / host-adrenergic pathway. The QseC/QseB sensor gates a CRISPRi circuit driving a fluorescent reporter, in the probiotic gut chassis E. coli Nissle 1917.",
+  "status": "template",
+  "tags": ["pathogen", "EHEC", "AI-3", "epinephrine", "clinical-gut", "probiotic", "Nissle", "CRISPRi"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": { "analyte": "AI-3 / epinephrine / norepinephrine", "category": "pathogen", "detects": "The AI-3 inter-kingdom signal and host catecholamines that activate EHEC virulence", "operatingRange": "QseC responds across µM catecholamine / AI-3" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "The QseC sensor kinase detects AI-3/epinephrine and phosphorylates QseB, activating QseB-dependent promoters.", "signalFlow": "AI-3/epinephrine -> QseC/QseB activates its promoter -> transcribes an anti-reporter sgRNA -> CRISPRi inverts a constitutive reporter (NOT). Pair with a memory switch to record an EHEC-signalling episode in the gut.", "logicType": "NOT" },
+  "parts": [
+    { "name": "QseC/QseB two-component system", "role": "regulator", "source": "Enterohemorrhagic E. coli adrenergic sensor", "notes": "AI-3/catecholamine-responsive; native E. coli framework (works in Nissle)." },
+    { "name": "QseB target promoter", "role": "promoter", "source": "EHEC qse regulon", "notes": "Activated by phospho-QseB." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Recoverable from stool for non-invasive readout." }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Fluorescence (flow cytometry on recovered cells)", "result": "Signal reports AI-3 / EHEC-type adrenergic signalling in the gut." },
+  "performance": { "limitOfDetection": "QseC module: µM catecholamine/AI-3 (module-validated).", "dynamicRange": "~1-100 µM", "responseTimeMin": 240, "validated": false, "notes": "Detects a virulence-activating signal rather than the live pathogen; QseC/QseB and CRISPRi are validated separately and integration is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Probiotic E. coli Nissle host; add thyA/dapA auxotrophy for gut-restricted containment.", "fieldDeployable": false, "notes": "Probiotic chassis with a human-safety record; research / supervised clinical use only." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design sgRNA (+ optional memory)", "description": "Target the reporter promoter; optionally add a memory switch." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: QseC/QseB. TU2: target promoter -> sgRNA. TU3: dCas9 + reporter. Low-copy vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add auxotrophic containment." },
+    { "order": 4, "stage": "induction", "title": "Validate in vitro", "description": "Confirm AI-3/epinephrine response before any animal work." },
+    { "order": 5, "stage": "readout", "title": "Recover and measure", "description": "Recover cells from stool; quantify fluorescence." }
+  ],
+  "provenance": { "source": "Design template combining the QseC/QseB AI-3 adrenergic sensor with a dCas9 CRISPRi circuit in E. coli Nissle", "partsSources": ["Sperandio et al. / QseC AI-3 inter-kingdom signalling (EHEC)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

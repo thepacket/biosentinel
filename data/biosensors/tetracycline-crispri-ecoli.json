@@ -1,0 +1,30 @@
+{
+  "id": "tetracycline-crispri-ecoli",
+  "name": "Tetracycline sensor (TetR + CRISPRi)",
+  "slug": "tetracycline-crispri-ecoli",
+  "shortDescription": "Detects tetracycline antibiotic contamination in water and food. The classic TetR sensor gates a CRISPRi circuit driving a visible pigment, in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["tetracycline", "antibiotic", "antibiotic-pollution", "water", "food-safety", "chemical", "environmental", "CRISPRi"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": { "analyte": "Tetracycline / anhydrotetracycline (aTc)", "category": "chemical", "detects": "Tetracycline-class antibiotic residues in water, food, and wastewater", "operatingRange": "TetR responds from low nM aTc" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "TetR de-represses the Ptet promoter on binding tetracycline/aTc.", "signalFlow": "Tetracycline -> TetR releases Ptet -> transcribes an anti-pigment sgRNA -> CRISPRi represses a constitutive amilCP cassette -> pigment fades with antibiotic (NOT). Pair an inverter for colour-on.", "logicType": "NOT" },
+  "parts": [
+    { "name": "TetR regulator", "role": "regulator", "source": "Tn10 tet operon (also a Marionette/standard sensor)", "notes": "Tetracycline/aTc-responsive repressor; one of the best-characterised regulators." },
+    { "name": "Ptet promoter", "role": "promoter", "partId": "BBa_R0040", "source": "tet operon promoter/operator", "notes": "De-repressed by tetracycline-bound TetR." },
+    { "name": "Anti-pigment sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala" }
+  ],
+  "output": { "type": "pigment", "reporterGene": "amilCP", "readout": "Visible pigment (naked eye / smartphone)", "result": "Pigment change reports tetracycline contamination." },
+  "performance": { "limitOfDetection": "TetR module: low-nM aTc (module-validated).", "dynamicRange": "~1-1000 nM tetracycline/aTc", "responseTimeMin": 150, "validated": false, "notes": "TetR/Ptet is among the most characterised regulator-promoter pairs in biology; integrated CRISPRi device is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Lab/contained; add kill-switch for field use.", "fieldDeployable": true, "notes": "E. coli K-12 non-pathogenic BSL-1 host; relevant to antibiotic-pollution surveillance. Note: do not select the host with tetracycline resistance." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-pigment sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: TetR + Ptet -> sgRNA. TU2: dCas9 + constitutive amilCP. Avoid TetR-resistance markers." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select (non-tet marker); confirm baseline pigment without antibiotic." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add water/food sample + tetracycline standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve." }
+  ],
+  "provenance": { "source": "Design template combining the classic TetR tetracycline sensor with E. coli CRISPRi", "partsSources": ["Hillen & Berens / TetR tetracycline regulation (Tn10)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

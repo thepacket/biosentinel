@@ -1,0 +1,30 @@
+{
+  "id": "vanillate-crispra-ecoli",
+  "name": "Vanillate sensor (VanR + CRISPRa)",
+  "slug": "vanillate-crispra-ecoli",
+  "shortDescription": "Detects vanillate/vanillin (lignin-degradation and food/flavour marker). The Marionette VanR sensor gates a CRISPRa circuit driving a fluorescent reporter, in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["vanillate", "vanillin", "lignin", "food", "chemical", "Marionette", "CRISPRa"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": { "analyte": "Vanillic acid / vanillin", "category": "chemical", "detects": "Vanillate in lignin-processing streams, food, and fermentation", "operatingRange": "VanR responds across µM vanillate" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "VanR de-represses the Pvan promoter on binding vanillate.", "signalFlow": "Vanillate -> VanR releases Pvan -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence rises with vanillate.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "VanR regulator", "role": "regulator", "source": "Marionette sensor (Meyer et al. 2019); Caulobacter van system", "notes": "Vanillate-responsive repressor, characterised as an orthogonal Marionette sensor." },
+    { "name": "Pvan promoter", "role": "promoter", "source": "van operon promoter", "notes": "De-repressed by vanillate-bound VanR." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (plate reader)", "result": "Fluorescence increases with vanillate." },
+  "performance": { "limitOfDetection": "VanR Marionette sensor: µM vanillate (module-validated).", "dynamicRange": "~1-100 µM vanillate", "responseTimeMin": 150, "validated": false, "notes": "VanR is a characterised orthogonal Marionette sensor; integrated CRISPRa device is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Lab/contained; add kill-switch for field use.", "fieldDeployable": false, "notes": "E. coli K-12 non-pathogenic BSL-1 host." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target a weak reporter promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: VanR + Pvan -> sgRNA. TU2: dCas9-omega. TU3: weak promoter -> sfGFP." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; confirm vanillate-dependent activation." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add sample + vanillate standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate vanillate from the curve." }
+  ],
+  "provenance": { "source": "Design template combining the Marionette VanR vanillate sensor with E. coli CRISPRa", "partsSources": ["Meyer et al. 2019, Nat. Chem. Biol. (Marionette sensors, VanR)", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

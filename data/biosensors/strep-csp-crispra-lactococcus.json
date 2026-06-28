@@ -1,0 +1,30 @@
+{
+  "id": "strep-csp-crispra-lactococcus",
+  "name": "Streptococcus sensor (CSP/ComD + CRISPRa)",
+  "slug": "strep-csp-crispra-lactococcus",
+  "shortDescription": "Detects Streptococcus via its competence-stimulating peptide (CSP). The ComD/ComE quorum system gates a CRISPRa circuit driving a fluorescent reporter, in the food-grade Gram-positive chassis Lactococcus lactis.",
+  "status": "template",
+  "tags": ["pathogen", "Streptococcus", "CSP", "quorum-sensing", "peptide", "GRAS", "CRISPRa"],
+  "chassisSlug": "lactococcus-lactis",
+  "input": { "analyte": "Competence-stimulating peptide (CSP)", "category": "pathogen", "detects": "The CSP quorum peptide secreted by streptococci (e.g. S. pneumoniae, S. mutans)", "operatingRange": "ComD responds from nM CSP" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "The ComD histidine kinase detects CSP and phosphorylates ComE, which activates competence promoters (PcomX/PcomC).", "signalFlow": "CSP -> ComD/ComE activates a com promoter -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence when Streptococcus signal is present.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "ComD/ComE two-component system", "role": "regulator", "source": "Streptococcus com quorum system", "notes": "CSP-responsive sensor kinase + activator; Gram-positive peptide signalling fits L. lactis." },
+    { "name": "com promoter (PcomX)", "role": "promoter", "source": "Streptococcus competence regulon", "notes": "Activated by phospho-ComE." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "mCherry reporter", "role": "reporter", "source": "standard fluorophore" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "mCherry", "readout": "Fluorescence (plate reader)", "result": "Fluorescence indicates streptococcal CSP in the sample." },
+  "performance": { "limitOfDetection": "ComD CSP sensing: nM range (module-validated).", "dynamicRange": "~1-1000 nM CSP", "responseTimeMin": 240, "validated": false, "notes": "Senses the pathogen's peptide signal, not the live organism; ComD/ComE and CRISPRa are validated separately and integration is a design template (requires porting com into L. lactis)." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": true, "biocontainment": "Safe GRAS L. lactis reads a secreted peptide; no streptococcal culture required.", "fieldDeployable": false, "notes": "Food-grade chassis; indirect, safe detection." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Port com + design sgRNA", "description": "Reconstitute ComD/ComE in L. lactis; design the CRISPRa sgRNA." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: ComD/ComE. TU2: PcomX -> sgRNA. TU3: dCas9-omega. TU4: weak promoter -> mCherry. NICE vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform L. lactis MG1363", "description": "Electroporate; select; add thyA containment; validate CSP response." },
+    { "order": 4, "stage": "induction", "title": "Add sample", "description": "Incubate with the sample + synthetic CSP standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate from the curve." }
+  ],
+  "provenance": { "source": "Design template combining the Streptococcus ComD/CSP quorum module with L. lactis CRISPRa", "partsSources": ["Streptococcus competence (com) quorum-sensing literature", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

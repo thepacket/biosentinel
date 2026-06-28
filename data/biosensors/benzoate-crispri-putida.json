@@ -1,0 +1,30 @@
+{
+  "id": "benzoate-crispri-putida",
+  "name": "Benzoate sensor (BenM + CRISPRi)",
+  "slug": "benzoate-crispri-putida",
+  "shortDescription": "Detects benzoate, a common aromatic pollutant and degradation intermediate. The BenM LysR-family regulator gates a CRISPRi circuit driving a visible pigment, in P. putida KT2440.",
+  "status": "template",
+  "tags": ["benzoate", "aromatic", "pollutant", "soil", "water", "environmental", "CRISPRi"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": { "analyte": "Benzoate", "category": "environmental", "detects": "Benzoate in soil/water (aromatic-compound degradation marker)", "operatingRange": "BenM responds across µM benzoate / cis,cis-muconate" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "BenM (LysR family) activates the benABC promoter in response to benzoate and its metabolite cis,cis-muconate.", "signalFlow": "Benzoate -> BenM activates PbenA -> transcribes an anti-pigment sgRNA -> CRISPRi represses a constitutive amilCP cassette -> pigment fades with benzoate (NOT). Pair an inverter for colour-on.", "logicType": "NOT" },
+  "parts": [
+    { "name": "BenM regulator", "role": "regulator", "source": "Acinetobacter baylyi ben operon (LysR family)", "notes": "Benzoate/cis,cis-muconate-responsive activator." },
+    { "name": "PbenA promoter", "role": "promoter", "source": "ben operon promoter", "notes": "Activated by effector-bound BenM." },
+    { "name": "Anti-pigment sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "CRISPRi (established in P. putida)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala" }
+  ],
+  "output": { "type": "pigment", "reporterGene": "amilCP", "readout": "Visible pigment (naked eye / smartphone)", "result": "Pigment change reports benzoate." },
+  "performance": { "limitOfDetection": "BenM module: µM benzoate (module-validated).", "dynamicRange": "~1-100 µM benzoate", "responseTimeMin": 180, "validated": false, "notes": "BenM is a well-studied aromatic sensor; integrated CRISPRi device is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "P. putida KT2440 certified HV1 safety host; add containment for field use.", "fieldDeployable": true, "notes": "Aromatic-tolerant chassis; instrument-free readout." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-pigment sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: BenM + PbenA -> sgRNA. TU2: dCas9 + constitutive amilCP. SEVA vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate; select; confirm baseline pigment without benzoate." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add soil eluate/water + benzoate standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve." }
+  ],
+  "provenance": { "source": "Design template combining the BenM benzoate-sensing module with P. putida CRISPRi", "partsSources": ["Collier/Neidle / BenM benzoate regulation (Acinetobacter baylyi)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

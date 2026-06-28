@@ -1,0 +1,30 @@
+{
+  "id": "salicylate-crispri-ecoli",
+  "name": "Salicylate sensor (NahR + CRISPRi)",
+  "slug": "salicylate-crispri-ecoli",
+  "shortDescription": "Detects salicylate (a naphthalene-degradation marker and drug metabolite). The NahR LysR-family activator gates a CRISPRi circuit driving a visible pigment, in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["salicylate", "naphthalene", "pollutant", "chemical", "environmental", "CRISPRi", "chromoprotein"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": { "analyte": "Salicylate", "category": "environmental", "detects": "Salicylate in water (naphthalene/PAH degradation intermediate; also a drug metabolite)", "operatingRange": "NahR responds across µM salicylate" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "NahR (LysR family) binds salicylate and activates the Psal/Pnah promoters.", "signalFlow": "Salicylate -> NahR activates Psal -> transcribes an anti-pigment sgRNA -> CRISPRi represses a constitutive amilCP cassette -> pigment fades with salicylate (NOT). Pair an inverter for colour-on.", "logicType": "NOT" },
+  "parts": [
+    { "name": "NahR regulator", "role": "regulator", "source": "Pseudomonas NAH7 plasmid (LysR family)", "notes": "Salicylate-responsive activator." },
+    { "name": "Psal promoter", "role": "promoter", "source": "NAH7 sal operon promoter", "notes": "Activated by salicylate-bound NahR." },
+    { "name": "Anti-pigment sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala" }
+  ],
+  "output": { "type": "pigment", "reporterGene": "amilCP", "readout": "Visible pigment (naked eye / smartphone)", "result": "Pigment change reports salicylate." },
+  "performance": { "limitOfDetection": "NahR module: µM salicylate (module-validated).", "dynamicRange": "~1-100 µM salicylate", "responseTimeMin": 180, "validated": false, "notes": "NahR is a classic, well-characterised salicylate sensor; integrated CRISPRi device is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Lab/contained; add kill-switch for field use.", "fieldDeployable": true, "notes": "Instrument-free pigment readout." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-pigment sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: NahR + Psal -> sgRNA. TU2: dCas9 + constitutive amilCP." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; confirm baseline pigment without salicylate." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add sample + salicylate standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve." }
+  ],
+  "provenance": { "source": "Design template combining the NahR salicylate-sensing module with E. coli CRISPRi", "partsSources": ["Schell / NahR salicylate regulation (NAH7)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

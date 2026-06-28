@@ -1,0 +1,30 @@
+{
+  "id": "cuminate-crispra-putida",
+  "name": "Cuminate sensor (CymR + CRISPRa)",
+  "slug": "cuminate-crispra-putida",
+  "shortDescription": "Detects cuminate (p-isopropylbenzoate), a terpenoid-degradation marker. The native P. putida CymR sensor gates a CRISPRa circuit driving a fluorescent reporter, in P. putida KT2440.",
+  "status": "template",
+  "tags": ["cuminate", "cumate", "terpenoid", "chemical", "Marionette", "CRISPRa"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": { "analyte": "Cuminate (p-isopropylbenzoate) / cumate", "category": "chemical", "detects": "Cuminate/cumate in degradation streams and as a process marker", "operatingRange": "CymR responds across µM cumate" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "CymR de-represses the Pcym/Pcmt promoter on binding cumate.", "signalFlow": "Cumate -> CymR releases Pcym -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence rises with cuminate.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "CymR regulator", "role": "regulator", "source": "Native P. putida cym/cmt operon (also a Marionette sensor)", "notes": "Cumate-responsive repressor; endogenous to P. putida." },
+    { "name": "Pcym promoter", "role": "promoter", "source": "P. putida cym operon promoter", "notes": "De-repressed by cumate-bound CymR." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (plate reader)", "result": "Fluorescence increases with cuminate." },
+  "performance": { "limitOfDetection": "CymR module: µM cumate (module-validated).", "dynamicRange": "~1-100 µM cumate", "responseTimeMin": 150, "validated": false, "notes": "CymR is native to P. putida and a characterised Marionette sensor; integrated CRISPRa device is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "P. putida KT2440 certified HV1 safety host; add containment for field use.", "fieldDeployable": true, "notes": "Native sensor in the host — minimal porting needed." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target a weak reporter promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: Pcym -> sgRNA (native CymR). TU2: dCas9-omega. TU3: weak promoter -> sfGFP. SEVA vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate; select; confirm cumate-dependent activation." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add sample + cumate standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate cuminate from the curve." }
+  ],
+  "provenance": { "source": "Design template combining the native P. putida CymR cumate sensor with CRISPRa", "partsSources": ["Eaton / P. putida cym-cmt cumate regulation; Meyer et al. 2019 (Marionette CymR)", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}
