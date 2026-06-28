@@ -1,0 +1,42 @@
+{
+  "id": "bacillus-subtilis-168",
+  "name": "Bacillus subtilis 168",
+  "slug": "bacillus-subtilis-168",
+  "species": "Bacillus subtilis",
+  "strain": "168 (trpC2)",
+  "taxId": 224308,
+  "shortDescription": "Gram-positive, spore-forming model bacterium with QPS (EFSA) status and a long history of safe industrial use. Spores make it robust for field-deployable and environmental biosensors.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": true,
+    "grasBasis": "EFSA Qualified Presumption of Safety (QPS); long history of use in food enzymes and fermentation.",
+    "probiotic": false,
+    "biocontainment": "Spore-based and auxotrophic containment; widely used in contained industrial fermentation.",
+    "bslSource": "ABSA Risk Group 1; EFSA QPS list.",
+    "notes": "Naturally competent for DNA uptake; excellent protein secretion."
+  },
+  "traits": {
+    "gram": "positive",
+    "oxygen": "facultative",
+    "optimalTempC": 37,
+    "sporeForming": true,
+    "doublingTimeMin": 25,
+    "transformable": true,
+    "secretes": true
+  },
+  "engineering": {
+    "genomeAccession": "NC_000964.3",
+    "commonPromoters": ["Pveg", "Phyperspank (IPTG)", "PgsiB (stress)"],
+    "selectionMarkers": ["SpcR", "ErmR", "KanR"],
+    "crisprTools": "dCas9/CRISPRi adapted for B. subtilis (e.g. Peters et al.).",
+    "toolkits": ["Bacillus SEVA-Brick", "BioBrick Bacillus collection"]
+  },
+  "typicalEnvironments": ["soil", "water", "field", "industrial fermenter"],
+  "bestFor": ["environmental", "chemical"],
+  "provenance": {
+    "source": "NCBI Taxonomy / EFSA QPS",
+    "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000009045.1/",
+    "dateAdded": "2026-06-28"
+  }
+}

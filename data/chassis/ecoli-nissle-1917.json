@@ -1,0 +1,42 @@
+{
+  "id": "ecoli-nissle-1917",
+  "name": "E. coli Nissle 1917",
+  "slug": "ecoli-nissle-1917",
+  "species": "Escherichia coli",
+  "strain": "Nissle 1917 (EcN)",
+  "taxId": 316435,
+  "shortDescription": "A probiotic E. coli used in humans for over a century (Mutaflor). Colonizes the gut safely, making it the chassis of choice for clinical / gut biomarker biosensors.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": false,
+    "probiotic": true,
+    "humanUse": "Marketed as the probiotic Mutaflor; used clinically for gastrointestinal indications.",
+    "biocontainment": "Engineered auxotrophies (e.g. thyA, dapA) demonstrated for gut-restricted containment.",
+    "bslSource": "ABSA Risk Group 1; established probiotic with extensive human-safety record.",
+    "notes": "Lacks defined virulence factors of pathogenic E. coli; strong gut colonization."
+  },
+  "traits": {
+    "gram": "negative",
+    "oxygen": "facultative",
+    "optimalTempC": 37,
+    "sporeForming": false,
+    "doublingTimeMin": 25,
+    "transformable": true,
+    "secretes": false
+  },
+  "engineering": {
+    "genomeAccession": "NZ_CP007799.1",
+    "commonPromoters": ["pTet", "pBAD", "tetracycline / arabinose inducible", "in-vivo gut-sensing promoters"],
+    "selectionMarkers": ["KanR", "CmR"],
+    "crisprTools": "Standard E. coli dCas9/CRISPRi tooling transfers to EcN.",
+    "toolkits": ["SEVA", "Synlogic / gut-sensor part sets (academic)"]
+  },
+  "typicalEnvironments": ["gut", "clinical"],
+  "bestFor": ["clinical-gut", "pathogen"],
+  "provenance": {
+    "source": "NCBI Taxonomy; probiotic literature (Mutaflor)",
+    "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000714595.1/",
+    "dateAdded": "2026-06-28"
+  }
+}

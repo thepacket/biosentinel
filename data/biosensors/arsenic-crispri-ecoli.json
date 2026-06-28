@@ -1,0 +1,70 @@
+{
+  "id": "arsenic-crispri-ecoli",
+  "name": "Arsenic water sensor (ArsR + CRISPRi)",
+  "slug": "arsenic-crispri-ecoli",
+  "shortDescription": "Detects arsenite in drinking water. The validated ArsR/Pars sensing module gates an sgRNA that, with dCas9, represses a constitutive sfGFP reporter (CRISPRi inverter). Built in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["arsenic", "heavy-metal", "water", "environmental", "CRISPRi", "field"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": {
+    "analyte": "Arsenite As(III)",
+    "category": "environmental",
+    "detects": "Inorganic arsenic in drinking/ground water",
+    "operatingRange": "ArsR sensing module responds around the WHO limit of 10 µg/L (~0.13 µM) up to tens of µg/L"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "Arsenite binds the ArsR repressor, releasing it from the Pars operator and de-repressing the Pars promoter.",
+    "signalFlow": "As(III) -> ArsR releases Pars -> Pars transcribes an sgRNA -> sgRNA + dCas9 bind and repress the constitutive sfGFP cassette (CRISPRi) -> green fluorescence falls as arsenic rises (NOT gate). A second CRISPRi inverter stage flips this to signal-ON if a turn-on readout is preferred.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "ArsR repressor", "role": "regulator", "partId": "BBa_J33201 (arsR/Pars module)", "source": "E. coli ars operon; Stocker et al. 2003; iGEM Edinburgh arsenic biosensor", "notes": "Arsenite-responsive transcriptional repressor." },
+    { "name": "Pars promoter/operator", "role": "promoter", "partId": "BBa_J33201", "source": "E. coli arsR-arsD intergenic region", "notes": "De-repressed when ArsR binds arsenite." },
+    { "name": "Anti-sfGFP sgRNA", "role": "sgRNA", "source": "designed to target the sfGFP promoter region", "notes": "Transcribed from Pars; spacer targets the reporter promoter for CRISPRi knockdown." },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard S. pyogenes sgRNA scaffold (Qi et al. 2013)" },
+    { "name": "dCas9", "role": "dCas9", "source": "Addgene dCas9 (D10A/H840A); Qi et al. 2013, Cell", "notes": "Constitutively expressed; catalytically dead, blocks transcription when guided." },
+    { "name": "J23119 constitutive promoter", "role": "promoter", "partId": "BBa_J23119", "sequence": "TTGACAGCTAGCTCAGTCCTAGGTATAATGCTAGC", "source": "Anderson promoter collection", "notes": "Drives the sfGFP reporter (target of CRISPRi)." },
+    { "name": "B0034 RBS", "role": "rbs", "partId": "BBa_B0034", "sequence": "AAAGAGGAGAAA", "source": "iGEM Registry" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Reporter whose level reports arsenic." }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Green fluorescence (plate reader or field fluorimeter)",
+    "result": "Fluorescence change proportional to arsenic concentration."
+  },
+  "performance": {
+    "limitOfDetection": "ArsR sensing module is validated near 10 µg/L (WHO arsenic limit).",
+    "dynamicRange": "~10-100 µg/L for the native ArsR module",
+    "responseTimeMin": 120,
+    "validated": false,
+    "notes": "The ArsR/Pars sensing module and CRISPRi are each individually validated in the literature; this specific integrated CRISPRi device is a design template and has not been validated end to end here."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Lab/contained use; auxotrophic kill-switch recommended before any field deployment.",
+    "fieldDeployable": true,
+    "notes": "E. coli K-12 is a non-pathogenic BSL-1 host."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design the anti-reporter sgRNA", "description": "Pick a 20-nt spacer targeting the sfGFP promoter/5'UTR with a PAM; check off-targets against the host genome." },
+    { "order": 2, "stage": "assembly", "title": "Assemble the two transcription units", "description": "TU1: Pars -> sgRNA. TU2: constitutive dCas9 + J23119-sfGFP reporter. Clone into a SEVA vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Transform and select; verify dCas9 and reporter expression in the absence of arsenic." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Incubate cells with the water sample (and an arsenic standard curve)." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Read sfGFP; interpolate arsenic concentration from the standard curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining a validated ArsR/Pars arsenic-sensing module with a dCas9 CRISPRi reporter circuit",
+    "partsSources": [
+      "Stocker et al. 2003, Environ. Sci. Technol. (ArsR-based arsenic biosensor)",
+      "iGEM Edinburgh 2006 arsenic biosensor (BBa_J33201)",
+      "Qi et al. 2013, Cell (CRISPRi / dCas9)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

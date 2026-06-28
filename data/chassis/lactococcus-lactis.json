@@ -1,0 +1,43 @@
+{
+  "id": "lactococcus-lactis",
+  "name": "Lactococcus lactis (MG1363)",
+  "slug": "lactococcus-lactis",
+  "species": "Lactococcus lactis",
+  "strain": "MG1363",
+  "taxId": 416870,
+  "shortDescription": "Food-grade, GRAS lactic acid bacterium used for centuries in dairy fermentation. Non-colonizing and ideal for ingestible / clinical biosensors where a food-safe, gut-transient host is wanted.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": true,
+    "grasBasis": "FDA GRAS for food use; EFSA QPS; centuries of safe use in dairy.",
+    "probiotic": true,
+    "humanUse": "Food fermentation; engineered L. lactis trialed clinically (e.g. mucosal delivery).",
+    "biocontainment": "thyA-based biological containment demonstrated in clinical trials (transient survival).",
+    "bslSource": "ABSA Risk Group 1; FDA GRAS; EFSA QPS.",
+    "notes": "Gram-positive, no LPS endotoxin; transient gut passage (does not colonize)."
+  },
+  "traits": {
+    "gram": "positive",
+    "oxygen": "facultative",
+    "optimalTempC": 30,
+    "sporeForming": false,
+    "doublingTimeMin": 60,
+    "transformable": true,
+    "secretes": true
+  },
+  "engineering": {
+    "genomeAccession": "NC_009004.1",
+    "commonPromoters": ["PnisA (nisin-inducible, NICE system)", "P32 (constitutive)"],
+    "selectionMarkers": ["ErmR", "CmR"],
+    "crisprTools": "dCas9/CRISPRi demonstrated in lactic acid bacteria.",
+    "toolkits": ["NICE (nisin-controlled expression)", "SEVA-compatible vectors"]
+  },
+  "typicalEnvironments": ["gut", "food", "clinical"],
+  "bestFor": ["clinical-gut", "chemical"],
+  "provenance": {
+    "source": "NCBI Taxonomy; FDA GRAS / EFSA QPS",
+    "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000009425.1/",
+    "dateAdded": "2026-06-28"
+  }
+}

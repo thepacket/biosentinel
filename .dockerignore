@@ -1,0 +1,30 @@
+# Build/deploy metadata not needed in the image context
+.git
+.github
+.gitignore
+.dockerignore
+Dockerfile
+fly.toml
+README.md
+docs/
+
+# Node
+**/node_modules
+**/.next
+**/out
+**/.vite
+
+# Python
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.mypy_cache
+**/.pytest_cache
+**/.ruff_cache
+**/*.egg-info
+**/*.tsbuildinfo
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

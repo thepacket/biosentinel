@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://biosensors.dev/schema/biosensor.schema.json",
+  "title": "Whole-cell Biosensor Design",
+  "description": "A living biosensor: a safe bacterial chassis engineered with a CRISPR-based sensing circuit that detects an input analyte and produces a readout. The design references a chassis from the safe-chassis catalog (BSL-1/GRAS only).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "slug", "status", "chassisSlug", "input", "sensing", "output", "safety", "provenance"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "shortDescription": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["validated", "published", "experimental", "template", "community"],
+      "description": "validated/published = real device from a cited source; template = real parts assembled into a CRISPR design pattern (not an end-to-end validated device); experimental/community = lab- or user-stage."
+    },
+    "tags": { "type": "array", "items": { "type": "string" } },
+
+    "chassisSlug": {
+      "type": "string",
+      "description": "References a chassis in the safe-chassis catalog (chassis.schema.json). Must resolve to a BSL-1 chassis."
+    },
+
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["analyte", "category"],
+      "properties": {
+        "analyte": { "type": "string", "description": "What is detected, e.g. 'Arsenite As(III)'." },
+        "category": {
+          "type": "string",
+          "enum": ["environmental", "pathogen", "clinical-gut", "chemical"],
+          "description": "Detection-target category."
+        },
+        "detects": { "type": "string", "description": "Plain-language description of the detected signal." },
+        "operatingRange": { "type": "string", "description": "Concentration range the sensor responds over." }
+      }
+    },
+
+    "sensing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "signalFlow"],
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["CRISPRi-repression", "CRISPRa-activation", "crRNA-conditional", "dCas9-anti-repressor", "other"],
+          "description": "How CRISPR mediates sensing. CRISPRi-repression: dCas9+sgRNA represses the reporter; the analyte gates dCas9/sgRNA so the reporter inverts. CRISPRa: dCas9-activator turns the reporter ON."
+        },
+        "casProtein": { "type": "string", "description": "Catalytically-dead Cas used, e.g. 'dCas9 (S. pyogenes)'." },
+        "sensorMechanism": { "type": "string", "description": "How the analyte is first sensed, e.g. 'ArsR repressor releases Pars promoter on arsenite binding'." },
+        "signalFlow": { "type": "string", "description": "End-to-end logic: analyte -> sensor -> CRISPR layer -> reporter ON/OFF." },
+        "logicType": { "type": "string", "enum": ["BUFFER", "NOT", "AND", "OR", "NAND", "amplifier"], "description": "Boolean behaviour of the circuit." }
+      }
+    },
+
+    "parts": {
+      "type": "array",
+      "description": "Genetic parts composing the sensing circuit, in transcriptional order where meaningful.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "role"],
+        "properties": {
+          "name": { "type": "string" },
+          "role": {
+            "type": "string",
+            "enum": ["promoter", "operator", "regulator", "rbs", "cds", "dCas9", "sgRNA", "reporter", "terminator", "insulator"]
+          },
+          "partId": { "type": "string", "description": "Registry id if any, e.g. iGEM BBa_K..., SEVA, Addgene." },
+          "sequence": { "type": "string", "description": "Nucleotide sequence (optional; include when from a cited source)." },
+          "source": { "type": "string", "description": "Where this part comes from (organism / paper / registry)." },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "readout"],
+      "properties": {
+        "type": { "type": "string", "enum": ["fluorescent", "colorimetric", "luminescent", "pigment", "electrochemical", "growth"] },
+        "reporterGene": { "type": "string", "description": "e.g. GFP, sfGFP, mCherry, amilCP (chromoprotein), luxCDABE, lacZ." },
+        "readout": { "type": "string", "description": "How the result is observed, e.g. 'green fluorescence', 'visible blue pigment', 'smartphone camera'." },
+        "result": { "type": "string", "description": "What a positive result looks like." }
+      }
+    },
+
+    "performance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "limitOfDetection": { "type": "string" },
+        "dynamicRange": { "type": "string" },
+        "responseTimeMin": { "type": "number" },
+        "validated": { "type": "boolean", "description": "Whether the integrated device (not just the parts) has been experimentally validated in a cited source." },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["biosafetyLevel", "grasChassis"],
+      "properties": {
+        "biosafetyLevel": { "type": "integer", "const": 1, "description": "Hard-enforced to BSL-1 (safe chassis only)." },
+        "grasChassis": { "type": "boolean" },
+        "biocontainment": { "type": "string", "description": "Containment strategy for deployment, e.g. 'auxotrophy + kill-switch', 'lab-only'." },
+        "fieldDeployable": { "type": "boolean" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "buildSteps": {
+      "type": "array",
+      "description": "Ordered, human-readable steps to build and run the biosensor.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["order", "stage", "title"],
+        "properties": {
+          "order": { "type": "integer" },
+          "stage": { "type": "string", "enum": ["design", "assembly", "transformation", "induction", "readout"] },
+          "title": { "type": "string" },
+          "description": { "type": "string" }
+        }
+      }
+    },
+
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "type": "string" },
+        "authors": { "type": "string" },
+        "year": { "type": "integer" },
+        "doi": { "type": "string" },
+        "url": { "type": "string" },
+        "partsSources": { "type": "array", "items": { "type": "string" }, "description": "Citations for the sensing parts when the integrated design is a template." },
+        "license": { "type": "string" },
+        "addedBy": { "type": "string" },
+        "dateAdded": { "type": "string", "format": "date" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

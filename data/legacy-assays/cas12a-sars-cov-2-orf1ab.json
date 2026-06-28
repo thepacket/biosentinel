@@ -1,0 +1,86 @@
+{
+  "id": "cas12a-sars-cov-2-orf1ab",
+  "name": "CRISPR-Cas12a SARS-CoV-2 (ORF1ab)",
+  "slug": "cas12a-sars-cov-2-orf1ab",
+  "shortDescription": "LbCas12a detection of SARS-CoV-2 targeting ORF1ab, with RT-RPA pre-amplification and fluorescent or lateral-flow readout. SARS-CoV-2 is an RNA virus; it is reverse-transcribed during RT-RPA so Cas12a detects the resulting dsDNA amplicon. Sequences from Xiong et al., PLOS Biology 2020 (open access).",
+  "status": "published",
+  "platform": "CRISPR-Cas12a",
+  "tags": ["SARS-CoV-2", "COVID-19", "Cas12a", "RPA", "lateral-flow", "fluorescent", "respiratory"],
+  "target": {
+    "organism": "Severe acute respiratory syndrome coronavirus 2",
+    "commonName": "SARS-CoV-2",
+    "taxId": 2697049,
+    "moleculeType": "DNA",
+    "geneSymbol": "ORF1ab",
+    "geneName": "Replicase polyprotein 1ab (ORF1ab)",
+    "referenceAccession": "NC_045512.2"
+  },
+  "sampleTypes": ["nasopharyngeal swab", "purified RNA"],
+  "amplification": {
+    "method": "RT-RPA",
+    "temperatureC": 42,
+    "timeMin": 20,
+    "kit": "TwistAmp Basic (recombinase polymerase amplification) with reverse transcriptase",
+    "primers": [
+      {
+        "name": "ORF1ab-F5",
+        "role": "forward",
+        "sequence": "TTGCCTGGCACGATATTACGCACAACTAATGGT",
+        "notes": "Selected as the optimal ORF1ab forward primer (F5+R1 pair) after screening F1-F5/R1-R5."
+      },
+      {
+        "name": "ORF1ab-R1",
+        "role": "reverse",
+        "sequence": "CAAGCTGATGTTGCAAAGTCAGTGTACTCTAT"
+      }
+    ],
+    "notes": "RT-RPA reverse-transcribes the viral RNA and isothermally amplifies the ORF1ab segment to dsDNA, which LbCas12a then detects directly (no T7 transcription step, unlike Cas13a SHERLOCK assays)."
+  },
+  "crispr": {
+    "casEnzyme": "LbCas12a",
+    "casType": "Cas12a",
+    "pamOrPfs": "TTTV (5' PAM)",
+    "directRepeat": "UAAUUUCUACUAAGUGUAGAU",
+    "guides": [
+      {
+        "name": "crRNA-ORF1ab",
+        "targetGene": "ORF1ab",
+        "spacerSequence": "GUGCAGUUGGUAACAUCUGUUAC",
+        "fullSequence": "UAAUUUCUACUAAGUGUAGAUGUGCAGUUGGUAACAUCUGUUAC"
+      }
+    ]
+  },
+  "reporter": {
+    "type": "fluorescent",
+    "readout": "Fluorescence (plate reader / blue-light transilluminator); lateral-flow strip variant available",
+    "collateralTarget": "ssDNA",
+    "sequence": "FAM-TTATT-BHQ1",
+    "fluorophore": "FAM",
+    "quencher": "BHQ1",
+    "notes": "Activated LbCas12a collaterally cleaves the ssDNA reporter. Fluorescence reporter: FAM-TTATT-BHQ1. Lateral-flow variant: FAM-TTATT-Biotin (ssDNA-FB)."
+  },
+  "workflowSteps": [
+    { "order": 1, "stage": "extraction", "title": "Extract viral RNA", "description": "Extract total RNA from the clinical sample.", "durationMin": 30 },
+    { "order": 2, "stage": "amplification", "title": "RT-RPA amplification", "description": "Combine sample RNA with RPA reagents + reverse transcriptase and ORF1ab-F5/R1 primers. Incubate isothermally to produce dsDNA amplicon.", "durationMin": 20, "temperatureC": 42 },
+    { "order": 3, "stage": "crispr-detection", "title": "Cas12a detection", "description": "Add RPA product to LbCas12a + crRNA-ORF1ab + ssDNA reporter. Target recognition activates collateral ssDNA cleavage.", "durationMin": 20, "temperatureC": 37 },
+    { "order": 4, "stage": "readout", "title": "Read result", "description": "Measure fluorescence, or dip a lateral-flow strip (positive = test line).", "durationMin": 5 }
+  ],
+  "validation": {
+    "limitOfDetection": "1-10 copies per reaction",
+    "specificity": "Designed for SARS-CoV-2 specificity; no cross-reactivity reported against tested controls.",
+    "crossReactivity": "No false positives among 11 negative clinical samples.",
+    "validatedOn": "22 nasopharyngeal swab clinical samples (11 positive, 11 negative); 100% concordance with RT-qPCR.",
+    "clinicalStatus": "Research use only (peer-reviewed, open access)."
+  },
+  "provenance": {
+    "source": "Rapid detection of SARS-CoV-2 with CRISPR-Cas12a",
+    "authors": "Xiong et al.",
+    "year": 2020,
+    "doi": "10.1371/journal.pbio.3000978",
+    "url": "https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3000978",
+    "license": "CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28",
+    "notes": "Sequences transcribed verbatim from S1 Table (Primers, crRNAs, and reporters)."
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://biosensors.dev/schema/assay.schema.json",
+  "title": "CRISPR Biosensor Assay",
+  "description": "Canonical description of a CRISPR-based nucleic-acid detection assay. Models the full pipeline (target -> amplification -> CRISPR -> reporter -> validation) so the library, designer, validator, and exporter all operate on the same object.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "slug", "status", "target", "amplification", "crispr", "reporter", "provenance"],
+  "properties": {
+    "id": { "type": "string", "description": "Stable unique id (kebab-case)." },
+    "name": { "type": "string", "description": "Human-readable assay name." },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "URL slug." },
+    "shortDescription": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["validated", "published", "experimental", "community"],
+      "description": "validated = clinically/experimentally validated in source; published = from peer-reviewed source; experimental = lab-stage; community = user-contributed."
+    },
+    "platform": {
+      "type": "string",
+      "description": "Named platform family, e.g. SHERLOCK, DETECTR, STOPCovid.",
+      "examples": ["SHERLOCK", "DETECTR"]
+    },
+    "tags": { "type": "array", "items": { "type": "string" } },
+
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["organism", "moleculeType"],
+      "properties": {
+        "organism": { "type": "string" },
+        "commonName": { "type": "string" },
+        "taxId": { "type": "integer", "description": "NCBI taxonomy id." },
+        "moleculeType": { "type": "string", "enum": ["DNA", "RNA"], "description": "Native target molecule. Drives Cas chemistry (DNA->Cas12, RNA->Cas13)." },
+        "geneSymbol": { "type": "string" },
+        "geneName": { "type": "string" },
+        "referenceAccession": { "type": "string", "description": "Reference genome/sequence accession, e.g. NC_045512.2." },
+        "ampliconRegion": { "type": "string", "description": "Coordinates of the amplified region, e.g. '26269-26381'." },
+        "ampliconSequence": { "type": "string", "description": "Expected amplicon sequence (optional)." }
+      }
+    },
+
+    "sampleTypes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "e.g. nasopharyngeal swab, saliva, plasma."
+    },
+
+    "amplification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method"],
+      "properties": {
+        "method": { "type": "string", "enum": ["RPA", "RT-RPA", "LAMP", "RT-LAMP", "RAA", "PCR", "RT-PCR", "NASBA", "none"] },
+        "temperatureC": { "type": "number" },
+        "timeMin": { "type": "number" },
+        "kit": { "type": "string", "description": "Reference kit, e.g. TwistAmp Basic." },
+        "primers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "role", "sequence"],
+            "properties": {
+              "name": { "type": "string" },
+              "role": { "type": "string", "enum": ["F3", "B3", "FIP", "BIP", "LF", "LB", "forward", "reverse", "probe"] },
+              "sequence": { "type": "string", "description": "5'->3' nucleotide sequence." },
+              "modifications": { "type": "string", "description": "e.g. contains T7 promoter, 5' biotin." },
+              "notes": { "type": "string" }
+            }
+          }
+        },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "crispr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["casEnzyme", "casType", "guides"],
+      "properties": {
+        "casEnzyme": { "type": "string", "description": "Specific ortholog, e.g. LwaCas13a, LbCas12a." },
+        "casType": { "type": "string", "enum": ["Cas12a", "Cas12b", "Cas13a", "Cas13b", "Cas13d", "Cas14", "Cas9", "Cas3", "other"] },
+        "pamOrPfs": { "type": "string", "description": "Required PAM (Cas12) or PFS (Cas13), e.g. TTTV." },
+        "directRepeat": { "type": "string", "description": "Scaffold/direct-repeat sequence prepended (Cas13) or appended (Cas12) to the spacer." },
+        "guides": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "spacerSequence"],
+            "properties": {
+              "name": { "type": "string" },
+              "targetGene": { "type": "string" },
+              "spacerSequence": { "type": "string", "description": "Guide spacer (5'->3'), without scaffold." },
+              "fullSequence": { "type": "string", "description": "Full crRNA/gRNA as ordered (scaffold + spacer)." },
+              "scores": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "onTargetActivity": { "type": "number" },
+                  "specificity": { "type": "number" },
+                  "secondaryStructureDeltaG": { "type": "number" },
+                  "model": { "type": "string", "description": "Scoring model used, e.g. ADAPT-CNN, cas13design." }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "reporter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "readout"],
+      "properties": {
+        "type": { "type": "string", "enum": ["fluorescent", "lateral-flow", "electrochemical", "colorimetric", "luminescent"] },
+        "readout": { "type": "string", "description": "How the signal is observed, e.g. plate reader, lateral-flow strip, smartphone." },
+        "collateralTarget": { "type": "string", "enum": ["ssRNA", "ssDNA"], "description": "Trans-cleavage substrate (Cas13->ssRNA, Cas12->ssDNA)." },
+        "sequence": { "type": "string", "description": "Reporter oligo sequence if defined." },
+        "fluorophore": { "type": "string" },
+        "quencher": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "workflowSteps": {
+      "type": "array",
+      "description": "Ordered, human-readable pipeline steps for running the assay.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["order", "stage", "title"],
+        "properties": {
+          "order": { "type": "integer" },
+          "stage": { "type": "string", "enum": ["extraction", "amplification", "crispr-detection", "readout"] },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "durationMin": { "type": "number" },
+          "temperatureC": { "type": "number" }
+        }
+      }
+    },
+
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "limitOfDetection": { "type": "string", "description": "e.g. '10 copies/uL'." },
+        "specificity": { "type": "string" },
+        "crossReactivity": { "type": "string" },
+        "validatedOn": { "type": "string", "description": "Sample cohort / panel." },
+        "clinicalStatus": { "type": "string", "description": "e.g. EUA, research-use-only." }
+      }
+    },
+
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "type": "string", "description": "Citation / origin." },
+        "authors": { "type": "string" },
+        "year": { "type": "integer" },
+        "doi": { "type": "string" },
+        "url": { "type": "string" },
+        "license": { "type": "string" },
+        "addedBy": { "type": "string" },
+        "dateAdded": { "type": "string", "format": "date" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

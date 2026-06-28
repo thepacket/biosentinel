@@ -1,0 +1,67 @@
+{
+  "id": "copper-crispri-putida",
+  "name": "Copper soil sensor (CueR + CRISPRi)",
+  "slug": "copper-crispri-putida",
+  "shortDescription": "Detects bioavailable copper Cu(I)/Cu(II) in soil and water. The CueR copper-responsive regulator gates a CRISPRi circuit driving a visible chromoprotein, in the robust environmental chassis P. putida KT2440.",
+  "status": "template",
+  "tags": ["copper", "heavy-metal", "soil", "water", "environmental", "CRISPRi", "chromoprotein"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": {
+    "analyte": "Copper Cu(I)/Cu(II)",
+    "category": "environmental",
+    "detects": "Bioavailable copper in soil/water (agricultural and mining contamination)",
+    "operatingRange": "CueR-family sensors respond from sub-µM copper"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "CueR (a MerR-family regulator) binds Cu(I) and activates the copper-responsive PcopA/PcueO promoter.",
+    "signalFlow": "Cu -> CueR activates PcopA -> transcribes an anti-pigment sgRNA -> dCas9 + sgRNA repress a constitutive amilCP cassette (CRISPRi) -> pigment fades as copper rises (NOT gate). Pair an inverter for colour-on output.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "CueR regulator", "role": "regulator", "source": "E. coli cue system (MerR family); P. putida CopR/CueR homologs", "notes": "Copper-responsive activator." },
+    { "name": "PcopA / PcueO promoter", "role": "promoter", "source": "copper-responsive operator/promoter", "notes": "Activated by Cu-bound CueR." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "CRISPRi (established in P. putida)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala", "notes": "Visible blue-purple pigment (no instrument)." }
+  ],
+  "output": {
+    "type": "pigment",
+    "reporterGene": "amilCP",
+    "readout": "Visible pigment (naked eye / smartphone)",
+    "result": "Pigment intensity reports copper concentration."
+  },
+  "performance": {
+    "limitOfDetection": "CueR module: sub-µM copper (module-validated).",
+    "dynamicRange": "~0.1-10 µM copper",
+    "responseTimeMin": 180,
+    "validated": false,
+    "notes": "CueR copper sensors and P. putida CRISPRi are validated separately; integrated device is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "P. putida KT2440 is a certified HV1 safety host; add a containment circuit for field use.",
+    "fieldDeployable": true,
+    "notes": "Robust soil chassis; instrument-free pigment readout."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-reporter sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: CueR. TU2: PcopA -> sgRNA. TU3: dCas9 + constitutive amilCP. Clone into SEVA vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate; select; confirm baseline pigment without copper." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add soil eluate/water + copper standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve by eye or camera." }
+  ],
+  "provenance": {
+    "source": "Design template combining a CueR copper-sensing module with P. putida CRISPRi",
+    "partsSources": [
+      "Stoyanov et al. 2001 / CueR copper sensing (E. coli cue system)",
+      "iGEM Uppsala amilCP (BBa_K592009)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

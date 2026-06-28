@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+services/api/.venv/
+
+# Node / Next
+node_modules/
+apps/web/.next/
+apps/web/out/
+*.tsbuildinfo
+next-env.d.ts
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

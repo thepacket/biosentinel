@@ -1,0 +1,41 @@
+{
+  "id": "ecoli-k12-mg1655",
+  "name": "E. coli K-12 (MG1655)",
+  "slug": "ecoli-k12-mg1655",
+  "species": "Escherichia coli",
+  "strain": "K-12 MG1655",
+  "taxId": 511145,
+  "shortDescription": "The non-pathogenic laboratory workhorse. K-12 strains have lost the ability to colonize the human gut and are the reference BSL-1 host for genetic engineering, with the deepest tooling of any bacterial chassis.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": false,
+    "probiotic": false,
+    "biocontainment": "Auxotrophic and synthetic-amino-acid kill-switch systems are well characterized in K-12.",
+    "bslSource": "ABSA/NIH Risk Group 1; E. coli K-12 derivatives are exempt host-vector systems under NIH Guidelines Appendix C.",
+    "notes": "K-12 lacks the O-antigen and many colonization factors; it is the standard 'safe' cloning host."
+  },
+  "traits": {
+    "gram": "negative",
+    "oxygen": "facultative",
+    "optimalTempC": 37,
+    "sporeForming": false,
+    "doublingTimeMin": 20,
+    "transformable": true,
+    "secretes": false
+  },
+  "engineering": {
+    "genomeAccession": "NC_000913.3",
+    "commonPromoters": ["pTac", "pBAD (araBAD)", "pLac", "Anderson series (J23xxx)"],
+    "selectionMarkers": ["AmpR", "KanR", "CmR"],
+    "crisprTools": "dCas9/CRISPRi and CRISPRa extensively characterized in E. coli.",
+    "toolkits": ["SEVA", "Anderson promoter collection", "Marionette sensor library"]
+  },
+  "typicalEnvironments": ["lab", "water", "soil (engineered)"],
+  "bestFor": ["environmental", "chemical", "pathogen"],
+  "provenance": {
+    "source": "NCBI Taxonomy / NIH Guidelines for Research Involving Recombinant DNA (Appendix C exemptions)",
+    "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000005845.2/",
+    "dateAdded": "2026-06-28"
+  }
+}

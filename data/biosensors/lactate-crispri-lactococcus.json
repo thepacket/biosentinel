@@ -1,0 +1,67 @@
+{
+  "id": "lactate-crispri-lactococcus",
+  "name": "Lactate sensor (LldR + CRISPRi)",
+  "slug": "lactate-crispri-lactococcus",
+  "shortDescription": "Detects L-lactate, a fermentation and clinical metabolite. The LldR lactate-responsive regulator gates a CRISPRa circuit driving a fluorescent reporter, in the food-grade GRAS chassis Lactococcus lactis.",
+  "status": "template",
+  "tags": ["lactate", "metabolite", "chemical", "food", "GRAS", "CRISPRa"],
+  "chassisSlug": "lactococcus-lactis",
+  "input": {
+    "analyte": "L-lactate",
+    "category": "chemical",
+    "detects": "L-lactate in fermentation, food, or clinical samples",
+    "operatingRange": "LldR-based sensors respond across physiological lactate (low mM)"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-ω (CRISPRa activator)",
+    "sensorMechanism": "LldR de-represses / activates its target promoter (Plld) in response to L-lactate.",
+    "signalFlow": "L-lactate -> LldR activates Plld -> transcribes an sgRNA -> dCas9-activator amplifies a weak reporter promoter (CRISPRa) -> fluorescence rises with lactate.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    { "name": "LldR regulator", "role": "regulator", "source": "E. coli lldPRD operon (GntR/FadR family)", "notes": "Lactate-responsive regulator; requires porting/codon-optimisation for L. lactis." },
+    { "name": "Plld promoter", "role": "promoter", "source": "lldPRD operator/promoter", "notes": "Modulated by LldR under lactate." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "CRISPRa (Bikard et al. 2013); CRISPRi demonstrated in lactic acid bacteria" },
+    { "name": "mCherry / GFP reporter", "role": "reporter", "source": "standard fluorophores", "notes": "Food-compatible fluorescent readout." }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "mCherry",
+    "readout": "Fluorescence (plate reader)",
+    "result": "Fluorescence rises with L-lactate concentration."
+  },
+  "performance": {
+    "limitOfDetection": "LldR module: low-mM lactate (module-validated in E. coli).",
+    "dynamicRange": "~0.1-10 mM L-lactate",
+    "responseTimeMin": 180,
+    "validated": false,
+    "notes": "LldR lactate sensing and CRISPRa are validated separately; the integrated device in L. lactis is a design template and the sensor module needs porting to the GRAS host."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "thyA-based biological containment demonstrated in L. lactis; food-grade host.",
+    "fieldDeployable": false,
+    "notes": "GRAS / food-grade chassis (no LPS endotoxin); suited to food-fermentation monitoring and ingestible research applications."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Port + design", "description": "Codon-optimise LldR/Plld for L. lactis; design the CRISPRa sgRNA." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: LldR. TU2: Plld -> sgRNA. TU3: dCas9-omega. TU4: weak promoter -> mCherry. Use NICE-compatible vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform L. lactis MG1363", "description": "Electroporate; select (ErmR/CmR); add thyA containment." },
+    { "order": 4, "stage": "induction", "title": "Expose to lactate", "description": "Validate across a lactate standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate lactate from the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining an LldR lactate-sensing module with L. lactis CRISPRa",
+    "partsSources": [
+      "Aguilera et al. 2008 / E. coli lldPRD (LldR lactate sensing)",
+      "Bikard et al. 2013, NAR (CRISPRa); CRISPRi in lactic acid bacteria"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

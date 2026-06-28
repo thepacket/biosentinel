@@ -1,0 +1,68 @@
+{
+  "id": "mercury-crispri-putida",
+  "name": "Mercury soil/water sensor (MerR + CRISPRi)",
+  "slug": "mercury-crispri-putida",
+  "shortDescription": "Detects ionic mercury Hg(II) in soil and water. The MerR/PmerT sensing module gates a CRISPRi circuit driving a visible chromoprotein, in the rugged environmental chassis P. putida KT2440.",
+  "status": "template",
+  "tags": ["mercury", "heavy-metal", "soil", "water", "environmental", "CRISPRi", "chromoprotein"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": {
+    "analyte": "Mercuric ion Hg(II)",
+    "category": "environmental",
+    "detects": "Bioavailable inorganic mercury in soil/water",
+    "operatingRange": "MerR-based sensors respond from sub-µM to µM Hg(II)"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-ω (CRISPRa activator)",
+    "sensorMechanism": "MerR binds Hg(II) and switches the PmerT promoter from repressed to activated (a distorted-operator activation mechanism).",
+    "signalFlow": "Hg(II) -> MerR activates PmerT -> PmerT transcribes an sgRNA -> sgRNA + dCas9-activator recruit RNA polymerase to a weak reporter promoter (CRISPRa) -> amilCP chromoprotein is produced -> visible blue-purple colour (BUFFER/amplifier).",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    { "name": "MerR regulator", "role": "regulator", "source": "Tn21/Tn501 mer operon", "notes": "Hg(II)-responsive activator/repressor (MerR family)." },
+    { "name": "PmerT promoter", "role": "promoter", "source": "mer operon operator/promoter", "notes": "Activated by Hg(II)-bound MerR." },
+    { "name": "Reporter-targeting sgRNA", "role": "sgRNA", "source": "designed to target the weak reporter promoter for CRISPRa", "notes": "Transcribed from PmerT." },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013; Dong et al. 2018 (CRISPRa)", "notes": "dCas9 fused to RNAP omega subunit for transcriptional activation." },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "Acropora millepora; iGEM Uppsala", "notes": "Blue-purple pigment, visible to the naked eye (no instrument)." }
+  ],
+  "output": {
+    "type": "pigment",
+    "reporterGene": "amilCP",
+    "readout": "Visible blue-purple pigment (naked eye / smartphone camera)",
+    "result": "Cells/colonies turn blue-purple when mercury is present."
+  },
+  "performance": {
+    "limitOfDetection": "MerR sensing module: sub-µM Hg(II) (module-validated).",
+    "dynamicRange": "~0.1-10 µM Hg(II) for native MerR modules",
+    "responseTimeMin": 180,
+    "validated": false,
+    "notes": "MerR mercury sensors and CRISPRa are validated separately in the literature; the integrated CRISPRa device is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "P. putida KT2440 is a certified HV1 safety host; pair with a containment circuit for field use.",
+    "fieldDeployable": true,
+    "notes": "Pigment output needs no instrument, suited to low-resource field testing."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design the CRISPRa sgRNA", "description": "Target a window upstream of a weak reporter promoter for activation; verify host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: MerR + PmerT -> sgRNA. TU2: dCas9-omega. TU3: weak promoter -> amilCP. Clone into SEVA vectors for P. putida." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate and select; confirm low background pigment without mercury." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Incubate with the soil eluate / water sample plus a Hg(II) standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the standard curve by eye or camera." }
+  ],
+  "provenance": {
+    "source": "Design template combining a validated MerR/PmerT mercury-sensing module with a dCas9 CRISPRa reporter circuit",
+    "partsSources": [
+      "mer operon / MerR mercury biosensors (e.g. Selifonova et al. 1993)",
+      "Bikard et al. 2013, NAR (dCas9 activation)",
+      "iGEM Uppsala amilCP (BBa_K592009)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

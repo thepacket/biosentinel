@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://biosensors.dev/schema/chassis.schema.json",
+  "title": "Safe Bacterial Chassis",
+  "description": "A non-pathogenic bacterial host used to build whole-cell biosensors. The catalog is restricted to safe organisms: biosafetyLevel is hard-enforced to 1 (BSL-1). GRAS / food-grade / probiotic status is tracked separately.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "slug", "species", "strain", "biosafetyLevel", "safety", "provenance"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string", "description": "Display name, e.g. 'E. coli K-12 (MG1655)'." },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "species": { "type": "string", "description": "Binomial species, e.g. 'Escherichia coli'." },
+    "strain": { "type": "string", "description": "Strain designation, e.g. 'K-12 MG1655'." },
+    "taxId": { "type": "integer", "description": "NCBI taxonomy id." },
+    "shortDescription": { "type": "string" },
+
+    "biosafetyLevel": {
+      "type": "integer",
+      "const": 1,
+      "description": "Hard-enforced to BSL-1. Any organism above BSL-1 is rejected by the catalog."
+    },
+
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pathogenic", "bslSource"],
+      "properties": {
+        "pathogenic": { "type": "boolean", "description": "Must be false to be listed." },
+        "gras": { "type": "boolean", "description": "Generally Recognized As Safe (US FDA) or equivalent." },
+        "grasBasis": { "type": "string", "description": "Basis, e.g. 'FDA GRAS', 'EFSA QPS', 'food-grade / long history of use'." },
+        "probiotic": { "type": "boolean" },
+        "humanUse": { "type": "string", "description": "Approved/known human use, e.g. 'Mutaflor probiotic'." },
+        "biocontainment": { "type": "string", "description": "Available containment options, e.g. 'auxotrophy, kill-switches characterized'." },
+        "bslSource": { "type": "string", "description": "Citation/basis for the BSL-1 classification, e.g. 'ABSA Risk Group 1; ATCC'." },
+        "notes": { "type": "string" }
+      }
+    },
+
+    "traits": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "gram": { "type": "string", "enum": ["negative", "positive"] },
+        "oxygen": { "type": "string", "enum": ["aerobe", "anaerobe", "facultative", "microaerophile"] },
+        "optimalTempC": { "type": "number" },
+        "sporeForming": { "type": "boolean" },
+        "doublingTimeMin": { "type": "number" },
+        "transformable": { "type": "boolean", "description": "Routinely genetically transformable." },
+        "secretes": { "type": "boolean", "description": "Good at protein secretion." }
+      }
+    },
+
+    "engineering": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "genomeAccession": { "type": "string" },
+        "commonPromoters": { "type": "array", "items": { "type": "string" } },
+        "selectionMarkers": { "type": "array", "items": { "type": "string" } },
+        "crisprTools": { "type": "string", "description": "Established CRISPR tooling, e.g. 'dCas9/CRISPRi well-characterized'." },
+        "toolkits": { "type": "array", "items": { "type": "string" }, "description": "Part toolkits, e.g. 'Marburg Collection', 'SEVA', 'Anderson promoters'." }
+      }
+    },
+
+    "typicalEnvironments": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Where this chassis is suited to deploy, e.g. 'gut', 'soil', 'water'."
+    },
+
+    "bestFor": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["environmental", "pathogen", "clinical-gut", "chemical"] },
+      "description": "Target categories this chassis suits."
+    },
+
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "type": "string" },
+        "url": { "type": "string" },
+        "dateAdded": { "type": "string", "format": "date" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

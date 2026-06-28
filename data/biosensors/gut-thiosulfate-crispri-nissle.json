@@ -1,0 +1,68 @@
+{
+  "id": "gut-thiosulfate-crispri-nissle",
+  "name": "Gut inflammation sensor (thiosulfate + CRISPRi)",
+  "slug": "gut-thiosulfate-crispri-nissle",
+  "shortDescription": "An ingestible sensor for gut inflammation. The validated thiosulfate two-component sensor (ThsSR) gates a CRISPRi amplifier driving a fluorescent reporter, in the human probiotic E. coli Nissle 1917.",
+  "status": "template",
+  "tags": ["clinical-gut", "inflammation", "thiosulfate", "probiotic", "Nissle", "CRISPRi"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": {
+    "analyte": "Thiosulfate (S2O3 2-)",
+    "category": "clinical-gut",
+    "detects": "Thiosulfate, a biomarker elevated during gut inflammation",
+    "operatingRange": "ThsSR sensor responds over physiological gut thiosulfate ranges (validated in mouse colitis models)"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-ω (CRISPRa activator)",
+    "sensorMechanism": "The ThsS membrane histidine kinase autophosphorylates in response to thiosulfate and activates the response regulator ThsR, which turns on its target promoter.",
+    "signalFlow": "Thiosulfate -> ThsS/ThsR two-component system activates PthsR -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> green fluorescence reports gut inflammation.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    { "name": "ThsS/ThsR two-component system", "role": "regulator", "source": "Shewanella; ported to E. coli by Daeffler et al. 2017, Mol. Syst. Biol.", "notes": "Thiosulfate-sensing histidine kinase + response regulator; validated in E. coli Nissle in vivo." },
+    { "name": "PthsR (ThsR target promoter)", "role": "promoter", "source": "Daeffler et al. 2017", "notes": "Activated by phosphorylated ThsR." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter", "notes": "Transcribed from PthsR." },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "CRISPRa (Bikard et al. 2013; Dong et al. 2018)" },
+    { "name": "sfGFP / mCherry reporter", "role": "reporter", "source": "standard fluorophores", "notes": "Fluorescent readout recoverable from stool for non-invasive monitoring." }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Fluorescence (flow cytometry / plate reader on recovered cells)",
+    "result": "Fluorescent-cell fraction rises with gut thiosulfate (inflammation)."
+  },
+  "performance": {
+    "limitOfDetection": "ThsSR module validated to report thiosulfate in mouse gut (Daeffler et al. 2017).",
+    "dynamicRange": "Physiological gut thiosulfate range",
+    "responseTimeMin": 240,
+    "validated": false,
+    "notes": "The thiosulfate sensor in E. coli Nissle is validated in vivo; the CRISPRa amplifier integration is a design template intended to boost the in-vivo signal."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Built in the probiotic E. coli Nissle 1917; pair with thyA/dapA auxotrophy for gut-restricted containment before any in-vivo use.",
+    "fieldDeployable": false,
+    "notes": "Probiotic chassis with a long human-safety record; intended for research / supervised clinical study only."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target the activation window of a weak reporter promoter; verify Nissle off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: ThsS/ThsR. TU2: PthsR -> sgRNA. TU3: dCas9-omega. TU4: weak promoter -> sfGFP. Integrate or use a stable low-copy vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add an auxotrophic containment marker." },
+    { "order": 4, "stage": "induction", "title": "Expose to thiosulfate", "description": "Validate in vitro across a thiosulfate curve before any animal work." },
+    { "order": 5, "stage": "readout", "title": "Recover and measure", "description": "Recover cells (e.g. from stool) and quantify fluorescence." }
+  ],
+  "provenance": {
+    "source": "Design template combining the validated ThsSR thiosulfate sensor in E. coli Nissle with a dCas9 CRISPRa amplifier",
+    "partsSources": [
+      "Daeffler et al. 2017, Mol. Syst. Biol. (thiosulfate sensor in E. coli Nissle)",
+      "Riglar et al. 2017, Nat. Biotechnol. (engineered Nissle gut sensors)",
+      "Bikard et al. 2013, NAR (CRISPRa)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "id": "paeruginosa-quorum-crispri-ecoli",
+  "name": "P. aeruginosa quorum sensor (LasR + CRISPRi)",
+  "slug": "paeruginosa-quorum-crispri-ecoli",
+  "shortDescription": "Flags contamination by Pseudomonas aeruginosa by sensing its quorum-sensing signal 3-oxo-C12-HSL. The LasR sensor gates a CRISPRi inverter driving a pigment reporter, in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["pathogen", "Pseudomonas aeruginosa", "quorum-sensing", "AHL", "water", "CRISPRi", "contamination"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": {
+    "analyte": "3-oxo-C12-homoserine lactone (3-oxo-C12-HSL)",
+    "category": "pathogen",
+    "detects": "The acyl-homoserine-lactone quorum signal secreted by Pseudomonas aeruginosa",
+    "operatingRange": "LasR sensors respond from low nM AHL"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "LasR binds 3-oxo-C12-HSL and activates the pLas (PlasI) promoter.",
+    "signalFlow": "AHL -> LasR activates pLas -> pLas transcribes an anti-pigment sgRNA -> CRISPRi represses a constitutive chromoprotein, OR (preferred turn-on) a paired inverter yields pigment-ON when the pathogen signal is present.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "LasR receptor", "role": "regulator", "partId": "Marionette AHL sensor (LasR)", "source": "P. aeruginosa lasR; Meyer et al. 2019, Nat. Chem. Biol. (Marionette sensors)", "notes": "3-oxo-C12-HSL-responsive activator." },
+    { "name": "pLas promoter", "role": "promoter", "source": "P. aeruginosa lasI promoter (PlasI)", "notes": "Activated by AHL-bound LasR." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the chromoprotein promoter", "notes": "Transcribed from pLas." },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013, Cell (CRISPRi)" },
+    { "name": "J23119 promoter", "role": "promoter", "partId": "BBa_J23119", "sequence": "TTGACAGCTAGCTCAGTCCTAGGTATAATGCTAGC", "source": "Anderson collection", "notes": "Drives the reporter targeted by CRISPRi." },
+    { "name": "amilGFP / amilCP reporter", "role": "reporter", "source": "iGEM chromoprotein collection", "notes": "Visible colour output." }
+  ],
+  "output": {
+    "type": "pigment",
+    "reporterGene": "amilCP (chromoprotein)",
+    "readout": "Visible pigment change (naked eye)",
+    "result": "Colour change indicates P. aeruginosa quorum signal in the sample."
+  },
+  "performance": {
+    "limitOfDetection": "LasR AHL sensor module: low-nM 3-oxo-C12-HSL (module-validated, Marionette).",
+    "dynamicRange": "~1-1000 nM AHL",
+    "responseTimeMin": 240,
+    "validated": false,
+    "notes": "The LasR AHL sensor (Marionette) and CRISPRi are validated separately; the integrated device here is a design template. Detects the pathogen's signal molecule, not the live pathogen itself."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Sensing is done by safe E. coli K-12 reading a secreted small molecule; no pathogen is handled or cultured.",
+    "fieldDeployable": false,
+    "notes": "Indirect, safe detection: the chassis senses an AHL signal, so no BSL-2 pathogen culture is required."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design the anti-reporter sgRNA", "description": "Target the chromoprotein promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: constitutive LasR. TU2: pLas -> sgRNA. TU3: dCas9 + J23119 -> reporter. Add a second inverter for turn-on output." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select and verify low background." },
+    { "order": 4, "stage": "induction", "title": "Add sample", "description": "Incubate with the filtered water/clinical sample and an AHL standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Read pigment by eye or camera." }
+  ],
+  "provenance": {
+    "source": "Design template combining the validated LasR AHL quorum-sensing module with a dCas9 CRISPRi reporter circuit",
+    "partsSources": [
+      "Meyer et al. 2019, Nat. Chem. Biol. (Marionette LasR AHL sensor)",
+      "Qi et al. 2013, Cell (CRISPRi)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

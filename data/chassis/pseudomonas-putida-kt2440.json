@@ -1,0 +1,41 @@
+{
+  "id": "pseudomonas-putida-kt2440",
+  "name": "Pseudomonas putida KT2440",
+  "slug": "pseudomonas-putida-kt2440",
+  "species": "Pseudomonas putida",
+  "strain": "KT2440",
+  "taxId": 160488,
+  "shortDescription": "A certified safety-strain soil bacterium with exceptional solvent/stress tolerance and diverse metabolism. The premier chassis for environmental biosensing of pollutants and heavy metals in soil and water.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": false,
+    "probiotic": false,
+    "biocontainment": "Well-developed containment circuits; the first Gram-negative soil bacterium certified as a safe cloning host (HV1).",
+    "bslSource": "ABSA Risk Group 1; KT2440 is a certified host-vector biosafety (HV1) strain (US Federal Register, 1982).",
+    "notes": "Rifampicin-resistant plasmid-cured derivative of P. putida mt-2; metabolically versatile, robust outdoors."
+  },
+  "traits": {
+    "gram": "negative",
+    "oxygen": "aerobe",
+    "optimalTempC": 30,
+    "sporeForming": false,
+    "doublingTimeMin": 40,
+    "transformable": true,
+    "secretes": false
+  },
+  "engineering": {
+    "genomeAccession": "NC_002947.4",
+    "commonPromoters": ["Pm/XylS", "Pu", "lac-derived", "Anderson series"],
+    "selectionMarkers": ["KanR", "GmR", "TcR"],
+    "crisprTools": "dCas9/CRISPRi and CRISPR base-editing established in P. putida.",
+    "toolkits": ["SEVA (Standard European Vector Architecture)", "Marburg Collection-style parts"]
+  },
+  "typicalEnvironments": ["soil", "water", "rhizosphere", "field"],
+  "bestFor": ["environmental", "chemical"],
+  "provenance": {
+    "source": "NCBI Taxonomy; SEVA; HV1 certification (US Federal Register 1982)",
+    "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000007565.2/",
+    "dateAdded": "2026-06-28"
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "id": "sherlock-sars-cov-2-sgene",
+  "name": "SHERLOCK SARS-CoV-2 (S gene)",
+  "slug": "sherlock-sars-cov-2-sgene",
+  "shortDescription": "Cas13a (SHERLOCK) detection of SARS-CoV-2 targeting the Spike (S) gene, with RT-RPA pre-amplification and lateral-flow or fluorescent readout. Sequences from the Zhang Lab open-access COVID-19 research protocol.",
+  "status": "published",
+  "platform": "SHERLOCK",
+  "tags": ["SARS-CoV-2", "COVID-19", "Cas13a", "RPA", "lateral-flow", "respiratory"],
+  "target": {
+    "organism": "Severe acute respiratory syndrome coronavirus 2",
+    "commonName": "SARS-CoV-2",
+    "taxId": 2697049,
+    "moleculeType": "RNA",
+    "geneSymbol": "S",
+    "geneName": "Spike glycoprotein",
+    "referenceAccession": "NC_045512.2",
+    "ampliconSequence": "UAACAUCACUAGGUUUCAAACUUUACUUGCUUUACAUAGAAGUUAUUUGACUCCUGGUGAUUCUUCUUCAGGUUGGACAGCUGGUGCUGCAGCUUAUUAUGUGGGUUAUCUUCAACCUAGGACUUUUCUAUUAAAAUAUAAUGAAAAUGGAACCAUUACAGAUGCUGUAGACUGUGC"
+  },
+  "sampleTypes": ["nasopharyngeal swab", "oropharyngeal swab", "purified RNA"],
+  "amplification": {
+    "method": "RT-RPA",
+    "temperatureC": 42,
+    "timeMin": 25,
+    "kit": "TwistAmp Basic (recombinase polymerase amplification)",
+    "primers": [
+      {
+        "name": "S-RPA-Forward_v1",
+        "role": "forward",
+        "sequence": "GAAATTAATACGACTCACTATAGGGAGGTTTCAAACTTTACTTGCTTTACATAGA",
+        "modifications": "5' T7 promoter appended (TAATACGACTCACTATAGGG) for downstream T7 transcription to ssRNA",
+        "notes": "Target-binding portion: AGGTTTCAAACTTTACTTGCTTTACATAGA"
+      },
+      {
+        "name": "S-RPA-Reverse_v1",
+        "role": "reverse",
+        "sequence": "TCCTAGGTTGAAGATAACCCACATAATAAG"
+      }
+    ],
+    "notes": "RT-RPA isothermally amplifies the viral S-gene segment; amplicon is transcribed to ssRNA by T7 RNA polymerase for Cas13a detection."
+  },
+  "crispr": {
+    "casEnzyme": "LwaCas13a",
+    "casType": "Cas13a",
+    "pamOrPfs": "PFS: non-G (H) base 3' of protospacer",
+    "directRepeat": "GAUUUAGACUACCCCAAAAACGAAGGGGACUAAAAC",
+    "guides": [
+      {
+        "name": "S-crRNA_v1",
+        "targetGene": "S",
+        "spacerSequence": "GCAGCACCAGCUGUCCAACCUGAAGAAG",
+        "fullSequence": "GAUUUAGACUACCCCAAAAACGAAGGGGACUAAAACGCAGCACCAGCUGUCCAACCUGAAGAAG"
+      }
+    ]
+  },
+  "reporter": {
+    "type": "lateral-flow",
+    "readout": "Lateral-flow strip (Milenia HybriDetect) or fluorescent plate reader",
+    "collateralTarget": "ssRNA",
+    "fluorophore": "FAM",
+    "notes": "Collateral cleavage of a FAM-biotin ssRNA reporter by activated LwaCas13a. The commercial reporter/lateral-flow substrate is available on request per the Zhang Lab protocol; exact reporter oligo sequence is not published."
+  },
+  "workflowSteps": [
+    { "order": 1, "stage": "extraction", "title": "Extract viral RNA", "description": "Extract total RNA from the clinical sample (e.g. QIAamp Viral RNA).", "durationMin": 30 },
+    { "order": 2, "stage": "amplification", "title": "RT-RPA amplification", "description": "Combine sample RNA with rehydrated RPA pellet, S-RPA-Forward_v1/Reverse_v1 primers (10 uM), and MgAc. Incubate isothermally.", "durationMin": 25, "temperatureC": 42 },
+    { "order": 3, "stage": "crispr-detection", "title": "T7 transcription + Cas13 detection", "description": "Add RPA product to a Cas13 reaction containing LwaCas13a, S-crRNA_v1 (10 ng/uL), T7 RNA polymerase, rNTPs, and the reporter. Activated Cas13a trans-cleaves the reporter.", "durationMin": 30, "temperatureC": 37 },
+    { "order": 4, "stage": "readout", "title": "Read result", "description": "Dip lateral-flow strip (positive = test line) or read fluorescence.", "durationMin": 5 }
+  ],
+  "validation": {
+    "specificity": "Designed for specificity to SARS-CoV-2; minimal off-target affinity to other common human coronaviruses.",
+    "validatedOn": "Serial dilutions of synthetic SARS-CoV-2 S-gene RNA fragments.",
+    "clinicalStatus": "Research use only (open-access research protocol)."
+  },
+  "provenance": {
+    "source": "A protocol for detection of COVID-19 using CRISPR diagnostics (Zhang Lab, Broad Institute / MIT)",
+    "authors": "Feng Zhang, Omar O. Abudayyeh, Jonathan S. Gootenberg",
+    "year": 2020,
+    "url": "https://www.broadinstitute.org/files/publications/special/COVID-19%20detection%20(updated).pdf",
+    "license": "Open-access research protocol (research use only)",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

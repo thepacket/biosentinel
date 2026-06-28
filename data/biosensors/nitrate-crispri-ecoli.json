@@ -1,0 +1,67 @@
+{
+  "id": "nitrate-crispri-ecoli",
+  "name": "Nitrate sensor (NarL + CRISPRi)",
+  "slug": "nitrate-crispri-ecoli",
+  "shortDescription": "Detects nitrate in water and food. The native E. coli NarX/NarL nitrate two-component system gates a CRISPRa circuit driving a fluorescent reporter, in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["nitrate", "chemical", "water-quality", "food-safety", "CRISPRa"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": {
+    "analyte": "Nitrate (NO3-)",
+    "category": "chemical",
+    "detects": "Nitrate in drinking water, agricultural runoff, and cured foods",
+    "operatingRange": "NarX/NarL responds across µM-mM nitrate"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-ω (CRISPRa activator)",
+    "sensorMechanism": "The NarX sensor kinase phosphorylates NarL in response to nitrate; phospho-NarL activates the nitrate-responsive Pnar promoter.",
+    "signalFlow": "NO3- -> NarX/NarL activates Pnar -> transcribes an sgRNA -> dCas9-activator amplifies a weak reporter promoter (CRISPRa) -> green fluorescence rises with nitrate.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    { "name": "NarX/NarL two-component system", "role": "regulator", "source": "Native E. coli nar regulon", "notes": "Endogenous nitrate sensor; no porting needed in E. coli." },
+    { "name": "Pnar promoter (e.g. PnarG)", "role": "promoter", "source": "E. coli narGHJI promoter", "notes": "Activated by phospho-NarL under nitrate." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed upstream of a weak reporter promoter", "notes": "Transcribed from Pnar." },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Green fluorescence (plate reader / field fluorimeter)",
+    "result": "Fluorescence increases with nitrate concentration."
+  },
+  "performance": {
+    "limitOfDetection": "NarX/NarL module reports nitrate over µM-mM (module-validated).",
+    "dynamicRange": "~10 µM - 10 mM nitrate",
+    "responseTimeMin": 120,
+    "validated": false,
+    "notes": "Uses E. coli's native nitrate sensor (anaerobic/microaerobic induction); CRISPRa amplifier integration is a design template. Note Pnar is also FNR/oxygen-modulated."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Lab/contained; add kill-switch for field use.",
+    "fieldDeployable": true,
+    "notes": "E. coli K-12 non-pathogenic BSL-1 host; relevant to drinking-water and food-safety nitrate limits."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target the activation window of a weak reporter promoter; verify host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: Pnar -> sgRNA (NarX/NarL endogenous). TU2: dCas9-omega. TU3: weak promoter -> sfGFP." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; confirm nitrate-dependent activation and low background." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Incubate (micro-aerobically) with the sample + nitrate standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate nitrate from the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining E. coli's native NarX/NarL nitrate sensor with a dCas9 CRISPRa reporter",
+    "partsSources": [
+      "Stewart 1993 / E. coli nar regulon literature (NarX/NarL nitrate sensing)",
+      "Bikard et al. 2013, NAR (CRISPRa)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

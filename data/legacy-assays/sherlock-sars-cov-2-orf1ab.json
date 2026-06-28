@@ -1,0 +1,82 @@
+{
+  "id": "sherlock-sars-cov-2-orf1ab",
+  "name": "SHERLOCK SARS-CoV-2 (Orf1ab)",
+  "slug": "sherlock-sars-cov-2-orf1ab",
+  "shortDescription": "Cas13a (SHERLOCK) detection of SARS-CoV-2 targeting the Orf1ab replicase polyprotein gene, with RT-RPA pre-amplification and lateral-flow or fluorescent readout. Sequences from the Zhang Lab open-access COVID-19 research protocol. Typically run alongside the S-gene assay as a confirmatory second target.",
+  "status": "published",
+  "platform": "SHERLOCK",
+  "tags": ["SARS-CoV-2", "COVID-19", "Cas13a", "RPA", "lateral-flow", "respiratory", "confirmatory"],
+  "target": {
+    "organism": "Severe acute respiratory syndrome coronavirus 2",
+    "commonName": "SARS-CoV-2",
+    "taxId": 2697049,
+    "moleculeType": "RNA",
+    "geneSymbol": "Orf1ab",
+    "geneName": "Replicase polyprotein 1ab",
+    "referenceAccession": "NC_045512.2",
+    "ampliconSequence": "UGAGUGUAAUGUGAAAACUACCGAAGUUGUAGGAGACAUUAUACUUAAACCAGCAAAUAAUAGUUUAAAAAUUACAGAAGAGGUUGGCCACACAGAUCUAAUGGCUGCUUAUGUAGACAAUUCUAGUCUUACUAUUAAGAAACCUAAUGAAUUAUCUAG"
+  },
+  "sampleTypes": ["nasopharyngeal swab", "oropharyngeal swab", "purified RNA"],
+  "amplification": {
+    "method": "RT-RPA",
+    "temperatureC": 42,
+    "timeMin": 25,
+    "kit": "TwistAmp Basic (recombinase polymerase amplification)",
+    "primers": [
+      {
+        "name": "Orf1ab-RPA-Forward_v1",
+        "role": "forward",
+        "sequence": "GAAATTAATACGACTCACTATAGGGCGAAGTTGTAGGAGACATTATACTTAAACC",
+        "modifications": "5' T7 promoter appended (TAATACGACTCACTATAGGG) for downstream T7 transcription to ssRNA",
+        "notes": "Target-binding portion: CGAAGTTGTAGGAGACATTATACTTAAACC"
+      },
+      {
+        "name": "Orf1ab-RPA-Reverse_v1",
+        "role": "reverse",
+        "sequence": "TAGTAAGACTAGAATTGTCTACATAAGCAGC"
+      }
+    ],
+    "notes": "RT-RPA isothermally amplifies the viral Orf1ab segment; amplicon is transcribed to ssRNA by T7 RNA polymerase for Cas13a detection."
+  },
+  "crispr": {
+    "casEnzyme": "LwaCas13a",
+    "casType": "Cas13a",
+    "pamOrPfs": "PFS: non-G (H) base 3' of protospacer",
+    "directRepeat": "GAUUUAGACUACCCCAAAAACGAAGGGGACUAAAAC",
+    "guides": [
+      {
+        "name": "Orf1ab-crRNA_v1",
+        "targetGene": "Orf1ab",
+        "spacerSequence": "CCAACCUCUUCUGUAAUUUUUAAACUAU",
+        "fullSequence": "GAUUUAGACUACCCCAAAAACGAAGGGGACUAAAACCCAACCUCUUCUGUAAUUUUUAAACUAU"
+      }
+    ]
+  },
+  "reporter": {
+    "type": "lateral-flow",
+    "readout": "Lateral-flow strip (Milenia HybriDetect) or fluorescent plate reader",
+    "collateralTarget": "ssRNA",
+    "fluorophore": "FAM",
+    "notes": "Collateral cleavage of a FAM-biotin ssRNA reporter by activated LwaCas13a. The commercial reporter/lateral-flow substrate is available on request per the Zhang Lab protocol; exact reporter oligo sequence is not published."
+  },
+  "workflowSteps": [
+    { "order": 1, "stage": "extraction", "title": "Extract viral RNA", "description": "Extract total RNA from the clinical sample (e.g. QIAamp Viral RNA).", "durationMin": 30 },
+    { "order": 2, "stage": "amplification", "title": "RT-RPA amplification", "description": "Combine sample RNA with rehydrated RPA pellet, Orf1ab-RPA-Forward_v1/Reverse_v1 primers (10 uM), and MgAc. Incubate isothermally.", "durationMin": 25, "temperatureC": 42 },
+    { "order": 3, "stage": "crispr-detection", "title": "T7 transcription + Cas13 detection", "description": "Add RPA product to a Cas13 reaction containing LwaCas13a, Orf1ab-crRNA_v1 (10 ng/uL), T7 RNA polymerase, rNTPs, and the reporter. Activated Cas13a trans-cleaves the reporter.", "durationMin": 30, "temperatureC": 37 },
+    { "order": 4, "stage": "readout", "title": "Read result", "description": "Dip lateral-flow strip (positive = test line) or read fluorescence.", "durationMin": 5 }
+  ],
+  "validation": {
+    "specificity": "Designed for specificity to SARS-CoV-2; minimal off-target affinity to other common human coronaviruses.",
+    "validatedOn": "Serial dilutions of synthetic SARS-CoV-2 Orf1ab RNA fragments.",
+    "clinicalStatus": "Research use only (open-access research protocol)."
+  },
+  "provenance": {
+    "source": "A protocol for detection of COVID-19 using CRISPR diagnostics (Zhang Lab, Broad Institute / MIT)",
+    "authors": "Feng Zhang, Omar O. Abudayyeh, Jonathan S. Gootenberg",
+    "year": 2020,
+    "url": "https://www.broadinstitute.org/files/publications/special/COVID-19%20detection%20(updated).pdf",
+    "license": "Open-access research protocol (research use only)",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}
