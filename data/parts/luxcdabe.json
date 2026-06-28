@@ -1,0 +1,23 @@
+{
+  "id": "luxcdabe",
+  "name": "luxCDABE",
+  "slug": "luxcdabe",
+  "category": "reporter",
+  "label": "Bioluminescence (luxCDABE)",
+  "shortDescription": "Self-contained bacterial bioluminescence operon; emits light with no added substrate. Good for in-vivo/ingestible readout.",
+  "outputType": "luminescent",
+  "readout": "Bioluminescence (luminometer / photodetector)",
+  "instrumentFree": true,
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "luminescent",
+    "in-vivo"
+  ],
+  "provenance": {
+    "source": "Bacterial lux operon (Vibrio/Photorhabdus)",
+    "dateAdded": "2026-06-28"
+  }
+}

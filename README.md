@@ -29,6 +29,7 @@ under `data/legacy-assays/` and served at `/api/legacy/assays`.
 packages/schema/    chassis.schema.json + biosensor.schema.json (+ legacy assay.schema.json)
 data/chassis/       safe BSL-1/GRAS chassis catalog (JSON)
 data/biosensors/    whole-cell CRISPR biosensor designs (JSON)
+data/parts/         reusable genetic-parts registry incl. reporters (JSON)
 data/legacy-assays/ retained in-vitro CRISPR-Dx assays
 services/api/       FastAPI — chassis/biosensor/legacy endpoints + validation
 apps/web/           Next.js (App Router, TS, static export) — library + detail + chassis

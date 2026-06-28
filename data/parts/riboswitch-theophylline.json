@@ -1,0 +1,20 @@
+{
+  "id": "riboswitch-theophylline",
+  "name": "Theophylline riboswitch",
+  "slug": "riboswitch-theophylline",
+  "category": "riboswitch",
+  "shortDescription": "Synthetic aptamer riboswitch that turns expression ON with theophylline; highly selective over caffeine.",
+  "ligand": "theophylline",
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "riboswitch",
+    "synthetic"
+  ],
+  "provenance": {
+    "source": "Suess / Breaker",
+    "dateAdded": "2026-06-28"
+  }
+}

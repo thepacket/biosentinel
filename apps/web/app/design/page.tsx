@@ -1,9 +1,10 @@
-import { getChassisCatalog, getSensorModules } from "@/lib/data";
+import { getChassisCatalog, getReporterPresets, getSensorModules } from "@/lib/data";
 import Designer from "../components/Designer";
 
 export default function DesignPage() {
   const modules = getSensorModules();
   const chassis = getChassisCatalog();
+  const reporters = getReporterPresets();
   return (
     <>
       <section className="hero">
@@ -18,7 +19,7 @@ export default function DesignPage() {
         </div>
       </section>
       <div className="container" style={{ paddingBottom: 64 }}>
-        <Designer modules={modules} chassis={chassis} />
+        <Designer modules={modules} chassis={chassis} reporters={reporters} />
       </div>
     </>
   );

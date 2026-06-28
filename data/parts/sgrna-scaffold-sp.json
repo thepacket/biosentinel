@@ -1,0 +1,19 @@
+{
+  "id": "sgrna-scaffold-sp",
+  "name": "SpCas9 sgRNA scaffold",
+  "slug": "sgrna-scaffold-sp",
+  "category": "sgrna-scaffold",
+  "shortDescription": "Standard S. pyogenes single-guide RNA scaffold; append the 20-nt spacer at the 5' end.",
+  "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+  "hosts": [
+    "broad-host"
+  ],
+  "tags": [
+    "sgRNA",
+    "scaffold"
+  ],
+  "provenance": {
+    "source": "Qi et al. 2013, Cell",
+    "dateAdded": "2026-06-28"
+  }
+}

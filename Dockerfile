@@ -39,6 +39,7 @@ COPY --from=client /app/apps/web/out ./static
 # Point the app at the in-container paths (defaults assume the repo layout).
 ENV BIOSENSORS_CHASSIS_DIR=/app/data/chassis \
     BIOSENSORS_DESIGN_DIR=/app/data/biosensors \
+    BIOSENSORS_PARTS_DIR=/app/data/parts \
     BIOSENSORS_LEGACY_DIR=/app/data/legacy-assays \
     BIOSENSORS_SCHEMA_DIR=/app/packages/schema \
     BIOSENSORS_STATIC_DIR=/app/static

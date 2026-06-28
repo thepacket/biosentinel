@@ -1,0 +1,22 @@
+{
+  "id": "mcherry",
+  "name": "mCherry",
+  "slug": "mcherry",
+  "category": "reporter",
+  "label": "Red fluorescence (mCherry)",
+  "shortDescription": "Monomeric red fluorescent protein; good for a second channel or food-grade hosts.",
+  "outputType": "fluorescent",
+  "readout": "Red fluorescence (plate reader)",
+  "instrumentFree": false,
+  "hosts": [
+    "broad-host"
+  ],
+  "tags": [
+    "red",
+    "fluorescent"
+  ],
+  "provenance": {
+    "source": "Shaner et al. 2004, Nat Biotechnol",
+    "dateAdded": "2026-06-28"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "dcas9",
+  "name": "dCas9",
+  "slug": "dcas9",
+  "category": "dcas9",
+  "shortDescription": "Catalytically dead S. pyogenes Cas9 (D10A/H840A). Blocks transcription when guided \u2014 the CRISPRi repressor.",
+  "action": "repress",
+  "pamOrPfs": "NGG (PAM)",
+  "hosts": [
+    "broad-host"
+  ],
+  "tags": [
+    "CRISPRi",
+    "repress"
+  ],
+  "provenance": {
+    "source": "Qi et al. 2013, Cell",
+    "dateAdded": "2026-06-28"
+  }
+}

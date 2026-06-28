@@ -137,6 +137,36 @@ export type BiosensorSummary = {
   grasChassis: boolean;
 };
 
+// A catalog part (distinct from `Part` above, which is a part *within* a design).
+export type CatalogPart = {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  shortDescription?: string;
+  sequence?: string;
+  partId?: string;
+  hosts?: string[];
+  tags?: string[];
+  label?: string;
+  outputType?: string;
+  readout?: string;
+  instrumentFree?: boolean;
+  strength?: string;
+  inducer?: string;
+  action?: string;
+  pamOrPfs?: string;
+  ligand?: string;
+  provenance: { source: string; doi?: string; url?: string; license?: string; dateAdded?: string; notes?: string };
+  usedIn?: { slug: string; name: string }[];
+};
+
+export type PartsCatalog = {
+  count: number;
+  items: CatalogPart[];
+  facets: { category: Record<string, number> };
+};
+
 export type SensorModule = {
   analyte: string;
   category: TargetCategory;

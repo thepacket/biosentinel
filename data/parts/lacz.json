@@ -1,0 +1,23 @@
+{
+  "id": "lacz",
+  "name": "lacZ",
+  "slug": "lacz",
+  "category": "reporter",
+  "label": "Colour on X-gal (lacZ)",
+  "shortDescription": "\u03b2-galactosidase; produces blue colour on X-gal. Classic colorimetric reporter.",
+  "outputType": "colorimetric",
+  "readout": "Blue colour on X-gal (naked eye)",
+  "instrumentFree": true,
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "colorimetric",
+    "instrument-free"
+  ],
+  "provenance": {
+    "source": "E. coli lacZ",
+    "dateAdded": "2026-06-28"
+  }
+}

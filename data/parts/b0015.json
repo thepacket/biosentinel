@@ -1,0 +1,19 @@
+{
+  "id": "b0015",
+  "name": "B0015",
+  "slug": "b0015",
+  "category": "terminator",
+  "shortDescription": "Standard double transcriptional terminator (B0010+B0012).",
+  "partId": "BBa_B0015",
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "terminator"
+  ],
+  "provenance": {
+    "source": "iGEM Registry",
+    "dateAdded": "2026-06-28"
+  }
+}

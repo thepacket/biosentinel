@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://biosensors.dev/schema/part.schema.json",
+  "title": "Genetic Part",
+  "description": "A reusable genetic part for building whole-cell CRISPR biosensors: promoters, RBSs, terminators, dCas9/Cas variants, sgRNA scaffolds, reporters/outputs, riboswitches, and regulators. Reporters are parts with category 'reporter'.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "slug", "category", "provenance"],
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string", "description": "Display name / symbol, e.g. 'sfGFP', 'J23119', 'dCas9-ω'." },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "category": {
+      "type": "string",
+      "enum": ["promoter", "rbs", "terminator", "cds", "dcas9", "sgrna-scaffold", "reporter", "regulator", "riboswitch", "operator"],
+      "description": "Part type."
+    },
+    "shortDescription": { "type": "string" },
+    "sequence": { "type": "string", "description": "Nucleotide (or amino-acid for some CDS) sequence, when from a defined source." },
+    "partId": { "type": "string", "description": "Registry id (iGEM BBa_, Addgene, SEVA, UniProt)." },
+    "hosts": { "type": "array", "items": { "type": "string" }, "description": "Hosts it works in, e.g. 'E. coli', 'B. subtilis', 'yeast', 'broad-host'." },
+    "tags": { "type": "array", "items": { "type": "string" } },
+
+    "label": { "type": "string", "description": "Optional friendly label for pickers (e.g. 'Green fluorescence (sfGFP)')." },
+
+    "outputType": { "type": "string", "enum": ["fluorescent", "colorimetric", "luminescent", "pigment", "electrochemical", "growth"], "description": "Reporter parts: output modality." },
+    "readout": { "type": "string", "description": "Reporter parts: how the signal is observed." },
+    "instrumentFree": { "type": "boolean", "description": "Reporter parts: visible without an instrument." },
+
+    "strength": { "type": "string", "description": "Promoter parts: e.g. constitutive-strong, weak, inducible." },
+    "inducer": { "type": "string", "description": "Promoter parts: inducer/effector if inducible." },
+
+    "action": { "type": "string", "enum": ["repress", "activate", "target-rna", "target-dna"], "description": "dCas9/Cas parts: CRISPR action." },
+    "pamOrPfs": { "type": "string", "description": "dCas9/Cas parts: required PAM or PFS." },
+
+    "ligand": { "type": "string", "description": "Riboswitch parts: bound ligand." },
+
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "type": "string" },
+        "doi": { "type": "string" },
+        "url": { "type": "string" },
+        "license": { "type": "string" },
+        "dateAdded": { "type": "string", "format": "date" },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

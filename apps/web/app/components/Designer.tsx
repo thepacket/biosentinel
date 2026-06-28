@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { ChassisSummary, SensorModule } from "@/lib/types";
-import { REPORTERS, STRATEGIES, buildDraft, circuitPropsFromBiosensor } from "@/lib/designer";
+import { STRATEGIES, buildDraft, circuitPropsFromBiosensor, type ReporterPreset } from "@/lib/designer";
 import CircuitDiagram from "./CircuitDiagram";
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -15,14 +15,16 @@ const CATEGORY_LABEL: Record<string, string> = {
 export default function Designer({
   modules,
   chassis,
+  reporters,
 }: {
   modules: SensorModule[];
   chassis: ChassisSummary[];
+  reporters: ReporterPreset[];
 }) {
   const [analyte, setAnalyte] = useState(modules[0]?.analyte ?? "");
   const [chassisSlug, setChassisSlug] = useState(chassis[0]?.slug ?? "");
   const [strategyId, setStrategyId] = useState(STRATEGIES[0].id);
-  const [reporterId, setReporterId] = useState(REPORTERS[0].id);
+  const [reporterId, setReporterId] = useState(reporters[0]?.id ?? "");
   const [name, setName] = useState("");
   const [copied, setCopied] = useState(false);
 
@@ -37,7 +39,7 @@ export default function Designer({
     const s = sp.get("strategy");
     if (s && STRATEGIES.some((x) => x.id === s)) setStrategyId(s);
     const r = sp.get("reporter");
-    if (r && REPORTERS.some((x) => x.id === r)) setReporterId(r);
+    if (r && reporters.some((x) => x.id === r)) setReporterId(r);
     const n = sp.get("name");
     if (n) setName(n);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,8 +50,9 @@ export default function Designer({
 
   const draft = useMemo(() => {
     if (!moduleSel || !chassisSel) return null;
-    return buildDraft({ name, module: moduleSel, chassis: chassisSel, strategyId, reporterId });
-  }, [name, moduleSel, chassisSel, strategyId, reporterId]);
+    const rep = reporters.find((r) => r.id === reporterId) ?? reporters[0];
+    return buildDraft({ name, module: moduleSel, chassis: chassisSel, strategyId, reporter: rep });
+  }, [name, moduleSel, chassisSel, strategyId, reporterId, reporters]);
 
   // Recommend chassis whose bestFor matches the module category.
   const recommended = new Set(
@@ -138,7 +141,7 @@ export default function Designer({
         <div className="step">
           <h3><span className="step-n">4</span> Reporter / output</h3>
           <div className="opt-grid">
-            {REPORTERS.map((r) => (
+            {reporters.map((r) => (
               <button
                 key={r.id}
                 className={`opt ${reporterId === r.id ? "active" : ""}`}

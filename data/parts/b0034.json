@@ -1,0 +1,20 @@
+{
+  "id": "b0034",
+  "name": "B0034",
+  "slug": "b0034",
+  "category": "rbs",
+  "shortDescription": "Standard medium-strength ribosome binding site.",
+  "sequence": "AAAGAGGAGAAA",
+  "partId": "BBa_B0034",
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "rbs"
+  ],
+  "provenance": {
+    "source": "iGEM Registry",
+    "dateAdded": "2026-06-28"
+  }
+}

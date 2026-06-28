@@ -1,0 +1,25 @@
+{
+  "id": "amilcp",
+  "name": "amilCP",
+  "slug": "amilcp",
+  "category": "reporter",
+  "label": "Visible pigment (amilCP)",
+  "shortDescription": "Blue-purple chromoprotein from Acropora millepora; visible to the naked eye, no instrument needed.",
+  "outputType": "pigment",
+  "readout": "Visible blue-purple pigment (naked eye / smartphone)",
+  "instrumentFree": true,
+  "partId": "BBa_K592009",
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "pigment",
+    "chromoprotein",
+    "instrument-free"
+  ],
+  "provenance": {
+    "source": "iGEM Uppsala (BBa_K592009)",
+    "dateAdded": "2026-06-28"
+  }
+}

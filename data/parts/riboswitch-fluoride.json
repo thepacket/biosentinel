@@ -1,0 +1,19 @@
+{
+  "id": "riboswitch-fluoride",
+  "name": "Fluoride riboswitch",
+  "slug": "riboswitch-fluoride",
+  "category": "riboswitch",
+  "shortDescription": "Natural crcB-class riboswitch that switches ON in response to fluoride.",
+  "ligand": "fluoride",
+  "hosts": [
+    "broad-host"
+  ],
+  "tags": [
+    "riboswitch",
+    "natural"
+  ],
+  "provenance": {
+    "source": "Baker et al. 2012, Science",
+    "dateAdded": "2026-06-28"
+  }
+}

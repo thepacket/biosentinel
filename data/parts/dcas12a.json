@@ -1,0 +1,20 @@
+{
+  "id": "dcas12a",
+  "name": "dCas12a",
+  "slug": "dcas12a",
+  "category": "dcas9",
+  "shortDescription": "Catalytically dead Cas12a (LbCas12a). T-rich PAM; processes its own crRNA array for multiplexing.",
+  "action": "target-dna",
+  "pamOrPfs": "TTTV (PAM)",
+  "hosts": [
+    "broad-host"
+  ],
+  "tags": [
+    "Cas12a",
+    "multiplex"
+  ],
+  "provenance": {
+    "source": "Zetsche et al. 2015; dCas12a CRISPRi",
+    "dateAdded": "2026-06-28"
+  }
+}

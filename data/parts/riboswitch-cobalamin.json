@@ -1,0 +1,19 @@
+{
+  "id": "riboswitch-cobalamin",
+  "name": "Cobalamin (B12) riboswitch",
+  "slug": "riboswitch-cobalamin",
+  "category": "riboswitch",
+  "shortDescription": "Natural riboswitch that binds adenosylcobalamin (vitamin B12) and modulates downstream expression.",
+  "ligand": "vitamin B12 (adenosylcobalamin)",
+  "hosts": [
+    "broad-host"
+  ],
+  "tags": [
+    "riboswitch",
+    "natural"
+  ],
+  "provenance": {
+    "source": "Nahvi/Breaker",
+    "dateAdded": "2026-06-28"
+  }
+}

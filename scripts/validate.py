@@ -57,6 +57,10 @@ def main() -> int:
             overall = False
             print(f"FAIL {b['slug']}: chassisSlug '{cs}' not in chassis catalog")
 
+    print("\n== parts ==")
+    ok, _ = validate_dir(ROOT / "data/parts", load_schema("part.schema.json"))
+    overall &= ok
+
     legacy_dir = ROOT / "data/legacy-assays"
     if legacy_dir.is_dir():
         print("\n== legacy CRISPR-Dx assays ==")

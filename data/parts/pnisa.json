@@ -1,0 +1,21 @@
+{
+  "id": "pnisa",
+  "name": "PnisA",
+  "slug": "pnisa",
+  "category": "promoter",
+  "shortDescription": "Nisin-inducible promoter of the NICE system for Lactococcus lactis.",
+  "strength": "inducible",
+  "inducer": "nisin",
+  "hosts": [
+    "L. lactis",
+    "lactobacilli"
+  ],
+  "tags": [
+    "inducible",
+    "food-grade"
+  ],
+  "provenance": {
+    "source": "NICE (nisin-controlled expression)",
+    "dateAdded": "2026-06-28"
+  }
+}

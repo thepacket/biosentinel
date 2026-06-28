@@ -31,6 +31,7 @@ def _path(env: str, *default: str) -> Path:
 
 CHASSIS_DIR = _path("BIOSENSORS_CHASSIS_DIR", "data", "chassis")
 BIOSENSOR_DIR = _path("BIOSENSORS_DESIGN_DIR", "data", "biosensors")
+PARTS_DIR = _path("BIOSENSORS_PARTS_DIR", "data", "parts")
 LEGACY_DIR = _path("BIOSENSORS_LEGACY_DIR", "data", "legacy-assays")
 SCHEMA_DIR = _path("BIOSENSORS_SCHEMA_DIR", "packages", "schema")
 STATIC_DIR = os.environ.get("BIOSENSORS_STATIC_DIR")
@@ -76,6 +77,11 @@ def biosensors() -> list[dict[str, Any]]:
         if b["chassisSlug"] not in slugs:
             raise ValueError(f"{b['slug']}: chassisSlug '{b['chassisSlug']}' not in catalog")
     return items
+
+
+@lru_cache(maxsize=1)
+def parts() -> list[dict[str, Any]]:
+    return _load(PARTS_DIR, "part.schema.json")
 
 
 @lru_cache(maxsize=1)
@@ -135,6 +141,7 @@ def health() -> dict[str, Any]:
         "status": "ok",
         "chassisCount": len(chassis()),
         "biosensorCount": len(biosensors()),
+        "partsCount": len(parts()),
         "legacyAssayCount": len(legacy()),
     }
 
@@ -210,6 +217,43 @@ def clone_biosensor(slug: str) -> dict[str, Any]:
             draft["status"] = "experimental"
             return draft
     raise HTTPException(status_code=404, detail=f"No biosensor '{slug}'")
+
+
+@app.get("/api/parts")
+def list_parts(category: str | None = None, q: str | None = None) -> dict[str, Any]:
+    items = parts()
+    if category:
+        items = [p for p in items if p["category"] == category]
+    if q:
+        ql = q.lower()
+        items = [
+            p for p in items
+            if ql in p["name"].lower()
+            or ql in p.get("shortDescription", "").lower()
+            or any(ql in t.lower() for t in p.get("tags", []))
+        ]
+    return {
+        "count": len(items),
+        "items": items,
+        "facets": {"category": _facets(parts(), "category")},
+    }
+
+
+@app.get("/api/parts/{slug}")
+def get_part(slug: str) -> dict[str, Any]:
+    for p in parts():
+        if p["slug"] == slug:
+            used = [
+                {"slug": b["slug"], "name": b["name"]}
+                for b in biosensors()
+                if any(
+                    (p.get("partId") and p["partId"] == part.get("partId"))
+                    or p["name"].lower() in part.get("name", "").lower()
+                    for part in b.get("parts", [])
+                )
+            ]
+            return {**p, "usedIn": used}
+    raise HTTPException(status_code=404, detail=f"No part '{slug}'")
 
 
 @app.get("/api/legacy/assays")

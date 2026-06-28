@@ -1,0 +1,18 @@
+{
+  "id": "pveg",
+  "name": "Pveg",
+  "slug": "pveg",
+  "category": "promoter",
+  "shortDescription": "Strong constitutive vegetative promoter for Bacillus subtilis.",
+  "strength": "constitutive-strong",
+  "hosts": [
+    "B. subtilis"
+  ],
+  "tags": [
+    "constitutive"
+  ],
+  "provenance": {
+    "source": "B. subtilis veg promoter",
+    "dateAdded": "2026-06-28"
+  }
+}

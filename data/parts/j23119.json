@@ -1,0 +1,21 @@
+{
+  "id": "j23119",
+  "name": "J23119",
+  "slug": "j23119",
+  "category": "promoter",
+  "shortDescription": "Strong constitutive promoter from the Anderson collection; common reference promoter.",
+  "sequence": "TTGACAGCTAGCTCAGTCCTAGGTATAATGCTAGC",
+  "partId": "BBa_J23119",
+  "strength": "constitutive-strong",
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "constitutive"
+  ],
+  "provenance": {
+    "source": "Anderson promoter collection (iGEM)",
+    "dateAdded": "2026-06-28"
+  }
+}

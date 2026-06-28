@@ -69,20 +69,15 @@ export type ReporterPreset = {
   instrumentFree: boolean;
 };
 
-export const REPORTERS: ReporterPreset[] = [
-  { id: "sfgfp", label: "Green fluorescence (sfGFP)", type: "fluorescent", reporterGene: "sfGFP", readout: "Green fluorescence (plate reader / fluorimeter)", result: "Fluorescence change reports the analyte.", instrumentFree: false },
-  { id: "mcherry", label: "Red fluorescence (mCherry)", type: "fluorescent", reporterGene: "mCherry", readout: "Red fluorescence (plate reader)", result: "Fluorescence change reports the analyte.", instrumentFree: false },
-  { id: "amilcp", label: "Visible pigment (amilCP)", type: "pigment", reporterGene: "amilCP", readout: "Visible blue-purple pigment (naked eye / smartphone)", result: "Pigment change reports the analyte.", instrumentFree: true },
-  { id: "lux", label: "Bioluminescence (luxCDABE)", type: "luminescent", reporterGene: "luxCDABE", readout: "Bioluminescence (luminometer / camera)", result: "Luminescence reports the analyte.", instrumentFree: true },
-  { id: "lacz", label: "Colour (lacZ / X-gal)", type: "colorimetric", reporterGene: "lacZ", readout: "Blue colour on X-gal (naked eye)", result: "Colour change reports the analyte.", instrumentFree: true },
-];
+// Reporter presets now come from the parts catalog (see getReporterPresets in
+// lib/data.ts), so adding a reporter part makes it selectable in the designer.
 
 // Map a reporter gene (as used in designs) back to a designer reporter preset id.
 export const REPORTER_BY_GENE: Record<string, string> = {
   sfGFP: "sfgfp",
   mCherry: "mcherry",
   amilCP: "amilcp",
-  luxCDABE: "lux",
+  luxCDABE: "luxcdabe",
   lacZ: "lacz",
 };
 
@@ -104,12 +99,12 @@ export type DesignSelection = {
   module: SensorModule;
   chassis: ChassisSummary;
   strategyId: string;
-  reporterId: string;
+  reporter: ReporterPreset;
 };
 
 export function buildDraft(sel: DesignSelection): Biosensor {
   const strat = STRATEGIES.find((s) => s.id === sel.strategyId) ?? STRATEGIES[0];
-  const rep = REPORTERS.find((r) => r.id === sel.reporterId) ?? REPORTERS[0];
+  const rep = sel.reporter;
   const m = sel.module;
   const isCRISPRa = strat.id === "CRISPRa-activation";
   const reg = m.regulator ?? `${m.analyte} sensor`;

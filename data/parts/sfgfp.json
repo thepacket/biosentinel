@@ -1,0 +1,22 @@
+{
+  "id": "sfgfp",
+  "name": "sfGFP",
+  "slug": "sfgfp",
+  "category": "reporter",
+  "label": "Green fluorescence (sfGFP)",
+  "shortDescription": "Superfolder GFP \u2014 bright, fast-folding green fluorescent reporter; the default fluorescent output.",
+  "outputType": "fluorescent",
+  "readout": "Green fluorescence (plate reader / fluorimeter)",
+  "instrumentFree": false,
+  "hosts": [
+    "broad-host"
+  ],
+  "tags": [
+    "green",
+    "fluorescent"
+  ],
+  "provenance": {
+    "source": "Pedelacq et al. 2006, Nat Biotechnol",
+    "dateAdded": "2026-06-28"
+  }
+}

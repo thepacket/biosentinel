@@ -1,0 +1,20 @@
+{
+  "id": "dcas13",
+  "name": "dCas13",
+  "slug": "dcas13",
+  "category": "dcas9",
+  "shortDescription": "Catalytically dead Cas13 \u2014 targets RNA rather than DNA, enabling transcript-level sensing/regulation.",
+  "action": "target-rna",
+  "pamOrPfs": "PFS (non-G)",
+  "hosts": [
+    "broad-host"
+  ],
+  "tags": [
+    "Cas13",
+    "RNA"
+  ],
+  "provenance": {
+    "source": "Abudayyeh et al. 2017",
+    "dateAdded": "2026-06-28"
+  }
+}

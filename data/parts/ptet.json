@@ -1,0 +1,21 @@
+{
+  "id": "ptet",
+  "name": "pTet",
+  "slug": "ptet",
+  "category": "promoter",
+  "shortDescription": "Tetracycline/aTc-inducible promoter, repressed by TetR.",
+  "partId": "BBa_R0040",
+  "strength": "inducible",
+  "inducer": "anhydrotetracycline (aTc)",
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "inducible"
+  ],
+  "provenance": {
+    "source": "Tn10 tet operon",
+    "dateAdded": "2026-06-28"
+  }
+}

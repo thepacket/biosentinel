@@ -1,0 +1,21 @@
+{
+  "id": "dcas9-omega",
+  "name": "dCas9-\u03c9",
+  "slug": "dcas9-omega",
+  "category": "dcas9",
+  "shortDescription": "dCas9 fused to the RNA polymerase omega subunit; recruits RNAP to activate a weak promoter (bacterial CRISPRa).",
+  "action": "activate",
+  "pamOrPfs": "NGG (PAM)",
+  "hosts": [
+    "E. coli",
+    "broad-host"
+  ],
+  "tags": [
+    "CRISPRa",
+    "activate"
+  ],
+  "provenance": {
+    "source": "Bikard et al. 2013, NAR",
+    "dateAdded": "2026-06-28"
+  }
+}

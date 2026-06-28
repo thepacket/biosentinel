@@ -9,13 +9,18 @@ import type {
   BiosensorSummary,
   Chassis,
   ChassisSummary,
+  CatalogPart,
+  PartsCatalog,
   SensorModule,
 } from "./types";
+import type { ReporterPreset } from "./designer";
 
 const CHASSIS_DIR =
   process.env.BIOSENSORS_CHASSIS_DIR || path.resolve(process.cwd(), "../../data/chassis");
 const BIOSENSOR_DIR =
   process.env.BIOSENSORS_DESIGN_DIR || path.resolve(process.cwd(), "../../data/biosensors");
+const PARTS_DIR =
+  process.env.BIOSENSORS_PARTS_DIR || path.resolve(process.cwd(), "../../data/parts");
 
 function readDir<T>(dir: string): T[] {
   if (!fs.existsSync(dir)) return [];
@@ -80,6 +85,66 @@ function biosensorSummary(b: Biosensor): BiosensorSummary {
     biosafetyLevel: b.safety.biosafetyLevel,
     grasChassis: b.safety.grasChassis,
   };
+}
+
+// ---- Parts catalog ----
+
+const CATEGORY_ORDER = [
+  "reporter", "promoter", "dcas9", "sgrna-scaffold", "riboswitch", "rbs", "terminator", "regulator", "operator", "cds",
+];
+
+export function getAllParts(): CatalogPart[] {
+  return readDir<CatalogPart>(PARTS_DIR).sort((a, b) => {
+    const ca = CATEGORY_ORDER.indexOf(a.category);
+    const cb = CATEGORY_ORDER.indexOf(b.category);
+    return ca !== cb ? ca - cb : a.name.localeCompare(b.name);
+  });
+}
+
+function partUsedIn(part: CatalogPart): { slug: string; name: string }[] {
+  return getAllBiosensors()
+    .filter((b) =>
+      (b.parts ?? []).some(
+        (p) =>
+          (part.partId && part.partId === p.partId) ||
+          p.name.toLowerCase().includes(part.name.toLowerCase()),
+      ),
+    )
+    .map((b) => ({ slug: b.slug, name: b.name }));
+}
+
+export function getPartBySlug(slug: string): CatalogPart | null {
+  const p = getAllParts().find((x) => x.slug === slug);
+  if (!p) return null;
+  return { ...p, usedIn: partUsedIn(p) };
+}
+
+export function getPartsCatalog(): PartsCatalog {
+  const items = getAllParts();
+  const facets = items.reduce<Record<string, number>>((acc, p) => {
+    acc[p.category] = (acc[p.category] ?? 0) + 1;
+    return acc;
+  }, {});
+  return { count: items.length, items, facets: { category: facets } };
+}
+
+const REPORTER_ORDER = ["sfgfp", "mcherry", "amilcp", "luxcdabe", "lacz"];
+
+// Reporter presets for the designer are derived from the parts catalog, so a
+// reporter added to data/parts automatically becomes selectable in the designer.
+export function getReporterPresets(): ReporterPreset[] {
+  return getAllParts()
+    .filter((p) => p.category === "reporter")
+    .sort((a, b) => REPORTER_ORDER.indexOf(a.slug) - REPORTER_ORDER.indexOf(b.slug))
+    .map((p) => ({
+      id: p.slug,
+      label: p.label ?? p.name,
+      type: p.outputType ?? "fluorescent",
+      reporterGene: p.name,
+      readout: p.readout ?? "",
+      result: `${p.label ?? p.name} reports the analyte.`,
+      instrumentFree: p.instrumentFree ?? false,
+    }));
 }
 
 // Derive a deduped catalog of real sensing modules from the library, so the

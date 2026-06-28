@@ -1,0 +1,21 @@
+{
+  "id": "dcas9-vpr",
+  "name": "dCas9-VPR",
+  "slug": "dcas9-vpr",
+  "category": "dcas9",
+  "shortDescription": "dCas9 fused to the VPR tripartite activator; strong CRISPRa in eukaryotes (yeast, mammalian).",
+  "action": "activate",
+  "pamOrPfs": "NGG (PAM)",
+  "hosts": [
+    "yeast",
+    "mammalian"
+  ],
+  "tags": [
+    "CRISPRa",
+    "eukaryotic"
+  ],
+  "provenance": {
+    "source": "Chavez et al. 2015, Nat Methods",
+    "dateAdded": "2026-06-28"
+  }
+}

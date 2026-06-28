@@ -1,0 +1,20 @@
+{
+  "id": "pbad",
+  "name": "pBAD",
+  "slug": "pbad",
+  "category": "promoter",
+  "shortDescription": "Arabinose-inducible promoter controlled by AraC; tight, tunable.",
+  "strength": "inducible",
+  "inducer": "L-arabinose",
+  "hosts": [
+    "E. coli"
+  ],
+  "tags": [
+    "inducible",
+    "tunable"
+  ],
+  "provenance": {
+    "source": "E. coli araBAD operon",
+    "dateAdded": "2026-06-28"
+  }
+}
