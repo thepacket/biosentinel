@@ -1,0 +1,67 @@
+{
+  "id": "heme-bleeding-crispri-nissle",
+  "name": "GI bleeding sensor (heme + CRISPRa)",
+  "slug": "heme-bleeding-crispri-nissle",
+  "shortDescription": "An ingestible sensor for heme, a marker of gastrointestinal bleeding. The validated HrtR heme sensor gates a CRISPRa circuit driving a luminescent reporter, in the probiotic E. coli Nissle 1917.",
+  "status": "template",
+  "tags": ["clinical-gut", "GI-bleeding", "heme", "blood", "probiotic", "Nissle", "CRISPRa", "luminescent"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": {
+    "analyte": "Heme",
+    "category": "clinical-gut",
+    "detects": "Heme released into the gut lumen during gastrointestinal bleeding",
+    "operatingRange": "HrtR-based heme sensors respond over physiological luminal heme"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-ω (CRISPRa activator)",
+    "sensorMechanism": "HrtR is a heme-binding repressor; heme binding releases it from the PhrtBA operator, de-repressing the promoter (which is then boosted by CRISPRa).",
+    "signalFlow": "Heme -> HrtR releases PhrtBA -> transcribes an sgRNA -> dCas9-activator amplifies a luminescent reporter (CRISPRa) -> luminescence reports gut bleeding.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    { "name": "HrtR repressor", "role": "regulator", "source": "Lactococcus lactis hrt system; used as a heme sensor by Mimee et al. 2018", "notes": "Heme-responsive repressor; validated as an ingestible heme sensor in vivo (pig/large-animal)." },
+    { "name": "PhrtBA promoter", "role": "promoter", "source": "hrtBA operator/promoter", "notes": "De-repressed by heme-bound HrtR." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak luminescent reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "luxCDABE operon", "role": "reporter", "source": "bacterial bioluminescence operon", "notes": "Luminescent output, pairs with an ingestible photodetector (cf. Mimee et al. 2018)." }
+  ],
+  "output": {
+    "type": "luminescent",
+    "reporterGene": "luxCDABE",
+    "readout": "Bioluminescence (photodetector; in vivo, an ingestible bio-electronic capsule)",
+    "result": "Luminescence rises when luminal heme (bleeding) is present."
+  },
+  "performance": {
+    "limitOfDetection": "HrtR heme module validated in vivo as an ingestible sensor (Mimee et al. 2018).",
+    "dynamicRange": "Physiological luminal heme range",
+    "responseTimeMin": 120,
+    "validated": false,
+    "notes": "The HrtR heme sensor with luminescent output is validated in vivo (bio-electronic pill); the CRISPRa amplifier integration here is a design template to boost sensitivity."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Probiotic E. coli Nissle host; pair with auxotrophy for gut-restricted containment.",
+    "fieldDeployable": false,
+    "notes": "Research / supervised clinical use only; probiotic chassis with a human-safety record."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target the activation window of the weak luminescent reporter promoter." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: HrtR. TU2: PhrtBA -> sgRNA. TU3: dCas9-omega. TU4: weak promoter -> luxCDABE." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add containment marker." },
+    { "order": 4, "stage": "induction", "title": "Validate with heme", "description": "Confirm heme-dependent luminescence across a standard curve." },
+    { "order": 5, "stage": "readout", "title": "Detect luminescence", "description": "Read with a photodetector / ingestible capsule." }
+  ],
+  "provenance": {
+    "source": "Design template combining the validated HrtR heme sensor with a dCas9 CRISPRa luminescent circuit in E. coli Nissle",
+    "partsSources": [
+      "Mimee et al. 2018, Science (ingestible heme bio-electronic sensor; HrtR)",
+      "Bikard et al. 2013, NAR (CRISPRa)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

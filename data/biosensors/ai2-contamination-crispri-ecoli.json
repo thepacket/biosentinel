@@ -1,0 +1,67 @@
+{
+  "id": "ai2-contamination-crispri-ecoli",
+  "name": "Bacterial contamination sensor (AI-2 + CRISPRi)",
+  "slug": "ai2-contamination-crispri-ecoli",
+  "shortDescription": "Flags general bacterial contamination by sensing autoinducer-2 (AI-2), the inter-species quorum signal made by most bacteria. The LsrR/AI-2 system gates a CRISPRi circuit driving a visible pigment, in safe E. coli K-12.",
+  "status": "template",
+  "tags": ["AI-2", "quorum-sensing", "contamination", "pathogen", "water", "food-safety", "CRISPRi"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": {
+    "analyte": "Autoinducer-2 (AI-2 / DPD)",
+    "category": "pathogen",
+    "detects": "AI-2, the universal inter-species quorum signal secreted by a broad range of bacteria — a proxy for general microbial contamination",
+    "operatingRange": "LsrR/AI-2 system responds from sub-µM AI-2"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "Imported AI-2 is phosphorylated and binds the LsrR repressor, de-repressing the lsr (Plsr) promoter.",
+    "signalFlow": "AI-2 -> phospho-AI-2 releases LsrR -> Plsr transcribes an anti-pigment sgRNA -> dCas9 + sgRNA repress a constitutive amilCP cassette (CRISPRi) -> pigment fades when bacteria are present (NOT gate); add an inverter for colour-on.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "LsrR repressor + Lsr transport", "role": "regulator", "source": "E. coli lsr operon", "notes": "AI-2-responsive repressor; native to E. coli." },
+    { "name": "Plsr promoter", "role": "promoter", "source": "E. coli lsr operon promoter", "notes": "De-repressed by phospho-AI-2." },
+    { "name": "Anti-pigment sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013, Cell (CRISPRi)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala", "notes": "Naked-eye pigment." }
+  ],
+  "output": {
+    "type": "pigment",
+    "reporterGene": "amilCP",
+    "readout": "Visible pigment (naked eye / smartphone)",
+    "result": "Colour change indicates bacterial quorum signal in the sample."
+  },
+  "performance": {
+    "limitOfDetection": "LsrR/AI-2 module: sub-µM AI-2 (module-validated).",
+    "dynamicRange": "~0.1-10 µM AI-2",
+    "responseTimeMin": 240,
+    "validated": false,
+    "notes": "Detects a broad bacterial signal rather than one species; the LsrR AI-2 system and CRISPRi are validated separately and the integrated device is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Safe E. coli K-12 reads a secreted small molecule; no pathogen handled.",
+    "fieldDeployable": false,
+    "notes": "Indirect, safe detection of contamination via a quorum signal."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-pigment sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: Plsr -> sgRNA (native Lsr import/LsrR). TU2: dCas9 + constitutive amilCP." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; confirm baseline pigment without AI-2." },
+    { "order": 4, "stage": "induction", "title": "Add sample", "description": "Incubate with the water/food sample + AI-2 (DPD) standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining the LsrR/AI-2 quorum-sensing module with E. coli CRISPRi",
+    "partsSources": [
+      "Xavier & Bassler 2005 / E. coli lsr-AI-2 system",
+      "Qi et al. 2013, Cell (CRISPRi)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

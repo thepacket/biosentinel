@@ -1,0 +1,67 @@
+{
+  "id": "zinc-crispri-lactococcus",
+  "name": "Zinc sensor (ZitR + CRISPRi)",
+  "slug": "zinc-crispri-lactococcus",
+  "shortDescription": "Detects zinc, a nutritional and water-quality marker. The native L. lactis ZitR zinc regulator gates a CRISPRi circuit driving a fluorescent reporter, in the food-grade GRAS chassis Lactococcus lactis.",
+  "status": "template",
+  "tags": ["zinc", "micronutrient", "water-quality", "chemical", "food", "GRAS", "CRISPRi"],
+  "chassisSlug": "lactococcus-lactis",
+  "input": {
+    "analyte": "Zinc Zn(II)",
+    "category": "chemical",
+    "detects": "Bioavailable zinc in water, food, or nutritional samples",
+    "operatingRange": "ZitR-based sensing responds across µM zinc"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "ZitR (a zinc-responsive repressor of the zitSQP operon) binds Zn(II) and changes occupancy of its operator/promoter.",
+    "signalFlow": "Zn(II) -> ZitR releases PzitS -> transcribes an anti-reporter sgRNA -> dCas9 + sgRNA repress a constitutive reporter (CRISPRi NOT gate). Pair an inverter for turn-on.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "ZitR regulator", "role": "regulator", "source": "Lactococcus lactis zit operon", "notes": "Native zinc-responsive repressor — no porting needed in L. lactis." },
+    { "name": "PzitS promoter", "role": "promoter", "source": "L. lactis zitSQP operon promoter", "notes": "Zinc-modulated via ZitR." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "CRISPRi (demonstrated in lactic acid bacteria)" },
+    { "name": "mCherry reporter", "role": "reporter", "source": "standard fluorophore", "notes": "Food-compatible fluorescent readout." }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "mCherry",
+    "readout": "Fluorescence (plate reader)",
+    "result": "Fluorescence change reports zinc concentration."
+  },
+  "performance": {
+    "limitOfDetection": "ZitR module: µM zinc (module-validated in L. lactis).",
+    "dynamicRange": "~1-100 µM zinc",
+    "responseTimeMin": 180,
+    "validated": false,
+    "notes": "ZitR is the native L. lactis zinc regulator (no porting); CRISPRi in lactic acid bacteria is established. Integrated device is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "thyA-based biological containment demonstrated in L. lactis; food-grade host.",
+    "fieldDeployable": false,
+    "notes": "GRAS / food-grade chassis (no LPS endotoxin); suited to food and nutritional zinc monitoring."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-reporter sgRNA", "description": "Target the reporter promoter; check L. lactis off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: PzitS -> sgRNA (native ZitR). TU2: dCas9 + constitutive mCherry. Use NICE-compatible vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform L. lactis MG1363", "description": "Electroporate; select (ErmR/CmR); add thyA containment." },
+    { "order": 4, "stage": "induction", "title": "Expose to zinc", "description": "Validate across a zinc standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate zinc from the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining the native L. lactis ZitR zinc-sensing module with CRISPRi",
+    "partsSources": [
+      "Llull & Poquet / L. lactis zit (ZitR zinc regulation) literature",
+      "Bikard et al. 2013, NAR (CRISPRi); CRISPRi in lactic acid bacteria"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

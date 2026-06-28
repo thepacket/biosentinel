@@ -1,0 +1,68 @@
+{
+  "id": "tetrathionate-crispri-nissle",
+  "name": "Gut inflammation memory sensor (tetrathionate + CRISPRi)",
+  "slug": "tetrathionate-crispri-nissle",
+  "shortDescription": "An ingestible sensor for tetrathionate, a biomarker of gut inflammation. The validated TtrSR sensor gates a CRISPRi circuit driving a fluorescent reporter, in the probiotic E. coli Nissle 1917. Complements the thiosulfate sensor as a second inflammation marker.",
+  "status": "template",
+  "tags": ["clinical-gut", "inflammation", "tetrathionate", "probiotic", "Nissle", "CRISPRi"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": {
+    "analyte": "Tetrathionate (S4O6 2-)",
+    "category": "clinical-gut",
+    "detects": "Tetrathionate, produced during intestinal inflammation",
+    "operatingRange": "TtrSR responds over physiological inflamed-gut tetrathionate levels (validated in mouse colitis)"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "The TtrS sensor kinase activates the response regulator TtrR in response to tetrathionate, turning on its target promoter.",
+    "signalFlow": "Tetrathionate -> TtrS/TtrR activates PttrR -> transcribes an anti-reporter sgRNA -> CRISPRi inverts a constitutive reporter (NOT), or pair with a memory switch (cI/Cro) for a persistent record of an inflammation episode.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "TtrS/TtrR two-component system", "role": "regulator", "source": "ported to E. coli Nissle by Daeffler et al. 2017 / Riglar et al. 2017", "notes": "Tetrathionate sensor; validated in vivo in mouse gut." },
+    { "name": "PttrR target promoter", "role": "promoter", "source": "Riglar et al. 2017", "notes": "Activated by phospho-TtrR." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "sfGFP / mCherry reporter", "role": "reporter", "source": "standard fluorophores", "notes": "Recoverable from stool for non-invasive readout." }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Fluorescence (flow cytometry on recovered cells)",
+    "result": "Fluorescent-cell fraction reflects gut tetrathionate / inflammation."
+  },
+  "performance": {
+    "limitOfDetection": "TtrSR module validated in vivo (mouse gut inflammation).",
+    "dynamicRange": "Physiological inflamed-gut tetrathionate range",
+    "responseTimeMin": 240,
+    "validated": false,
+    "notes": "The tetrathionate sensor (with a genetic memory switch) is validated in vivo by Riglar et al.; the CRISPRi integration here is a design template. Pairs with the thiosulfate sensor for two-marker inflammation sensing."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Built in probiotic E. coli Nissle; add thyA/dapA auxotrophy for gut-restricted containment.",
+    "fieldDeployable": false,
+    "notes": "Probiotic chassis with a human-safety record; research / supervised clinical use only."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design sgRNA (and optional memory switch)", "description": "Target the reporter promoter; optionally add a cI/Cro memory element to record transient inflammation." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: TtrS/TtrR. TU2: PttrR -> sgRNA. TU3: dCas9 + reporter. Use a stable low-copy vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add auxotrophic containment." },
+    { "order": 4, "stage": "induction", "title": "Validate in vitro", "description": "Confirm tetrathionate response across a standard curve before any animal work." },
+    { "order": 5, "stage": "readout", "title": "Recover and measure", "description": "Recover cells from stool; quantify fluorescence." }
+  ],
+  "provenance": {
+    "source": "Design template combining the validated TtrSR tetrathionate sensor in E. coli Nissle with a dCas9 CRISPRi circuit",
+    "partsSources": [
+      "Riglar et al. 2017, Nat. Biotechnol. (tetrathionate memory sensor in Nissle)",
+      "Daeffler et al. 2017, Mol. Syst. Biol. (sulfur-compound sensors)",
+      "Qi et al. 2013, Cell (CRISPRi)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

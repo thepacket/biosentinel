@@ -1,0 +1,67 @@
+{
+  "id": "toluene-crispri-putida",
+  "name": "Toluene/BTEX sensor (XylR + CRISPRi)",
+  "slug": "toluene-crispri-putida",
+  "shortDescription": "Detects toluene and related BTEX aromatic pollutants. The native XylR/Pu regulator gates a CRISPRi circuit driving a visible pigment, in P. putida KT2440 — a natural toluene-degrader and rugged environmental chassis.",
+  "status": "template",
+  "tags": ["toluene", "BTEX", "aromatic", "pollutant", "soil", "water", "environmental", "CRISPRi"],
+  "chassisSlug": "pseudomonas-putida-kt2440",
+  "input": {
+    "analyte": "Toluene (and BTEX aromatics)",
+    "category": "environmental",
+    "detects": "Toluene / benzene-toluene-ethylbenzene-xylene contamination in soil and groundwater",
+    "operatingRange": "XylR/Pu responds across µM toluene"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "XylR binds toluene/m-xylene effectors and activates the Pu promoter (sigma-54 dependent).",
+    "signalFlow": "Toluene -> XylR activates Pu -> transcribes an anti-pigment sgRNA -> dCas9 + sgRNA repress a constitutive amilCP cassette (CRISPRi) -> pigment fades with toluene (NOT); pair an inverter for colour-on.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "XylR regulator", "role": "regulator", "source": "Pseudomonas putida TOL plasmid (pWW0)", "notes": "Toluene/xylene-responsive sigma-54 activator; native effector range in P. putida." },
+    { "name": "Pu promoter", "role": "promoter", "source": "TOL plasmid upper-pathway promoter", "notes": "Activated by effector-bound XylR." },
+    { "name": "Anti-pigment sgRNA", "role": "sgRNA", "source": "designed against the amilCP promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "CRISPRi (established in P. putida)" },
+    { "name": "amilCP chromoprotein", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala", "notes": "Naked-eye pigment." }
+  ],
+  "output": {
+    "type": "pigment",
+    "reporterGene": "amilCP",
+    "readout": "Visible pigment (naked eye / smartphone)",
+    "result": "Pigment change reports toluene/BTEX contamination."
+  },
+  "performance": {
+    "limitOfDetection": "XylR/Pu module: µM toluene (module-validated).",
+    "dynamicRange": "~1-100 µM toluene",
+    "responseTimeMin": 180,
+    "validated": false,
+    "notes": "XylR/Pu is a classic, well-characterised aromatic sensor native to P. putida; the CRISPRi integration is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "P. putida KT2440 is a certified HV1 safety host; add a containment circuit for field use.",
+    "fieldDeployable": true,
+    "notes": "Ideal match: P. putida natively tolerates and metabolises aromatics, so it works in real contaminated samples."
+  },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-pigment sgRNA", "description": "Target the amilCP promoter; check host off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: XylR. TU2: Pu -> sgRNA. TU3: dCas9 + constitutive amilCP. Clone into SEVA vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform P. putida KT2440", "description": "Electroporate; select; confirm baseline pigment without toluene." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add soil eluate / groundwater + toluene standard curve." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Compare pigment to the curve." }
+  ],
+  "provenance": {
+    "source": "Design template combining the native XylR/Pu toluene-sensing module with P. putida CRISPRi",
+    "partsSources": [
+      "Ramos et al. / TOL plasmid XylR-Pu literature (toluene sensing in P. putida)",
+      "iGEM Uppsala amilCP (BBa_K592009)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}
