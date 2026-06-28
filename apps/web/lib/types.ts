@@ -77,9 +77,11 @@ export type Biosensor = {
   slug: string;
   shortDescription?: string;
   status: string;
+  designType?: string;
   tags?: string[];
   chassisSlug: string;
   input: { analyte: string; category: TargetCategory; detects?: string; operatingRange?: string };
+  additionalInputs?: { analyte: string; category: TargetCategory; detects?: string; operatingRange?: string }[];
   sensing: {
     strategy: string;
     casProtein?: string;
@@ -125,6 +127,7 @@ export type BiosensorSummary = {
   name: string;
   shortDescription: string;
   status: string;
+  designType?: string;
   tags: string[];
   analyte: string;
   category: TargetCategory;
@@ -189,6 +192,7 @@ export type BiosensorLibrary = {
     category: Record<string, number>;
     strategy: Record<string, number>;
     chassisName: Record<string, number>;
+    designType: Record<string, number>;
     status: Record<string, number>;
   };
 };

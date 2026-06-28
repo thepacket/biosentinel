@@ -1,0 +1,37 @@
+{
+  "id": "arsenic-ratiometric-ecoli",
+  "name": "Arsenic ratiometric quantifier",
+  "slug": "arsenic-ratiometric-ecoli",
+  "shortDescription": "Quantifies arsenic with two reporters: an arsenic-driven green channel over a constitutive red channel. The green/red ratio cancels out cell number, growth, and instrument variation — giving a robust, self-normalizing readout for field quantitation.",
+  "status": "template",
+  "tags": ["arsenic", "heavy-metal", "ratiometric", "quantitative", "water", "environmental", "CRISPRa"],
+  "designType": "ratiometric",
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": { "analyte": "Arsenite As(III)", "category": "environmental", "detects": "Arsenic, quantified by the green/red reporter ratio", "operatingRange": "ArsR module around the 10 µg/L WHO limit and above" },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-ω (CRISPRa activator)",
+    "sensorMechanism": "Arsenite de-represses Pars; a constitutive promoter drives the normalizer reporter in parallel.",
+    "signalFlow": "Arsenite -> ArsR releases Pars -> sgRNA -> dCas9-activator amplifies the GREEN reporter (CRISPRa). A constitutive promoter drives the RED normalizer independently. The GREEN/RED ratio is the arsenic readout, self-normalized against cell density and conditions.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    { "name": "ArsR + Pars", "role": "regulator", "source": "E. coli ars operon; Stocker et al. 2003", "notes": "Arsenite-responsive; drives the signal channel." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "transcribed from Pars" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP (signal channel)", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Arsenic-driven GREEN channel." },
+    { "name": "J23119 -> mCherry (normalizer channel)", "role": "reporter", "partId": "BBa_J23119", "source": "Anderson collection + mCherry", "notes": "Constitutive RED channel for normalization." }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP / mCherry (ratio)", "readout": "Green/red fluorescence ratio (plate reader / two-channel field reader)", "result": "The GREEN/RED ratio scales with arsenic, independent of cell number." },
+  "performance": { "limitOfDetection": "ArsR module near 10 µg/L; ratiometric output improves quantitation robustness.", "validated": false, "notes": "Ratiometric two-reporter normalization is a validated quantitation strategy; this arsenic CRISPRa version is a design template. The ratio cancels cell-density and instrument variation." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Lab/contained; add kill-switch for field use.", "fieldDeployable": true, "notes": "E. coli K-12 non-pathogenic BSL-1 host." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design the two channels", "description": "Signal: Pars -> CRISPRa -> sfGFP. Normalizer: J23119 -> mCherry. Design the sgRNA." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: ArsR + Pars -> sgRNA. TU2: dCas9-omega. TU3: weak promoter -> sfGFP. TU4: J23119 -> mCherry." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; confirm stable red and arsenic-dependent green." },
+    { "order": 4, "stage": "induction", "title": "Arsenic titration", "description": "Run a standard curve; record green/red ratios." },
+    { "order": 5, "stage": "readout", "title": "Compute ratio", "description": "Interpolate arsenic from the GREEN/RED ratio." }
+  ],
+  "provenance": { "source": "Design template: a ratiometric (two-reporter) arsenic quantifier with a CRISPRa signal channel", "partsSources": ["Stocker et al. 2003 (ArsR)", "Bikard et al. 2013, NAR (CRISPRa)", "ratiometric reporter normalization (general)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

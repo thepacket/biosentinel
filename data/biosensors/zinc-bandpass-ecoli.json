@@ -1,0 +1,37 @@
+{
+  "id": "zinc-bandpass-ecoli",
+  "name": "Zinc band-pass sensor (healthy-window)",
+  "slug": "zinc-bandpass-ecoli",
+  "shortDescription": "Fires only when zinc sits within a target concentration window — not too low, not too high — using an incoherent feed-forward loop. Useful for flagging deviations from a healthy/optimal range rather than mere presence.",
+  "status": "template",
+  "tags": ["zinc", "band-pass", "window", "micronutrient", "chemical", "CRISPRi"],
+  "designType": "band-pass",
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": { "analyte": "Zinc Zn(II)", "category": "chemical", "detects": "Zinc within a defined concentration window", "operatingRange": "Tunable pass-band (e.g. ~1-50 µM) set by the two thresholds" },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "Two zinc-responsive elements with different thresholds: a low-threshold ZntR activator turns the reporter ON; a high-threshold arm drives a CRISPRi sgRNA that turns it back OFF.",
+    "signalFlow": "Low zinc -> reporter OFF (below low threshold). Mid zinc -> ZntR ON, high arm not yet active -> reporter ON (in band). High zinc -> CRISPRi sgRNA represses the reporter -> OFF (above high threshold). Net: ON only inside the window (incoherent feed-forward loop).",
+    "logicType": "NOT"
+  },
+  "parts": [
+    { "name": "ZntR + PzntA (low-threshold ON arm)", "role": "regulator", "source": "E. coli zinc-responsive activator", "notes": "Turns the reporter on above the low threshold." },
+    { "name": "High-threshold zinc element -> sgRNA", "role": "promoter", "source": "second zinc-responsive promoter with a higher set-point", "notes": "Drives the CRISPRi sgRNA above the high threshold." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (plate reader)", "result": "Fluorescence peaks within the zinc window and falls off outside it." },
+  "performance": { "validated": false, "notes": "Band-pass / incoherent feed-forward circuits are validated as a topology (Basu et al. 2005); this zinc-windowed CRISPRi version is a design template. Tune the two thresholds via promoter/operator strength." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Lab/contained; add kill-switch for field use.", "fieldDeployable": false, "notes": "E. coli K-12 non-pathogenic BSL-1 host." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Set the two thresholds", "description": "Tune the low (ON) and high (OFF) zinc set-points via operator affinity; design the sgRNA." },
+    { "order": 2, "stage": "assembly", "title": "Assemble the feed-forward loop", "description": "ON arm: ZntR -> reporter. OFF arm: high-threshold zinc promoter -> sgRNA + dCas9 -> represses reporter." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; characterise the dose-response to confirm a band-pass shape." },
+    { "order": 4, "stage": "induction", "title": "Zinc titration", "description": "Run a full zinc dose-response to map the pass-band." },
+    { "order": 5, "stage": "readout", "title": "Read window", "description": "Signal present only within the target window." }
+  ],
+  "provenance": { "source": "Design template: a zinc band-pass sensor (incoherent feed-forward loop) with a CRISPRi high-threshold arm", "partsSources": ["Basu et al. 2005, Nature (band-pass / IFFL)", "ZntR zinc sensing (E. coli)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

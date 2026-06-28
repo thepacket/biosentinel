@@ -74,6 +74,7 @@ function biosensorSummary(b: Biosensor): BiosensorSummary {
     name: b.name,
     shortDescription: b.shortDescription ?? "",
     status: b.status,
+    designType: b.designType ?? "single",
     tags: b.tags ?? [],
     analyte: b.input.analyte,
     category: b.input.category,
@@ -177,9 +178,10 @@ export function getSensorModules(): SensorModule[] {
 
 export function getBiosensorLibrary(): BiosensorLibrary {
   const items = getAllBiosensors().map(biosensorSummary);
-  const facet = (key: "category" | "strategy" | "chassisName" | "status") =>
+  const facet = (key: "category" | "strategy" | "chassisName" | "status" | "designType") =>
     items.reduce<Record<string, number>>((acc, b) => {
-      acc[b[key]] = (acc[b[key]] ?? 0) + 1;
+      const v = (b[key] ?? "single") as string;
+      acc[v] = (acc[v] ?? 0) + 1;
       return acc;
     }, {});
   return {
@@ -189,6 +191,7 @@ export function getBiosensorLibrary(): BiosensorLibrary {
       category: facet("category"),
       strategy: facet("strategy"),
       chassisName: facet("chassisName"),
+      designType: facet("designType"),
       status: facet("status"),
     },
   };

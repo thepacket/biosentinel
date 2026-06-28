@@ -1,0 +1,37 @@
+{
+  "id": "inflammation-memory-nissle",
+  "name": "Gut inflammation memory recorder (tetrathionate)",
+  "slug": "inflammation-memory-nissle",
+  "shortDescription": "Records a transient gut-inflammation episode and remembers it. A recombinase memory switch, triggered by the tetrathionate sensor, flips a DNA state that persists after the signal is gone — so a single exposure is still detectable days later in stool.",
+  "status": "template",
+  "tags": ["clinical-gut", "inflammation", "tetrathionate", "memory", "recorder", "recombinase", "probiotic", "Nissle"],
+  "designType": "memory",
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": { "analyte": "Tetrathionate (transient)", "category": "clinical-gut", "detects": "A transient tetrathionate / inflammation episode that may not coincide with sampling", "operatingRange": "Records exposure above the sensor's threshold" },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "The TtrS/TtrR tetrathionate sensor drives a recombinase (integrase) that flips a DNA register; the flipped state is heritable and stable without further signal.",
+    "signalFlow": "Tetrathionate -> TtrS/TtrR expresses a recombinase -> the recombinase inverts a DNA segment (set the memory bit) -> the flipped state switches a reporter permanently ON. CRISPRi can gate or reset the register. The record persists after the signal clears.",
+    "logicType": "BUFFER"
+  },
+  "parts": [
+    { "name": "TtrS/TtrR sensor", "role": "regulator", "source": "Daeffler/Riglar et al. (tetrathionate sensor in Nissle)", "notes": "Validated in vivo; triggers the recombinase." },
+    { "name": "Recombinase / integrase (e.g. Bxb1)", "role": "cds", "source": "phage serine integrase", "notes": "Flips a DNA register to store the memory bit." },
+    { "name": "Flippable DNA register", "role": "operator", "source": "attB/attP-flanked invertible segment", "notes": "Heritable two-state memory element." },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)", "notes": "Optional gating/reset of the register." },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Switched permanently ON by the flipped register; recoverable from stool." }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Fluorescence (flow cytometry on recovered cells)", "result": "Cells stay fluorescent after a past inflammation episode, even once tetrathionate is gone." },
+  "performance": { "validated": false, "notes": "Recombinase memory + the tetrathionate sensor are each validated in vivo (Riglar et al. 2017); this CRISPRi-gated memory variant is a design template. Captures intermittent inflammation that real-time sensors miss." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Probiotic E. coli Nissle host; add thyA/dapA auxotrophy for gut-restricted containment.", "fieldDeployable": false, "notes": "Probiotic chassis with a human-safety record; research / supervised clinical use only." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design the memory register", "description": "Place a recombinase-invertible register controlling the reporter; design any CRISPRi reset." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: TtrS/TtrR -> recombinase. TU2: invertible register -> reporter. Optional dCas9 reset arm." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; verify the register flips on tetrathionate and stays flipped." },
+    { "order": 4, "stage": "induction", "title": "Pulse exposure", "description": "Apply a transient tetrathionate pulse, then remove it; confirm the memory persists." },
+    { "order": 5, "stage": "readout", "title": "Recover and read state", "description": "Recover cells (e.g. from stool) and read the flipped fraction." }
+  ],
+  "provenance": { "source": "Design template: a recombinase memory recorder triggered by the validated tetrathionate sensor, with optional CRISPRi gating", "partsSources": ["Riglar et al. 2017, Nat. Biotechnol. (in-vivo memory sensor)", "Bxb1 / serine integrase memory devices", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

@@ -115,6 +115,7 @@ def _biosensor_summary(b: dict[str, Any]) -> dict[str, Any]:
         "name": b["name"],
         "shortDescription": b.get("shortDescription", ""),
         "status": b["status"],
+        "designType": b.get("designType", "single"),
         "tags": b.get("tags", []),
         "analyte": b["input"]["analyte"],
         "category": b["input"]["category"],
@@ -193,6 +194,7 @@ def list_biosensors(
             "category": _facets(allitems, "category"),
             "strategy": _facets(allitems, "strategy"),
             "chassisName": _facets(allitems, "chassisName"),
+            "designType": _facets(allitems, "designType"),
             "status": _facets(allitems, "status"),
         },
     }

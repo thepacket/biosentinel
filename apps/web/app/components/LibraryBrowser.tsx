@@ -56,6 +56,7 @@ function Card({ b }: { b: BiosensorSummary }) {
         <span className="chip cas">{b.strategy}</span>
         <span className="chip amp">{b.reporterGene ?? b.output}</span>
         <span className="chip">{b.chassisName}</span>
+        {b.designType && b.designType !== "single" && <span className="badge template">{b.designType}</span>}
         <span className={`badge ${b.status}`}>{b.status}</span>
       </div>
     </Link>
@@ -66,6 +67,7 @@ export default function LibraryBrowser({ data }: { data: BiosensorLibrary }) {
   const [cat, setCat] = useState<string | null>(null);
   const [chassis, setChassis] = useState<string | null>(null);
   const [strategy, setStrategy] = useState<string | null>(null);
+  const [dtype, setDtype] = useState<string | null>(null);
   const [q, setQ] = useState("");
 
   const items = useMemo(() => {
@@ -75,12 +77,13 @@ export default function LibraryBrowser({ data }: { data: BiosensorLibrary }) {
         (!cat || b.category === cat) &&
         (!chassis || b.chassisName === chassis) &&
         (!strategy || b.strategy === strategy) &&
+        (!dtype || (b.designType ?? "single") === dtype) &&
         (!ql ||
           b.name.toLowerCase().includes(ql) ||
           b.analyte.toLowerCase().includes(ql) ||
           b.tags.some((t) => t.toLowerCase().includes(ql))),
     );
-  }, [data.items, cat, chassis, strategy, q]);
+  }, [data.items, cat, chassis, strategy, dtype, q]);
 
   return (
     <div className="layout">
@@ -93,6 +96,7 @@ export default function LibraryBrowser({ data }: { data: BiosensorLibrary }) {
         />
         <FacetGroup title="Detects" facet={data.facets.category} active={cat} onSelect={setCat} label={(k) => CATEGORY_LABEL[k] ?? k} />
         <FacetGroup title="Sensing strategy" facet={data.facets.strategy} active={strategy} onSelect={setStrategy} />
+        <FacetGroup title="Design type" facet={data.facets.designType} active={dtype} onSelect={setDtype} />
         <FacetGroup title="Chassis" facet={data.facets.chassisName} active={chassis} onSelect={setChassis} />
       </aside>
       <div>

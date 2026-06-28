@@ -23,6 +23,12 @@
       "description": "References a chassis in the safe-chassis catalog (chassis.schema.json). Must resolve to a BSL-1 chassis."
     },
 
+    "designType": {
+      "type": "string",
+      "enum": ["single", "AND", "OR", "band-pass", "memory", "ratiometric"],
+      "description": "Circuit topology. single = one input -> reporter (default). AND/OR = multi-input logic gates. band-pass = responds only within a concentration window. memory = records a transient exposure. ratiometric = two reporters for quantitation."
+    },
+
     "input": {
       "type": "object",
       "additionalProperties": false,
@@ -36,6 +42,22 @@
         },
         "detects": { "type": "string", "description": "Plain-language description of the detected signal." },
         "operatingRange": { "type": "string", "description": "Concentration range the sensor responds over." }
+      }
+    },
+
+    "additionalInputs": {
+      "type": "array",
+      "description": "Extra inputs for multi-input designs (AND/OR). The primary input stays in 'input'.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["analyte", "category"],
+        "properties": {
+          "analyte": { "type": "string" },
+          "category": { "type": "string", "enum": ["environmental", "pathogen", "clinical-gut", "chemical"] },
+          "detects": { "type": "string" },
+          "operatingRange": { "type": "string" }
+        }
       }
     },
 

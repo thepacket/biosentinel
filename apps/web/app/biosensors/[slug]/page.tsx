@@ -1,3 +1,4 @@
+import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllBiosensors, getBiosensorBySlug } from "@/lib/data";
@@ -40,6 +41,7 @@ export default function BiosensorPage({ params }: { params: { slug: string } }) 
           <p className="lede">{b.shortDescription}</p>
           <div className="chips" style={{ marginTop: 12 }}>
             <span className={`cat cat-${b.input.category}`}>{CATEGORY_LABEL[b.input.category]}</span>
+            {b.designType && b.designType !== "single" && <span className="badge template">{b.designType} circuit</span>}
             <span className="badge bsl1">BSL-1 chassis</span>
             {b.safety.grasChassis && <span className="badge gras">GRAS</span>}
             <span className={`badge ${b.status}`}>{b.status}</span>
@@ -77,13 +79,29 @@ export default function BiosensorPage({ params }: { params: { slug: string } }) 
         {/* What it detects */}
         <section className="block">
           <h2>What it detects</h2>
+          {b.designType && b.designType !== "single" && (
+            <p className="footnote" style={{ marginTop: 0 }}>
+              <strong className="warn-inline">{b.designType}</strong> design — {{
+                AND: "fires only when all inputs are present.",
+                OR: "fires when any input is present.",
+                "band-pass": "responds only within a concentration window.",
+                memory: "records a transient exposure and remembers it.",
+                ratiometric: "uses two reporters for self-normalizing quantitation.",
+              }[b.designType] ?? ""}
+            </p>
+          )}
           <dl className="kv">
-            <dt>Analyte</dt>
-            <dd>{b.input.analyte}</dd>
+            <dt>{b.additionalInputs && b.additionalInputs.length > 0 ? "Input 1" : "Analyte"}</dt>
+            <dd>{b.input.analyte}{b.input.operatingRange ? ` — ${b.input.operatingRange}` : ""}</dd>
+            {(b.additionalInputs ?? []).map((inp, i) => (
+              <React.Fragment key={i}>
+                <dt>Input {i + 2}</dt>
+                <dd>{inp.analyte}{inp.operatingRange ? ` — ${inp.operatingRange}` : ""}</dd>
+              </React.Fragment>
+            ))}
             <dt>Category</dt>
             <dd>{CATEGORY_LABEL[b.input.category]}</dd>
             {b.input.detects && (<><dt>Signal</dt><dd>{b.input.detects}</dd></>)}
-            {b.input.operatingRange && (<><dt>Operating range</dt><dd>{b.input.operatingRange}</dd></>)}
           </dl>
         </section>
 

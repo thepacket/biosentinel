@@ -1,0 +1,40 @@
+{
+  "id": "arsenic-mercury-and-ecoli",
+  "name": "Arsenic AND mercury gate (dual heavy-metal)",
+  "slug": "arsenic-mercury-and-ecoli",
+  "shortDescription": "A two-input AND gate that fires only when BOTH arsenic and mercury are present — reducing false positives and flagging co-contaminated water. ArsR drives the sgRNA and MerR drives dCas9, so CRISPRi repression (and the readout) needs both metals.",
+  "status": "template",
+  "tags": ["arsenic", "mercury", "heavy-metal", "AND-gate", "multi-input", "water", "environmental", "CRISPRi"],
+  "designType": "AND",
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": { "analyte": "Arsenite As(III)", "category": "environmental", "detects": "Arsenic (input 1 of 2)", "operatingRange": "ArsR ~10 µg/L+" },
+  "additionalInputs": [
+    { "analyte": "Mercuric ion Hg(II)", "category": "environmental", "detects": "Mercury (input 2 of 2)", "operatingRange": "MerR sub-µM+" }
+  ],
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "ArsR de-represses Pars on arsenite; MerR activates PmerT on mercury.",
+    "signalFlow": "Arsenite -> Pars drives the anti-reporter sgRNA. Hg(II) -> PmerT drives dCas9. Only when BOTH metals are present do dCas9 and sgRNA together repress the constitutive reporter (CRISPRi AND). With one or neither metal, the reporter stays ON.",
+    "logicType": "AND"
+  },
+  "parts": [
+    { "name": "ArsR + Pars (input 1)", "role": "regulator", "source": "E. coli ars operon; Stocker et al. 2003", "notes": "Arsenite-responsive; drives the sgRNA." },
+    { "name": "MerR + PmerT (input 2)", "role": "regulator", "source": "Tn21 mer operon", "notes": "Mercury-responsive; drives dCas9." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "transcribed from Pars (input 1)" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9 (from PmerT, input 2)", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)", "notes": "Expressed only under mercury." },
+    { "name": "amilCP reporter", "role": "reporter", "partId": "BBa_K592009", "source": "iGEM Uppsala", "notes": "Constitutive; repressed only when both inputs present." }
+  ],
+  "output": { "type": "pigment", "reporterGene": "amilCP", "readout": "Visible pigment (naked eye)", "result": "Pigment is lost only when both arsenic and mercury are present." },
+  "performance": { "validated": false, "notes": "Both sensing modules and CRISPRi are validated separately; the AND-gate integration is a design template. Requiring two co-contaminants sharply cuts single-analyte false positives." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Lab/contained; add kill-switch for field use.", "fieldDeployable": true, "notes": "E. coli K-12 non-pathogenic BSL-1 host." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design the AND topology", "description": "Route input 1 (ArsR/Pars) to the sgRNA and input 2 (MerR/PmerT) to dCas9; check off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: ArsR + Pars -> sgRNA. TU2: MerR + PmerT -> dCas9. TU3: constitutive amilCP." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; verify pigment-on with each metal alone, pigment-off only with both." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Test all four combinations (neither/As/Hg/both) plus standards." },
+    { "order": 5, "stage": "readout", "title": "Score colour", "description": "Loss of pigment = both metals present." }
+  ],
+  "provenance": { "source": "Design template: a two-input CRISPRi AND gate combining validated ArsR and MerR metal sensors", "partsSources": ["Stocker et al. 2003 (ArsR)", "mer operon / MerR literature", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}
