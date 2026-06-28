@@ -1,0 +1,31 @@
+{
+  "id": "chromate-crispri-cglutamicum",
+  "name": "Chromate sensor (ChrR + CRISPRi)",
+  "slug": "chromate-crispri-cglutamicum",
+  "shortDescription": "Detects toxic hexavalent chromium (chromate) in industrial water. The ChrR chromate-responsive regulator gates a CRISPRi circuit driving a fluorescent reporter, in the robust GRAS industrial chassis Corynebacterium glutamicum.",
+  "status": "template",
+  "tags": ["chromate", "chromium", "heavy-metal", "industrial", "water", "environmental", "CRISPRi"],
+  "chassisSlug": "corynebacterium-glutamicum",
+  "input": { "analyte": "Chromate Cr(VI)", "category": "environmental", "detects": "Hexavalent chromium in industrial effluent and water", "operatingRange": "ChrR/chr operon responds across µM chromate" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "ChrR/ChrB regulators of chromate-resistance operons respond to chromate and switch the chr promoter.", "signalFlow": "Cr(VI) -> ChrR switches Pchr -> transcribes an anti-reporter sgRNA -> CRISPRi inverts a constitutive reporter (NOT). Pair an inverter for turn-on.", "logicType": "NOT" },
+  "parts": [
+    { "name": "ChrR regulator", "role": "regulator", "source": "Chromate-resistance (chr) operon regulator", "notes": "Chromate-responsive; port into C. glutamicum." },
+    { "name": "Pchr promoter", "role": "promoter", "source": "chr operon promoter", "notes": "Switched by chromate-bound ChrR." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Cleto et al. 2016 (CRISPRi in C. glutamicum)" },
+    { "name": "Ptuf promoter", "role": "promoter", "source": "C. glutamicum strong constitutive promoter", "notes": "Drives the reporter (CRISPRi target)." },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (plate reader)", "result": "Fluorescence change reports chromate." },
+  "performance": { "limitOfDetection": "ChrR module: µM chromate (module-validated).", "dynamicRange": "~1-100 µM Cr(VI)", "responseTimeMin": 180, "validated": false, "notes": "ChrR chromate sensing and C. glutamicum CRISPRi are validated separately; integrated device is a design template. C. glutamicum tolerates harsh industrial samples." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": true, "biocontainment": "Auxotrophic containment; GRAS industrial host.", "fieldDeployable": true, "notes": "GRAS, robust at high cell density for industrial monitoring." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-reporter sgRNA", "description": "Target the reporter promoter; check C. glutamicum off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: ChrR + Pchr -> sgRNA. TU2: dCas9 + Ptuf -> sfGFP." },
+    { "order": 3, "stage": "transformation", "title": "Transform C. glutamicum", "description": "Electroporate; select; confirm low background." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add effluent sample + chromate standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate chromate from the curve." }
+  ],
+  "provenance": { "source": "Design template combining a ChrR chromate-sensing module with C. glutamicum CRISPRi", "partsSources": ["Chromate-resistance (chr) operon / ChrR literature", "Cleto et al. 2016, ACS Synth Biol (CRISPRi in C. glutamicum)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

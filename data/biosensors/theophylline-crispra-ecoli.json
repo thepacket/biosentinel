@@ -1,0 +1,30 @@
+{
+  "id": "theophylline-crispra-ecoli",
+  "name": "Theophylline sensor (riboswitch + CRISPRa)",
+  "slug": "theophylline-crispra-ecoli",
+  "shortDescription": "Detects theophylline, an asthma drug with a narrow therapeutic window. The well-characterized synthetic theophylline riboswitch gates a CRISPRa circuit driving a fluorescent reporter, in safe E. coli K-12 — a model for low-cost therapeutic drug monitoring.",
+  "status": "template",
+  "tags": ["theophylline", "drug-monitoring", "riboswitch", "clinical-gut", "CRISPRa"],
+  "chassisSlug": "ecoli-k12-mg1655",
+  "input": { "analyte": "Theophylline", "category": "clinical-gut", "detects": "Theophylline (therapeutic drug monitoring; narrow therapeutic index)", "operatingRange": "Theophylline riboswitches respond across µM-mM" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "The synthetic theophylline aptamer riboswitch in the 5' UTR switches expression ON when theophylline binds.", "signalFlow": "Theophylline -> riboswitch turns ON sgRNA expression -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence rises with drug concentration.", "logicType": "BUFFER" },
+  "parts": [
+    { "name": "Theophylline riboswitch", "role": "rbs", "source": "Synthetic theophylline aptamer riboswitch (Suess / Breaker)", "notes": "Highly selective for theophylline over caffeine; place upstream of the sgRNA." },
+    { "name": "sgRNA (riboswitch-controlled)", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "Constitutive promoter (J23119)", "role": "promoter", "partId": "BBa_J23119", "sequence": "TTGACAGCTAGCTCAGTCCTAGGTATAATGCTAGC", "source": "Anderson collection", "notes": "Drives the riboswitch-sgRNA transcript." },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (plate reader)", "result": "Fluorescence increases with theophylline." },
+  "performance": { "limitOfDetection": "Theophylline riboswitch: µM-mM (module-validated).", "dynamicRange": "~10 µM - 1 mM", "responseTimeMin": 150, "validated": false, "notes": "The theophylline riboswitch is a gold-standard synthetic RNA sensor; integrated CRISPRa device is a design template. Highly selective against caffeine." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Lab/contained; add kill-switch for field use.", "fieldDeployable": false, "notes": "E. coli K-12 non-pathogenic BSL-1 host; model for therapeutic drug monitoring." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design riboswitch-sgRNA", "description": "Place the theophylline riboswitch 5' of the sgRNA; design the CRISPRa spacer." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: J23119 -> riboswitch -> sgRNA. TU2: dCas9-omega. TU3: weak promoter -> sfGFP." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli K-12", "description": "Select; confirm theophylline-dependent activation; check caffeine specificity." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add sample + theophylline standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate theophylline from the curve." }
+  ],
+  "provenance": { "source": "Design template combining the synthetic theophylline riboswitch with E. coli CRISPRa", "partsSources": ["Suess / Breaker (theophylline riboswitch)", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

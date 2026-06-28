@@ -1,0 +1,31 @@
+{
+  "id": "lactiplantibacillus-plantarum",
+  "name": "Lactiplantibacillus plantarum (WCFS1)",
+  "slug": "lactiplantibacillus-plantarum",
+  "species": "Lactiplantibacillus plantarum",
+  "strain": "WCFS1",
+  "taxId": 220668,
+  "shortDescription": "A GRAS probiotic lactic acid bacterium that persists in the gut better than L. lactis. Robust to gut bile and acid, making it a strong chassis for ingestible clinical/gut biosensors and fermented-food monitoring.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": true,
+    "grasBasis": "EFSA QPS; widespread probiotic and food-fermentation use.",
+    "probiotic": true,
+    "humanUse": "Common probiotic supplement; fermented foods.",
+    "biocontainment": "Auxotrophy (e.g. alr/dapA) and food-grade containment demonstrated.",
+    "bslSource": "ABSA Risk Group 1; EFSA QPS.",
+    "notes": "Gram-positive, bile/acid-tolerant; better gut persistence than L. lactis."
+  },
+  "traits": { "gram": "positive", "oxygen": "facultative", "optimalTempC": 37, "sporeForming": false, "doublingTimeMin": 60, "transformable": true, "secretes": true },
+  "engineering": {
+    "genomeAccession": "GCF_000203855.3",
+    "commonPromoters": ["PsppA (SppIP-inducible, pSIP)", "P11 (constitutive)"],
+    "selectionMarkers": ["ErmR", "CmR"],
+    "crisprTools": "CRISPRi and CRISPR base editing demonstrated in lactobacilli.",
+    "toolkits": ["pSIP expression system"]
+  },
+  "typicalEnvironments": ["gut", "food", "clinical"],
+  "bestFor": ["clinical-gut", "chemical"],
+  "provenance": { "source": "NCBI Taxonomy; EFSA QPS", "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000203855.3/", "dateAdded": "2026-06-28" }
+}

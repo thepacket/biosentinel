@@ -1,0 +1,30 @@
+{
+  "id": "nitrogen-crispra-cyano",
+  "name": "Water nitrogen sensor (NtcA + CRISPRa)",
+  "slug": "nitrogen-crispra-cyano",
+  "shortDescription": "A self-powered sensor for nitrogen status in water bodies (relevant to eutrophication and algal blooms). The native cyanobacterial NtcA nitrogen regulator gates a CRISPRa circuit driving a fluorescent reporter, in the photosynthetic chassis Synechocystis — which runs on light and CO2.",
+  "status": "template",
+  "tags": ["nitrogen", "eutrophication", "water-quality", "environmental", "self-powered", "cyanobacteria", "CRISPRa"],
+  "chassisSlug": "synechocystis-6803",
+  "input": { "analyte": "Nitrogen status (2-oxoglutarate / N limitation)", "category": "environmental", "detects": "Cellular nitrogen status, reporting nitrogen availability in water (eutrophication-relevant)", "operatingRange": "NtcA responds to the C/N balance via 2-oxoglutarate" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "NtcA, the global cyanobacterial nitrogen regulator, is activated by 2-oxoglutarate (high under nitrogen limitation) and turns on NtcA-dependent promoters.", "signalFlow": "Nitrogen limitation -> NtcA activates an NtcA promoter -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence reports nitrogen status. Self-powered by photosynthesis.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "NtcA regulator", "role": "regulator", "source": "Native Synechocystis ntcA (global nitrogen regulator)", "notes": "2-oxoglutarate/nitrogen-status-responsive activator; endogenous." },
+    { "name": "NtcA-dependent promoter (e.g. PglnA)", "role": "promoter", "source": "Synechocystis NtcA-regulated promoter", "notes": "Activated by 2-OG-bound NtcA under N limitation." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Yao et al. 2016 / CRISPRi-a in Synechocystis" },
+    { "name": "sfGFP", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Green fluorescence (field fluorimeter)", "result": "Fluorescence reflects nitrogen status of the water." },
+  "performance": { "limitOfDetection": "NtcA reports the cellular C/N balance (module-validated).", "dynamicRange": "Nitrogen-replete to -limited transition", "responseTimeMin": 720, "validated": false, "notes": "NtcA nitrogen sensing and Synechocystis CRISPRi-a are validated separately; integrated device is a design template. Photoautotrophic chassis enables long-term, self-powered deployment." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Light/CO2-dependent growth; add inducible-essential containment for outdoor use.", "fieldDeployable": true, "notes": "Self-powered (photosynthesis) — suited to long-term water-body monitoring." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target a weak promoter; check Synechocystis off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: NtcA promoter -> sgRNA (native NtcA). TU2: dCas9-omega. TU3: weak promoter -> sfGFP. Integrate at neutral sites; CyanoGate." },
+    { "order": 3, "stage": "transformation", "title": "Transform Synechocystis 6803", "description": "Use natural transformation; select; segregate fully." },
+    { "order": 4, "stage": "induction", "title": "Deploy / expose", "description": "Expose to water + a nitrogen series under light." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Relate signal to nitrogen status." }
+  ],
+  "provenance": { "source": "Design template combining the native Synechocystis NtcA nitrogen sensor with cyanobacterial CRISPRa", "partsSources": ["Herrero et al. / NtcA nitrogen regulation (cyanobacteria)", "Yao et al. 2016 (CRISPRi in Synechocystis)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

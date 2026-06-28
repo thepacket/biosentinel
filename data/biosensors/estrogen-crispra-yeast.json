@@ -1,0 +1,30 @@
+{
+  "id": "estrogen-crispra-yeast",
+  "name": "Estrogen / endocrine-disruptor sensor (ERα + CRISPRa)",
+  "slug": "estrogen-crispra-yeast",
+  "shortDescription": "Detects estrogens and estrogenic endocrine-disrupting chemicals in water. Uses the human estrogen receptor (ERα) expressed in GRAS baker's yeast — a eukaryotic sensing class bacteria cannot do — gating a CRISPRa circuit driving a fluorescent reporter.",
+  "status": "template",
+  "tags": ["estrogen", "endocrine-disruptor", "EDC", "water", "chemical", "eukaryotic", "yeast", "CRISPRa"],
+  "chassisSlug": "saccharomyces-cerevisiae",
+  "input": { "analyte": "Estrogens / estrogenic EDCs", "category": "chemical", "detects": "17β-estradiol and estrogen-mimicking endocrine disruptors in water", "operatingRange": "Yeast ERα assays detect sub-nM to nM 17β-estradiol" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-VPR (eukaryotic CRISPRa activator)", "sensorMechanism": "Ligand-bound human ERα binds estrogen-response elements (EREs), activating an ERE-controlled promoter (the classic yeast estrogen screen).", "signalFlow": "Estrogen -> ERα binds ERE promoter -> transcribes an sgRNA -> dCas9-VPR amplifies a fluorescent reporter (CRISPRa) -> fluorescence rises with estrogenic activity.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "Human estrogen receptor alpha (ERα)", "role": "regulator", "source": "Human ESR1, expressed in yeast (Routledge & Sumpter 1996, yeast estrogen screen)", "notes": "Ligand-activated nuclear receptor — requires a eukaryotic host." },
+    { "name": "ERE promoter", "role": "promoter", "source": "Estrogen-response-element-controlled yeast promoter", "notes": "Activated by ligand-bound ERα." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak yeast promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-VPR", "role": "dCas9", "source": "Yeast CRISPRa (dCas9 fused to VPR/VP64)", "notes": "Eukaryotic transcriptional activator." },
+    { "name": "yEGFP", "role": "reporter", "source": "yeast-enhanced GFP" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "yEGFP", "readout": "Green fluorescence (plate reader)", "result": "Fluorescence increases with estrogenic activity." },
+  "performance": { "limitOfDetection": "Yeast ERα assays: sub-nM 17β-estradiol (module-validated).", "dynamicRange": "~0.1-10 nM estradiol equivalents", "responseTimeMin": 360, "validated": false, "notes": "The yeast estrogen screen (ERα + ERE) is a validated assay; the CRISPRa-amplified version here is a design template. Reports total estrogenic activity (a key advantage for unknown EDC mixtures)." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": true, "biocontainment": "Auxotrophic markers; GRAS yeast host.", "fieldDeployable": true, "notes": "GRAS baker's yeast; eukaryotic chassis enables human-receptor-based sensing." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target a weak yeast promoter; check S. cerevisiae off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "Express ERα; ERE -> sgRNA; dCas9-VPR; weak promoter -> yEGFP. Use the Yeast Toolkit (MoClo)." },
+    { "order": 3, "stage": "transformation", "title": "Transform S. cerevisiae", "description": "Integrate at defined loci; select on auxotrophic markers." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Incubate with the water sample + estradiol standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Report estradiol-equivalent estrogenic activity." }
+  ],
+  "provenance": { "source": "Design template combining the yeast estrogen screen (ERα/ERE) with eukaryotic CRISPRa", "partsSources": ["Routledge & Sumpter 1996 (yeast estrogen screen, ERα/ERE)", "Yeast dCas9-VPR CRISPRa literature"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

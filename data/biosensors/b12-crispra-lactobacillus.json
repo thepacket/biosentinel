@@ -1,0 +1,30 @@
+{
+  "id": "b12-crispra-lactobacillus",
+  "name": "Vitamin B12 sensor (cobalamin riboswitch + CRISPRa)",
+  "slug": "b12-crispra-lactobacillus",
+  "shortDescription": "Detects vitamin B12 (cobalamin) in food and the gut. The natural cobalamin riboswitch gates a CRISPRa circuit driving a fluorescent reporter, in the gut-persistent probiotic Lactiplantibacillus plantarum.",
+  "status": "template",
+  "tags": ["vitamin-B12", "cobalamin", "micronutrient", "food", "clinical-gut", "riboswitch", "probiotic", "CRISPRa"],
+  "chassisSlug": "lactiplantibacillus-plantarum",
+  "input": { "analyte": "Vitamin B12 (adenosylcobalamin)", "category": "clinical-gut", "detects": "Cobalamin in food, supplements, and the gut", "operatingRange": "Cobalamin riboswitches respond at nM-µM B12" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "The natural cobalamin (B12) riboswitch binds adenosylcobalamin and modulates downstream expression.", "signalFlow": "B12 -> cobalamin riboswitch gates sgRNA expression -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence reports B12 level.", "logicType": "BUFFER" },
+  "parts": [
+    { "name": "Cobalamin (B12) riboswitch", "role": "rbs", "source": "Natural cobalamin riboswitch (btuB / cob class)", "notes": "Widespread B12-binding RNA element; place upstream of the sgRNA." },
+    { "name": "sgRNA (riboswitch-controlled)", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "P11 constitutive promoter", "role": "promoter", "source": "L. plantarum constitutive promoter", "notes": "Drives the riboswitch-sgRNA transcript." },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "CRISPRa (Bikard et al. 2013); CRISPRi in lactobacilli" },
+    { "name": "mCherry reporter", "role": "reporter", "source": "standard fluorophore" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "mCherry", "readout": "Fluorescence (plate reader)", "result": "Fluorescence increases with vitamin B12." },
+  "performance": { "limitOfDetection": "Cobalamin riboswitch: nM-µM B12 (module-validated).", "dynamicRange": "~1 nM - 1 µM B12", "responseTimeMin": 180, "validated": false, "notes": "The cobalamin riboswitch is a well-characterised natural B12 sensor; integrated CRISPRa device is a design template. Relevant to food fortification and B12-deficiency contexts." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": true, "biocontainment": "Auxotrophy (alr/dapA) and food-grade containment; GRAS probiotic host.", "fieldDeployable": false, "notes": "GRAS, gut-persistent probiotic; suited to food and ingestible sensing." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design riboswitch-sgRNA", "description": "Place the cobalamin riboswitch 5' of the sgRNA; design the CRISPRa spacer." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: P11 -> riboswitch -> sgRNA. TU2: dCas9-omega. TU3: weak promoter -> mCherry. pSIP vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform L. plantarum WCFS1", "description": "Electroporate; select; add food-grade containment." },
+    { "order": 4, "stage": "induction", "title": "Expose to sample", "description": "Add food/gut sample + B12 standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate B12 from the curve." }
+  ],
+  "provenance": { "source": "Design template combining the natural cobalamin riboswitch with L. plantarum CRISPRa", "partsSources": ["Nahvi/Breaker (cobalamin riboswitch)", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

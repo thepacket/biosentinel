@@ -1,0 +1,29 @@
+{
+  "id": "synechocystis-6803",
+  "name": "Synechocystis sp. PCC 6803",
+  "slug": "synechocystis-6803",
+  "species": "Synechocystis sp.",
+  "strain": "PCC 6803",
+  "taxId": 1148,
+  "shortDescription": "A non-pathogenic photosynthetic cyanobacterium. It runs on light and CO2, so biosensors built in it are self-powered — ideal for long-term, deployable environmental and water-quality monitoring without added nutrients.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": false,
+    "probiotic": false,
+    "biocontainment": "Light/CO2-dependent growth limits survival; auxotrophic and inducible-essential containment demonstrated.",
+    "bslSource": "ABSA Risk Group 1; widely used non-pathogenic model cyanobacterium.",
+    "notes": "Photoautotroph — self-powered; naturally transformable."
+  },
+  "traits": { "gram": "negative", "oxygen": "aerobe", "optimalTempC": 30, "sporeForming": false, "doublingTimeMin": 600, "transformable": true, "secretes": false },
+  "engineering": {
+    "genomeAccession": "GCF_000009725.1",
+    "commonPromoters": ["Pcpc560 (strong)", "PpsbA2 (light)", "Ptrc"],
+    "selectionMarkers": ["KanR", "SpcR", "CmR"],
+    "crisprTools": "dCas9 CRISPRi established in Synechocystis (Yao et al. 2016).",
+    "toolkits": ["CyanoGate (MoClo)"]
+  },
+  "typicalEnvironments": ["water", "field", "photobioreactor"],
+  "bestFor": ["environmental", "chemical"],
+  "provenance": { "source": "NCBI Taxonomy; Yao et al. 2016 (CRISPRi in Synechocystis)", "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000009725.1/", "dateAdded": "2026-06-28" }
+}

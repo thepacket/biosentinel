@@ -1,0 +1,30 @@
+{
+  "id": "corynebacterium-glutamicum",
+  "name": "Corynebacterium glutamicum (ATCC 13032)",
+  "slug": "corynebacterium-glutamicum",
+  "species": "Corynebacterium glutamicum",
+  "strain": "ATCC 13032",
+  "taxId": 196627,
+  "shortDescription": "A GRAS industrial workhorse used for food-grade amino-acid production at megaton scale. Robust, stress-tolerant, and easy to grow at high density — well suited to industrial-process and chemical monitoring.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": true,
+    "grasBasis": "EFSA QPS; decades of safe use producing food/feed amino acids (glutamate, lysine).",
+    "probiotic": false,
+    "biocontainment": "Auxotrophic containment standard in industrial strains.",
+    "bslSource": "ABSA Risk Group 1; EFSA QPS.",
+    "notes": "Non-pathogenic relative of C. diphtheriae but lacks the toxin and virulence factors; Gram-positive."
+  },
+  "traits": { "gram": "positive", "oxygen": "facultative", "optimalTempC": 30, "sporeForming": false, "doublingTimeMin": 60, "transformable": true, "secretes": true },
+  "engineering": {
+    "genomeAccession": "GCF_000011325.1",
+    "commonPromoters": ["Ptac", "Ptuf (strong)", "PgntK"],
+    "selectionMarkers": ["KanR", "SpcR"],
+    "crisprTools": "CRISPRi (dCas9) and CRISPR base editing established (Cleto et al. 2016).",
+    "toolkits": ["CGXII media systems", "SEVA-compatible vectors"]
+  },
+  "typicalEnvironments": ["industrial fermenter", "lab"],
+  "bestFor": ["chemical", "environmental"],
+  "provenance": { "source": "NCBI Taxonomy; EFSA QPS; Cleto et al. 2016 (CRISPRi)", "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000011325.1/", "dateAdded": "2026-06-28" }
+}

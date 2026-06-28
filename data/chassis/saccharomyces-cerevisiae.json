@@ -1,0 +1,30 @@
+{
+  "id": "saccharomyces-cerevisiae",
+  "name": "Saccharomyces cerevisiae (BY4741)",
+  "slug": "saccharomyces-cerevisiae",
+  "species": "Saccharomyces cerevisiae",
+  "strain": "BY4741",
+  "taxId": 559292,
+  "shortDescription": "GRAS baker's yeast — the model eukaryote. Being a eukaryote, it can host human nuclear receptors and GPCRs, unlocking sensing of steroids, hormones, and other eukaryotic-specific ligands that bacteria cannot detect. dCas9 CRISPRi/CRISPRa are well established.",
+  "biosafetyLevel": 1,
+  "safety": {
+    "pathogenic": false,
+    "gras": true,
+    "grasBasis": "FDA GRAS; millennia of safe use in baking and brewing; EFSA QPS.",
+    "probiotic": false,
+    "biocontainment": "Auxotrophic markers (his3, leu2, ura3, met15) standard; well-developed containment.",
+    "bslSource": "ABSA Risk Group 1; FDA GRAS.",
+    "notes": "Eukaryote (fungus), not a bacterium — enables nuclear-receptor and GPCR-based biosensors."
+  },
+  "traits": { "oxygen": "facultative", "optimalTempC": 30, "sporeForming": false, "doublingTimeMin": 90, "transformable": true, "secretes": true },
+  "engineering": {
+    "genomeAccession": "GCF_000146045.2",
+    "commonPromoters": ["pTEF1", "pGAL1 (galactose-inducible)", "pADH1", "pCYC1"],
+    "selectionMarkers": ["URA3", "LEU2", "HIS3", "KanMX"],
+    "crisprTools": "dCas9 CRISPRi/CRISPRa established in yeast (Gilbert/Smith labs).",
+    "toolkits": ["MoClo-YTK (Yeast Toolkit)", "EasyClone"]
+  },
+  "typicalEnvironments": ["lab", "food", "clinical"],
+  "bestFor": ["chemical", "clinical-gut"],
+  "provenance": { "source": "NCBI Taxonomy; FDA GRAS", "url": "https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000146045.2/", "dateAdded": "2026-06-28" }
+}
