@@ -57,6 +57,7 @@ export default function BiosensorPage({ params }: { params: { slug: string } }) 
             >
               Open in designer
             </a>
+            <a className="btn secondary" href="/guides/">Design guide RNA</a>
             {b.provenance.url && (
               <a className="btn secondary" href={b.provenance.url} target="_blank" rel="noreferrer">Source ↗</a>
             )}

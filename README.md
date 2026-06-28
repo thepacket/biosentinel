@@ -22,6 +22,7 @@ under `data/legacy-assays/` and served at `/api/legacy/assays`.
 - ✅ Whole-cell CRISPR biosensor designs — `data/biosensors/` (arsenic, mercury, P. aeruginosa quorum, gut thiosulfate)
 - ✅ FastAPI backend — chassis + biosensor + legacy endpoints, schema-validated, referential integrity + BSL-1 guardrail
 - ✅ Next.js UI — design library with safety badges + analyte/chassis/strategy filters, design detail (chassis · sensing · parts · output · safety · build steps), chassis catalog
+- ✅ Parts registry (`/parts`) + designer (`/design`) + **Guide RNA designer (`/guides`)** — sgRNA enumeration + off-target scoring (MIT/CFD), engine adapted from CRISPR Studio (`~/genes`)
 
 ## Repo layout
 

@@ -20,6 +20,12 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from jsonschema import Draft7Validator
+from pydantic import BaseModel, Field
+
+from . import guides as guide_design
+from .crispr_studio import offtarget as ot
+from .crispr_studio.cas import get_profile
+from .crispr_studio.genome import parse_fasta
 
 _PARENTS = Path(__file__).resolve().parents
 REPO_ROOT = _PARENTS[3] if len(_PARENTS) > 3 else _PARENTS[-1]
@@ -256,6 +262,58 @@ def get_part(slug: str) -> dict[str, Any]:
             ]
             return {**p, "usedIn": used}
     raise HTTPException(status_code=404, detail=f"No part '{slug}'")
+
+
+class GuideDesignReq(BaseModel):
+    target: str = Field(..., description="Target region (FASTA or raw sequence), e.g. the reporter promoter")
+    casId: str = Field("spcas9", description="Cas profile id")
+    count: int = Field(20, ge=1, le=100)
+
+
+class OffTargetReq(BaseModel):
+    spacer: str
+    casId: str = "spcas9"
+    reference: str = Field(..., description="Reference to scan (FASTA / raw), e.g. host genome region or plasmid")
+    maxMismatches: int = Field(4, ge=0, le=6)
+
+
+@app.post("/api/guides/design")
+def guides_design(req: GuideDesignReq) -> dict[str, Any]:
+    """Enumerate + rank candidate guide spacers in a target region (CRISPRi/CRISPRa)."""
+    try:
+        return guide_design.design_guides(req.target, req.casId, req.count)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@app.post("/api/guides/offtarget")
+def guides_offtarget(req: OffTargetReq) -> dict[str, Any]:
+    """Score a guide's off-target binding risk against a reference (MIT + CFD)."""
+    try:
+        profile = get_profile(req.casId)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    spacer = req.spacer.upper().replace("U", "T")
+    if len(spacer) != profile.spacer_length or any(b not in "ACGT" for b in spacer):
+        raise HTTPException(status_code=400, detail=f"spacer must be {profile.spacer_length} A/C/G/T bases")
+    records = parse_fasta(req.reference)
+    if not records:
+        raise HTTPException(status_code=400, detail="reference contained no usable sequence")
+    res = ot.search(spacer, profile, records, req.maxMismatches)
+    return {
+        "mitSpecificity": res.mit_specificity,
+        "cfdSpecificity": res.cfd_specificity,
+        "cfdApplicable": profile.cfd_applicable,
+        "onTargetCount": res.on_target_count,
+        "offTargetCount": len(res.hits),
+        "scannedBp": res.scanned_bp,
+        "truncated": res.truncated,
+        "topHits": [
+            {"record": h.record, "strand": h.strand, "start": h.start, "mismatches": h.mismatches,
+             "sequence": h.sequence, "pam": h.pam, "mitScore": round(h.mit_score, 1), "cfdScore": (round(h.cfd_score, 3) if h.cfd_score is not None else None)}
+            for h in res.hits[:10]
+        ],
+    }
 
 
 @app.get("/api/legacy/assays")
