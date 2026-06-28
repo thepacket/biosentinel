@@ -91,9 +91,14 @@ export default function BiosensorPage({ params }: { params: { slug: string } }) 
         <section className="block">
           <h2>Genetic circuit</h2>
           <CircuitDiagram {...circuitPropsFromBiosensor(b)} />
-          <h3 style={{ fontSize: 13, color: "var(--muted)", margin: "20px 0 6px", textTransform: "uppercase", letterSpacing: ".6px" }}>
-            Genetic construct (SBOL)
-          </h3>
+        </section>
+
+        {/* SBOL parts track */}
+        <section className="block">
+          <h2>Genetic construct (SBOL)</h2>
+          <p className="footnote" style={{ marginTop: 0, marginBottom: 10 }}>
+            The DNA construct as transcription units, drawn with SBOL Visual part glyphs.
+          </p>
           <PartsTrack {...circuitPropsFromBiosensor(b)} />
         </section>
 
