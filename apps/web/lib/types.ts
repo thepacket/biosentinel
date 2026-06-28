@@ -137,6 +137,21 @@ export type BiosensorSummary = {
   grasChassis: boolean;
 };
 
+export type SensorModule = {
+  analyte: string;
+  category: TargetCategory;
+  strategy: string;
+  casProtein?: string;
+  regulator?: string;
+  promoter?: string;
+  sensorMechanism?: string;
+  logicType?: string;
+  operatingRange?: string;
+  detects?: string;
+  source: string;
+  fromSlug: string;
+};
+
 export type BiosensorLibrary = {
   count: number;
   items: BiosensorSummary[];

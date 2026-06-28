@@ -9,6 +9,7 @@ import type {
   BiosensorSummary,
   Chassis,
   ChassisSummary,
+  SensorModule,
 } from "./types";
 
 const CHASSIS_DIR =
@@ -79,6 +80,34 @@ function biosensorSummary(b: Biosensor): BiosensorSummary {
     biosafetyLevel: b.safety.biosafetyLevel,
     grasChassis: b.safety.grasChassis,
   };
+}
+
+// Derive a deduped catalog of real sensing modules from the library, so the
+// designer can recombine genuine, cited parts with new chassis/reporters.
+export function getSensorModules(): SensorModule[] {
+  const seen = new Set<string>();
+  const modules: SensorModule[] = [];
+  for (const b of getAllBiosensors()) {
+    if (seen.has(b.input.analyte)) continue;
+    seen.add(b.input.analyte);
+    const regulator = b.parts?.find((p) => p.role === "regulator");
+    const promoter = b.parts?.find((p) => p.role === "promoter");
+    modules.push({
+      analyte: b.input.analyte,
+      category: b.input.category,
+      strategy: b.sensing.strategy,
+      casProtein: b.sensing.casProtein,
+      regulator: regulator?.name,
+      promoter: promoter?.name,
+      sensorMechanism: b.sensing.sensorMechanism,
+      logicType: b.sensing.logicType,
+      operatingRange: b.input.operatingRange,
+      detects: b.input.detects,
+      source: b.provenance.partsSources?.[0] ?? b.provenance.source,
+      fromSlug: b.slug,
+    });
+  }
+  return modules.sort((a, b) => a.analyte.localeCompare(b.analyte));
 }
 
 export function getBiosensorLibrary(): BiosensorLibrary {
