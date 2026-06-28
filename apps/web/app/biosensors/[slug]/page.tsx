@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllBiosensors, getBiosensorBySlug } from "@/lib/data";
-import { circuitPropsFromBiosensor } from "@/lib/designer";
+import { circuitPropsFromBiosensor, REPORTER_BY_GENE } from "@/lib/designer";
 import CloneButton from "../../components/CloneButton";
 import CircuitDiagram from "../../components/CircuitDiagram";
 
@@ -48,6 +48,12 @@ export default function BiosensorPage({ params }: { params: { slug: string } }) 
           </div>
           <div className="actions">
             <CloneButton slug={b.slug} name={b.name} />
+            <a
+              className="btn secondary"
+              href={`/design/?analyte=${encodeURIComponent(b.input.analyte)}&chassis=${b.chassisSlug}&strategy=${b.sensing.strategy}&reporter=${REPORTER_BY_GENE[b.output.reporterGene ?? ""] ?? "sfgfp"}&name=${encodeURIComponent(b.name + " (remix)")}`}
+            >
+              Open in designer
+            </a>
             {b.provenance.url && (
               <a className="btn secondary" href={b.provenance.url} target="_blank" rel="noreferrer">Source ↗</a>
             )}

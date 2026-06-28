@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { ChassisSummary, SensorModule } from "@/lib/types";
 import { REPORTERS, STRATEGIES, buildDraft, circuitPropsFromBiosensor } from "@/lib/designer";
 import CircuitDiagram from "./CircuitDiagram";
@@ -25,6 +25,23 @@ export default function Designer({
   const [reporterId, setReporterId] = useState(REPORTERS[0].id);
   const [name, setName] = useState("");
   const [copied, setCopied] = useState(false);
+
+  // Pre-load from URL params (e.g. "Open in designer" from a library design).
+  // Read on mount via window.location to stay compatible with static export.
+  useEffect(() => {
+    const sp = new URLSearchParams(window.location.search);
+    const a = sp.get("analyte");
+    if (a && modules.some((m) => m.analyte === a)) setAnalyte(a);
+    const c = sp.get("chassis");
+    if (c && chassis.some((x) => x.slug === c)) setChassisSlug(c);
+    const s = sp.get("strategy");
+    if (s && STRATEGIES.some((x) => x.id === s)) setStrategyId(s);
+    const r = sp.get("reporter");
+    if (r && REPORTERS.some((x) => x.id === r)) setReporterId(r);
+    const n = sp.get("name");
+    if (n) setName(n);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const moduleSel = modules.find((m) => m.analyte === analyte) ?? modules[0];
   const chassisSel = chassis.find((c) => c.slug === chassisSlug) ?? chassis[0];

@@ -77,6 +77,15 @@ export const REPORTERS: ReporterPreset[] = [
   { id: "lacz", label: "Colour (lacZ / X-gal)", type: "colorimetric", reporterGene: "lacZ", readout: "Blue colour on X-gal (naked eye)", result: "Colour change reports the analyte.", instrumentFree: true },
 ];
 
+// Map a reporter gene (as used in designs) back to a designer reporter preset id.
+export const REPORTER_BY_GENE: Record<string, string> = {
+  sfGFP: "sfgfp",
+  mCherry: "mcherry",
+  amilCP: "amilcp",
+  luxCDABE: "lux",
+  lacZ: "lacz",
+};
+
 function kebab(s: string): string {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "design";
 }
