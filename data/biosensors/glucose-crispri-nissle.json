@@ -1,0 +1,30 @@
+{
+  "id": "glucose-crispri-nissle",
+  "name": "Glucose sensor (CRP/cAMP + CRISPRi)",
+  "slug": "glucose-crispri-nissle",
+  "shortDescription": "Reports glucose via catabolite repression (CRP/cAMP). When glucose is low, cAMP-CRP activates its promoters; when glucose is high, it switches off. CRP gates a CRISPRi circuit driving a fluorescent reporter, in the probiotic E. coli Nissle 1917 — relevant to gut/metabolic monitoring.",
+  "status": "template",
+  "tags": ["clinical-gut", "glucose", "metabolic", "catabolite-repression", "probiotic", "Nissle", "CRISPRi"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": { "analyte": "Glucose", "category": "clinical-gut", "detects": "Glucose availability via the cAMP-CRP catabolite-repression system", "operatingRange": "CRP/cAMP responds across the glucose-rich to -poor transition" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "Low glucose raises cAMP, which binds CRP to activate CRP-dependent promoters; high glucose lowers cAMP and switches them off.", "signalFlow": "Glucose change -> cAMP-CRP activity at Pcrp -> transcribes an sgRNA -> CRISPRi inverts a constitutive reporter (NOT). Net: reporter tracks glucose (via the CRP inversion); choose inverter polarity for the desired direction.", "logicType": "NOT" },
+  "parts": [
+    { "name": "CRP (cAMP receptor protein)", "role": "regulator", "source": "Native E. coli crp / cya (cAMP)", "notes": "Glucose/catabolite-state sensor; endogenous to E. coli Nissle." },
+    { "name": "CRP-dependent promoter", "role": "promoter", "source": "E. coli CRP-activated promoter (e.g. derived from lac/cat)", "notes": "Active at low glucose (high cAMP-CRP)." },
+    { "name": "sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Recoverable from stool for non-invasive readout." }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Fluorescence (flow cytometry on recovered cells)", "result": "Signal tracks glucose availability (via the CRP/CRISPRi inversion)." },
+  "performance": { "limitOfDetection": "CRP/cAMP reports the glucose-rich to -poor transition (module-validated).", "dynamicRange": "Glucose-replete to -limited transition", "responseTimeMin": 150, "validated": false, "notes": "An indirect, relative glucose readout via catabolite repression; CRP and CRISPRi are validated separately and integration is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Probiotic E. coli Nissle host; add thyA/dapA auxotrophy for gut-restricted containment.", "fieldDeployable": false, "notes": "Probiotic chassis with a human-safety record; research / supervised clinical use only." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design sgRNA + choose polarity", "description": "Target the reporter promoter; pick inverter polarity for the desired glucose direction." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: CRP-dependent promoter -> sgRNA (native CRP/cAMP). TU2: dCas9 + reporter. Low-copy vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add auxotrophic containment." },
+    { "order": 4, "stage": "induction", "title": "Validate in vitro", "description": "Confirm response across a glucose series before any animal work." },
+    { "order": 5, "stage": "readout", "title": "Recover and measure", "description": "Recover cells from stool; quantify fluorescence." }
+  ],
+  "provenance": { "source": "Design template combining the native E. coli CRP/cAMP catabolite system with a dCas9 CRISPRi circuit in E. coli Nissle", "partsSources": ["Busby & Ebright / CRP-cAMP catabolite repression (E. coli)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

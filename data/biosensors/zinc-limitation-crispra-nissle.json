@@ -1,0 +1,30 @@
+{
+  "id": "zinc-limitation-crispra-nissle",
+  "name": "Zinc-limitation/calprotectin sensor (Zur + CRISPRa)",
+  "slug": "zinc-limitation-crispra-nissle",
+  "shortDescription": "An ingestible sensor for host nutritional immunity: the host inflammation protein calprotectin sequesters zinc, and the Zur zinc-uptake regulator reports the resulting zinc limitation. Zur gates a CRISPRa circuit driving a fluorescent reporter, in the probiotic E. coli Nissle 1917.",
+  "status": "template",
+  "tags": ["clinical-gut", "inflammation", "calprotectin", "zinc-limitation", "nutritional-immunity", "probiotic", "Nissle", "CRISPRa"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": { "analyte": "Zinc limitation (calprotectin proxy)", "category": "clinical-gut", "detects": "Host-imposed zinc sequestration by calprotectin during inflammation", "operatingRange": "Zur de-represses uptake genes under zinc starvation" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "Zur (Fur-family) represses zinc-uptake promoters (e.g. PznuA) when zinc is replete and releases them under zinc limitation.", "signalFlow": "Zinc limitation (calprotectin) -> Zur releases PznuA -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence reports inflammation-driven zinc sequestration.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "Zur regulator", "role": "regulator", "source": "Native E. coli zur (Fur family)", "notes": "Zinc-responsive repressor; endogenous to E. coli Nissle." },
+    { "name": "PznuA promoter", "role": "promoter", "source": "E. coli znuABC uptake promoter", "notes": "De-repressed under zinc limitation." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Recoverable from stool for non-invasive readout." }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Fluorescence (flow cytometry on recovered cells)", "result": "Signal reports zinc limitation (calprotectin / inflammation)." },
+  "performance": { "limitOfDetection": "Zur module reports zinc starvation (module-validated).", "dynamicRange": "Zinc-replete to -limited transition", "responseTimeMin": 180, "validated": false, "notes": "Reports zinc limitation as a proxy for calprotectin-driven nutritional immunity; Zur and CRISPRa are validated separately and integration is a design template." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Probiotic E. coli Nissle host; add thyA/dapA auxotrophy for gut-restricted containment.", "fieldDeployable": false, "notes": "Probiotic chassis with a human-safety record; research / supervised clinical use only." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design CRISPRa sgRNA", "description": "Target a weak reporter promoter; check Nissle off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: PznuA -> sgRNA (native Zur). TU2: dCas9-omega. TU3: weak promoter -> sfGFP. Low-copy vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add auxotrophic containment." },
+    { "order": 4, "stage": "induction", "title": "Validate in vitro", "description": "Confirm response across a zinc-limitation series before any animal work." },
+    { "order": 5, "stage": "readout", "title": "Recover and measure", "description": "Recover cells from stool; quantify fluorescence." }
+  ],
+  "provenance": { "source": "Design template combining the native E. coli Zur zinc-limitation sensor with a dCas9 CRISPRa circuit in E. coli Nissle", "partsSources": ["Patzer & Hantke / Zur zinc-uptake regulation (E. coli)", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

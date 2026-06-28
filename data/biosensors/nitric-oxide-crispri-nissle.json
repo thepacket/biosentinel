@@ -1,0 +1,30 @@
+{
+  "id": "nitric-oxide-crispri-nissle",
+  "name": "Gut nitric-oxide sensor (NsrR + CRISPRi)",
+  "slug": "nitric-oxide-crispri-nissle",
+  "shortDescription": "An ingestible sensor for nitric oxide, a marker of intestinal inflammation. The native NsrR NO-sensing repressor gates a CRISPRi circuit driving a fluorescent reporter, in the probiotic E. coli Nissle 1917.",
+  "status": "template",
+  "tags": ["clinical-gut", "inflammation", "nitric-oxide", "probiotic", "Nissle", "CRISPRi"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": { "analyte": "Nitric oxide (NO)", "category": "clinical-gut", "detects": "Luminal nitric oxide produced by host iNOS during gut inflammation", "operatingRange": "NsrR responds to nM-µM NO" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "NsrR is a [2Fe-2S] repressor that releases its operator (e.g. the hmp promoter) when NO modifies its cluster.", "signalFlow": "NO -> NsrR releases PnsrR/Phmp -> transcribes an anti-reporter sgRNA -> CRISPRi inverts a constitutive reporter (NOT). Pair an inverter or memory switch for a persistent inflammation record.", "logicType": "NOT" },
+  "parts": [
+    { "name": "NsrR regulator", "role": "regulator", "source": "Native E. coli nsrR", "notes": "NO-responsive [2Fe-2S] repressor; endogenous to E. coli Nissle." },
+    { "name": "Phmp / PnsrR promoter", "role": "promoter", "source": "E. coli NsrR-regulated promoter", "notes": "De-repressed when NO modifies NsrR." },
+    { "name": "Anti-reporter sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Recoverable from stool for non-invasive readout." }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Fluorescence (flow cytometry on recovered cells)", "result": "Signal reflects luminal NO / inflammation." },
+  "performance": { "limitOfDetection": "NsrR module: nM-µM NO (module-validated).", "dynamicRange": "Physiological inflamed-gut NO", "responseTimeMin": 180, "validated": false, "notes": "NsrR NO-sensing and CRISPRi are validated separately; integrated device is a design template. Complements the thiosulfate/tetrathionate/peroxide inflammation sensors." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Probiotic E. coli Nissle host; add thyA/dapA auxotrophy for gut-restricted containment.", "fieldDeployable": false, "notes": "Probiotic chassis with a human-safety record; research / supervised clinical use only." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Design anti-reporter sgRNA", "description": "Target the reporter promoter; check Nissle off-targets." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: Phmp -> sgRNA (native NsrR). TU2: dCas9 + constitutive sfGFP. Low-copy vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add auxotrophic containment." },
+    { "order": 4, "stage": "induction", "title": "Validate in vitro", "description": "Confirm NO-donor response across a standard curve before any animal work." },
+    { "order": 5, "stage": "readout", "title": "Recover and measure", "description": "Recover cells from stool; quantify fluorescence." }
+  ],
+  "provenance": { "source": "Design template combining the native E. coli NsrR nitric-oxide sensor with a dCas9 CRISPRi circuit in E. coli Nissle", "partsSources": ["Tucker et al. / Spiro / NsrR nitric-oxide sensing (E. coli)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "tryptophan-crispri-lactococcus",
+  "name": "Tryptophan sensor (TrpR + CRISPRi)",
+  "slug": "tryptophan-crispri-lactococcus",
+  "shortDescription": "Detects tryptophan, a dietary amino acid and precursor of gut-microbial indole/serotonin metabolites. The classic TrpR repressor gates a CRISPRi circuit driving a fluorescent reporter, in the food-grade GRAS chassis Lactococcus lactis.",
+  "status": "template",
+  "tags": ["clinical-gut", "tryptophan", "amino-acid", "metabolite", "food", "GRAS", "CRISPRi"],
+  "chassisSlug": "lactococcus-lactis",
+  "input": { "analyte": "L-tryptophan", "category": "clinical-gut", "detects": "Luminal/dietary tryptophan (precursor of indole and serotonin pathway metabolites)", "operatingRange": "TrpR responds across µM-mM tryptophan" },
+  "sensing": { "strategy": "CRISPRi-repression", "casProtein": "dCas9 (S. pyogenes, catalytically dead)", "sensorMechanism": "TrpR binds tryptophan as co-repressor and represses the trp promoter.", "signalFlow": "Tryptophan -> Trp-TrpR represses Ptrp (so Ptrp drives the sgRNA only at LOW tryptophan); for a turn-on-with-tryptophan readout, route TrpR to gate a CRISPRi inverter. As drawn: tryptophan lowers sgRNA, de-repressing the reporter.", "logicType": "NOT" },
+  "parts": [
+    { "name": "TrpR repressor", "role": "regulator", "source": "E. coli trpR (classic tryptophan repressor)", "notes": "Tryptophan co-repressor-activated; requires porting/codon-optimisation for L. lactis." },
+    { "name": "Ptrp promoter", "role": "promoter", "source": "E. coli trp operon promoter/operator", "notes": "Repressed by Trp-bound TrpR." },
+    { "name": "sgRNA", "role": "sgRNA", "source": "designed against the reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9", "role": "dCas9", "source": "Qi et al. 2013 (CRISPRi)" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006" }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Fluorescence (plate reader)", "result": "Signal reports tryptophan level (via the TrpR/CRISPRi inversion)." },
+  "performance": { "limitOfDetection": "TrpR module: µM-mM tryptophan (module-validated).", "dynamicRange": "~10 µM - 1 mM tryptophan", "responseTimeMin": 180, "validated": false, "notes": "TrpR is one of the best-characterised repressors; integrated CRISPRi device is a design template. Choose inverter polarity to get a turn-on-with-tryptophan readout." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": true, "biocontainment": "thyA-based containment in L. lactis; food-grade host.", "fieldDeployable": false, "notes": "GRAS / food-grade chassis; research / supervised use." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Port + design", "description": "Codon-optimise TrpR/Ptrp for L. lactis; design the sgRNA and choose inverter polarity." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: TrpR + Ptrp -> sgRNA. TU2: dCas9 + reporter. NICE vectors." },
+    { "order": 3, "stage": "transformation", "title": "Transform L. lactis MG1363", "description": "Electroporate; select; add thyA containment." },
+    { "order": 4, "stage": "induction", "title": "Expose to tryptophan", "description": "Validate across a tryptophan standard curve." },
+    { "order": 5, "stage": "readout", "title": "Measure fluorescence", "description": "Interpolate tryptophan from the curve." }
+  ],
+  "provenance": { "source": "Design template combining the classic TrpR tryptophan repressor with L. lactis CRISPRi", "partsSources": ["Yanofsky / TrpR tryptophan regulation (E. coli)", "Qi et al. 2013, Cell (CRISPRi)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}

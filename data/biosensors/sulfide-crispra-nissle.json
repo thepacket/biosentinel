@@ -1,0 +1,30 @@
+{
+  "id": "sulfide-crispra-nissle",
+  "name": "Gut sulfide sensor (CstR + CRISPRa)",
+  "slug": "sulfide-crispra-nissle",
+  "shortDescription": "An ingestible sensor for hydrogen sulfide / persulfide, a gut-microbial metabolite linked to colitis and colorectal risk. The CstR persulfide-sensing repressor gates a CRISPRa circuit driving a fluorescent reporter, in the probiotic E. coli Nissle 1917.",
+  "status": "template",
+  "tags": ["clinical-gut", "hydrogen-sulfide", "persulfide", "metabolite", "probiotic", "Nissle", "CRISPRa"],
+  "chassisSlug": "ecoli-nissle-1917",
+  "input": { "analyte": "Hydrogen sulfide / persulfide (H2S)", "category": "clinical-gut", "detects": "Luminal hydrogen sulfide / reactive sulfur species from gut microbial metabolism", "operatingRange": "CstR responds to µM persulfide" },
+  "sensing": { "strategy": "CRISPRa-activation", "casProtein": "dCas9-ω (CRISPRa activator)", "sensorMechanism": "CstR is a persulfide-sensing repressor; reactive sulfur species crosslink its cysteines and release it from its operator.", "signalFlow": "H2S/persulfide -> CstR releases Pcst -> transcribes an sgRNA -> dCas9-activator amplifies a fluorescent reporter (CRISPRa) -> fluorescence rises with gut sulfide.", "logicType": "amplifier" },
+  "parts": [
+    { "name": "CstR regulator", "role": "regulator", "source": "Staphylococcus/Bacillus cst operon (persulfide sensor)", "notes": "Reactive-sulfur-species-responsive repressor; requires porting into E. coli Nissle." },
+    { "name": "Pcst promoter", "role": "promoter", "source": "cst operon operator/promoter", "notes": "De-repressed by persulfide-modified CstR." },
+    { "name": "Reporter-activating sgRNA", "role": "sgRNA", "source": "designed for CRISPRa upstream of a weak reporter promoter" },
+    { "name": "sgRNA scaffold (SpCas9)", "role": "sgRNA", "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC", "source": "Standard SpCas9 scaffold" },
+    { "name": "dCas9-ω activator", "role": "dCas9", "source": "Bikard et al. 2013 (CRISPRa)" },
+    { "name": "sfGFP reporter", "role": "reporter", "source": "Pedelacq et al. 2006", "notes": "Recoverable from stool for non-invasive readout." }
+  ],
+  "output": { "type": "fluorescent", "reporterGene": "sfGFP", "readout": "Fluorescence (flow cytometry on recovered cells)", "result": "Fluorescent-cell fraction rises with luminal sulfide." },
+  "performance": { "limitOfDetection": "CstR module: µM persulfide (module-validated).", "dynamicRange": "Physiological gut sulfide range", "responseTimeMin": 180, "validated": false, "notes": "CstR persulfide sensing and CRISPRa are validated separately; integrated device is a design template requiring CstR porting to Nissle." },
+  "safety": { "biosafetyLevel": 1, "grasChassis": false, "biocontainment": "Probiotic E. coli Nissle host; add thyA/dapA auxotrophy for gut-restricted containment.", "fieldDeployable": false, "notes": "Probiotic chassis with a human-safety record; research / supervised clinical use only." },
+  "buildSteps": [
+    { "order": 1, "stage": "design", "title": "Port CstR + design sgRNA", "description": "Reconstitute CstR/Pcst in Nissle; design the CRISPRa sgRNA." },
+    { "order": 2, "stage": "assembly", "title": "Assemble units", "description": "TU1: CstR. TU2: Pcst -> sgRNA. TU3: dCas9-omega. TU4: weak promoter -> sfGFP. Low-copy vector." },
+    { "order": 3, "stage": "transformation", "title": "Transform E. coli Nissle 1917", "description": "Select; add auxotrophic containment." },
+    { "order": 4, "stage": "induction", "title": "Validate in vitro", "description": "Confirm sulfide-donor response before any animal work." },
+    { "order": 5, "stage": "readout", "title": "Recover and measure", "description": "Recover cells from stool; quantify fluorescence." }
+  ],
+  "provenance": { "source": "Design template combining the CstR persulfide sensor with a dCas9 CRISPRa circuit in E. coli Nissle", "partsSources": ["Luebke / Giedroc 2014 / CstR persulfide sensing", "Bikard et al. 2013, NAR (CRISPRa)"], "license": "Parts per their original sources; design template CC BY 4.0", "addedBy": "seed", "dateAdded": "2026-06-28" }
+}
