@@ -120,13 +120,13 @@ export default function CircuitDiagram(p: CircuitProps) {
         </g>
       )}
 
-      {/* connector labels */}
+      {/* connector labels — sit in a row above the blocks */}
       <g fontSize={10} fill={C.muted} textAnchor="middle">
-        <text x={(CX[0] + CX[1]) / 2} y={96}>binds</text>
-        <text x={(CX[1] + CX[2]) / 2} y={96}>transcribes</text>
-        <text x={(CX[2] + CX[3]) / 2} y={96}>guides</text>
-        <text x={(CX[4] + CX[5]) / 2} y={96}>produces</text>
-        <text x={(CX[3] + CX[4]) / 2} y={150} fill={actionColor} fontWeight={700}>
+        <text x={(CX[0] + CX[1]) / 2} y={60}>binds</text>
+        <text x={(CX[1] + CX[2]) / 2} y={60}>transcribes</text>
+        <text x={(CX[2] + CX[3]) / 2} y={60}>guides</text>
+        <text x={(CX[4] + CX[5]) / 2} y={60}>produces</text>
+        <text x={(CX[3] + CX[4]) / 2} y={60} fill={actionColor} fontWeight={700}>
           {activate ? "ACTIVATES" : "REPRESSES"}
         </text>
       </g>
