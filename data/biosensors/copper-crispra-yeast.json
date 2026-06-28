@@ -1,0 +1,122 @@
+{
+  "id": "copper-crispra-yeast",
+  "name": "Copper sensor (ACE1 + CRISPRa)",
+  "slug": "copper-crispra-yeast",
+  "shortDescription": "Detects copper in water using the native yeast copper-responsive activator ACE1 and its CUP1 promoter, gating a CRISPRa circuit driving a fluorescent reporter, in GRAS baker's yeast.",
+  "status": "template",
+  "tags": [
+    "copper",
+    "heavy-metal",
+    "water",
+    "environmental",
+    "eukaryotic",
+    "yeast",
+    "CRISPRa"
+  ],
+  "chassisSlug": "saccharomyces-cerevisiae",
+  "input": {
+    "analyte": "Copper Cu(II)/Cu(I)",
+    "category": "environmental",
+    "detects": "Bioavailable copper in water",
+    "operatingRange": "ACE1/CUP1 responds across \u00b5M copper"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-VPR (eukaryotic CRISPRa activator)",
+    "sensorMechanism": "Copper-bound ACE1 activates the CUP1 promoter (PCUP1).",
+    "signalFlow": "Cu -> ACE1 activates PCUP1 -> sgRNA -> dCas9-VPR amplifies the reporter (CRISPRa) -> fluorescence rises with copper.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    {
+      "name": "ACE1 regulator",
+      "role": "regulator",
+      "source": "Native S. cerevisiae ACE1 (copper-responsive activator)"
+    },
+    {
+      "name": "PCUP1 promoter",
+      "role": "promoter",
+      "source": "S. cerevisiae CUP1 promoter"
+    },
+    {
+      "name": "sgRNA",
+      "role": "sgRNA",
+      "source": "designed against / upstream of the reporter promoter"
+    },
+    {
+      "name": "sgRNA scaffold (SpCas9)",
+      "role": "sgRNA",
+      "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+      "source": "Standard SpCas9 scaffold"
+    },
+    {
+      "name": "dCas9-VPR",
+      "role": "dCas9",
+      "source": "Yeast CRISPRa (dCas9-VPR)"
+    },
+    {
+      "name": "mCherry",
+      "role": "reporter",
+      "source": "standard fluorophore"
+    }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "mCherry",
+    "readout": "Red fluorescence (plate reader)",
+    "result": "Fluorescence increases with copper."
+  },
+  "performance": {
+    "validated": false,
+    "notes": "ACE1/CUP1 is a classic copper-responsive yeast system; integrated CRISPRa device is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "Auxotrophic markers; GRAS yeast host.",
+    "fieldDeployable": true,
+    "notes": "GRAS baker's yeast."
+  },
+  "buildSteps": [
+    {
+      "order": 1,
+      "stage": "design",
+      "title": "Design sgRNA",
+      "description": "Target/position the sgRNA; check S. cerevisiae off-targets."
+    },
+    {
+      "order": 2,
+      "stage": "assembly",
+      "title": "Assemble units",
+      "description": "Sensor -> sgRNA; dCas9; reporter. Use the host's standard toolkit."
+    },
+    {
+      "order": 3,
+      "stage": "transformation",
+      "title": "Transform S. cerevisiae",
+      "description": "Transform, select, and confirm low background."
+    },
+    {
+      "order": 4,
+      "stage": "induction",
+      "title": "Expose to sample",
+      "description": "Incubate with the sample plus a copper standard curve."
+    },
+    {
+      "order": 5,
+      "stage": "readout",
+      "title": "Read result",
+      "description": "Relate signal to concentration."
+    }
+  ],
+  "provenance": {
+    "source": "Design template combining the native yeast ACE1/CUP1 copper sensor with CRISPRa",
+    "partsSources": [
+      "Thiele / ACE1-CUP1 copper regulation (yeast)",
+      "Yeast dCas9-VPR CRISPRa"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

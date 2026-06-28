@@ -1,0 +1,124 @@
+{
+  "id": "androgen-crispra-yeast",
+  "name": "Androgen sensor (AR + CRISPRa)",
+  "slug": "androgen-crispra-yeast",
+  "shortDescription": "Detects androgens (testosterone and anabolic-steroid mimics) in water and sport/clinical samples using the human androgen receptor expressed in GRAS yeast \u2014 a eukaryotic sensing class bacteria cannot do \u2014 gating a CRISPRa circuit driving a fluorescent reporter.",
+  "status": "template",
+  "tags": [
+    "androgen",
+    "testosterone",
+    "EDC",
+    "endocrine-disruptor",
+    "water",
+    "chemical",
+    "eukaryotic",
+    "yeast",
+    "CRISPRa"
+  ],
+  "chassisSlug": "saccharomyces-cerevisiae",
+  "input": {
+    "analyte": "Androgens (testosterone / mimics)",
+    "category": "chemical",
+    "detects": "Androgenic activity in water, clinical, or anti-doping samples",
+    "operatingRange": "Yeast androgen screen detects sub-nM to nM DHT/testosterone"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-VPR (eukaryotic CRISPRa activator)",
+    "sensorMechanism": "Ligand-bound human androgen receptor (AR) binds androgen-response elements (AREs), activating an ARE promoter (the yeast androgen screen).",
+    "signalFlow": "Androgen -> AR binds ARE promoter -> sgRNA -> dCas9-VPR amplifies the reporter (CRISPRa) -> fluorescence rises with androgenic activity.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    {
+      "name": "Human androgen receptor (AR)",
+      "role": "regulator",
+      "source": "Human AR; Sohoni & Sumpter 1998 (yeast androgen screen)"
+    },
+    {
+      "name": "ARE promoter",
+      "role": "promoter",
+      "source": "androgen-response-element yeast promoter"
+    },
+    {
+      "name": "sgRNA",
+      "role": "sgRNA",
+      "source": "designed against / upstream of the reporter promoter"
+    },
+    {
+      "name": "sgRNA scaffold (SpCas9)",
+      "role": "sgRNA",
+      "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+      "source": "Standard SpCas9 scaffold"
+    },
+    {
+      "name": "dCas9-VPR",
+      "role": "dCas9",
+      "source": "Yeast CRISPRa (dCas9-VPR)"
+    },
+    {
+      "name": "yEGFP",
+      "role": "reporter",
+      "source": "yeast-enhanced GFP"
+    }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "yEGFP",
+    "readout": "Green fluorescence (plate reader)",
+    "result": "Fluorescence increases with androgenic activity."
+  },
+  "performance": {
+    "validated": false,
+    "notes": "The yeast androgen screen (AR/ARE) is a validated assay; the CRISPRa-amplified version is a design template. Reports total androgenic activity, useful for unknown mixtures."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "Auxotrophic markers; GRAS yeast host.",
+    "fieldDeployable": true,
+    "notes": "GRAS baker's yeast; eukaryotic chassis enables human-receptor sensing."
+  },
+  "buildSteps": [
+    {
+      "order": 1,
+      "stage": "design",
+      "title": "Design sgRNA",
+      "description": "Target/position the sgRNA; check S. cerevisiae off-targets."
+    },
+    {
+      "order": 2,
+      "stage": "assembly",
+      "title": "Assemble units",
+      "description": "Sensor -> sgRNA; dCas9; reporter. Use the host's standard toolkit."
+    },
+    {
+      "order": 3,
+      "stage": "transformation",
+      "title": "Transform S. cerevisiae",
+      "description": "Transform, select, and confirm low background."
+    },
+    {
+      "order": 4,
+      "stage": "induction",
+      "title": "Expose to sample",
+      "description": "Incubate with the sample plus a androgen standard curve."
+    },
+    {
+      "order": 5,
+      "stage": "readout",
+      "title": "Read result",
+      "description": "Relate signal to concentration."
+    }
+  ],
+  "provenance": {
+    "source": "Design template combining the yeast androgen screen (AR/ARE) with eukaryotic CRISPRa",
+    "partsSources": [
+      "Sohoni & Sumpter 1998 (yeast androgen screen)",
+      "Yeast dCas9-VPR CRISPRa"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

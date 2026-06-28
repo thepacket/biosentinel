@@ -1,0 +1,125 @@
+{
+  "id": "thiamine-crispri-lactobacillus",
+  "name": "Thiamine (B1) sensor (TPP riboswitch + CRISPRi)",
+  "slug": "thiamine-crispri-lactobacillus",
+  "shortDescription": "Detects thiamine pyrophosphate (vitamin B1) in food and the gut using the natural TPP riboswitch \u2014 the most widespread riboswitch class \u2014 gating a CRISPRi circuit driving a fluorescent reporter, in probiotic Lactiplantibacillus plantarum.",
+  "status": "template",
+  "tags": [
+    "thiamine",
+    "vitamin-B1",
+    "TPP",
+    "micronutrient",
+    "food",
+    "clinical-gut",
+    "riboswitch",
+    "probiotic",
+    "CRISPRi"
+  ],
+  "chassisSlug": "lactiplantibacillus-plantarum",
+  "input": {
+    "analyte": "Thiamine pyrophosphate (vitamin B1)",
+    "category": "clinical-gut",
+    "detects": "Thiamine/TPP in food, supplements, and the gut",
+    "operatingRange": "TPP riboswitch responds at nM-\u00b5M"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "The natural TPP riboswitch binds thiamine pyrophosphate and modulates downstream expression.",
+    "signalFlow": "TPP/B1 -> TPP riboswitch gates an anti-reporter sgRNA -> CRISPRi inverts a constitutive reporter (NOT). Choose polarity for a turn-on-with-B1 readout.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    {
+      "name": "TPP riboswitch",
+      "role": "rbs",
+      "source": "Natural TPP (THI-box) riboswitch (Winkler/Breaker)",
+      "notes": "Most widespread natural riboswitch; place upstream of the sgRNA."
+    },
+    {
+      "name": "sgRNA (riboswitch-controlled)",
+      "role": "sgRNA",
+      "source": "designed against the reporter promoter"
+    },
+    {
+      "name": "sgRNA scaffold (SpCas9)",
+      "role": "sgRNA",
+      "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+      "source": "Standard SpCas9 scaffold"
+    },
+    {
+      "name": "P11 constitutive promoter",
+      "role": "promoter",
+      "source": "L. plantarum constitutive promoter"
+    },
+    {
+      "name": "dCas9",
+      "role": "dCas9",
+      "source": "CRISPRi in lactobacilli"
+    },
+    {
+      "name": "sfGFP reporter",
+      "role": "reporter",
+      "source": "Pedelacq et al. 2006"
+    }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Fluorescence (plate reader)",
+    "result": "Signal reports thiamine level (via the riboswitch/CRISPRi inversion)."
+  },
+  "performance": {
+    "validated": false,
+    "notes": "The TPP riboswitch is the most widespread natural riboswitch; integrated CRISPRi device is a design template."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "Auxotrophy and food-grade containment; GRAS probiotic host.",
+    "fieldDeployable": false,
+    "notes": "GRAS, gut-persistent probiotic."
+  },
+  "buildSteps": [
+    {
+      "order": 1,
+      "stage": "design",
+      "title": "Design sgRNA",
+      "description": "Target/position the sgRNA; check L. plantarum WCFS1 off-targets."
+    },
+    {
+      "order": 2,
+      "stage": "assembly",
+      "title": "Assemble units",
+      "description": "Sensor -> sgRNA; dCas9; reporter. Use the host's standard toolkit."
+    },
+    {
+      "order": 3,
+      "stage": "transformation",
+      "title": "Transform L. plantarum WCFS1",
+      "description": "Transform, select, and confirm low background."
+    },
+    {
+      "order": 4,
+      "stage": "induction",
+      "title": "Expose to sample",
+      "description": "Incubate with the sample plus a thiamine standard curve."
+    },
+    {
+      "order": 5,
+      "stage": "readout",
+      "title": "Read result",
+      "description": "Relate signal to concentration."
+    }
+  ],
+  "provenance": {
+    "source": "Design template combining the natural TPP riboswitch with L. plantarum CRISPRi",
+    "partsSources": [
+      "Winkler/Breaker (TPP riboswitch)",
+      "Bikard et al. 2013, NAR (CRISPRi/a)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

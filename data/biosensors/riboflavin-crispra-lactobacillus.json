@@ -1,0 +1,126 @@
+{
+  "id": "riboflavin-crispra-lactobacillus",
+  "name": "Riboflavin (B2) sensor (FMN riboswitch + CRISPRa)",
+  "slug": "riboflavin-crispra-lactobacillus",
+  "shortDescription": "Detects riboflavin / FMN (vitamin B2) in food and the gut. The natural FMN riboswitch gates a CRISPRa circuit driving a fluorescent reporter, in the gut-persistent probiotic Lactiplantibacillus plantarum.",
+  "status": "template",
+  "tags": [
+    "riboflavin",
+    "vitamin-B2",
+    "FMN",
+    "micronutrient",
+    "food",
+    "clinical-gut",
+    "riboswitch",
+    "probiotic",
+    "CRISPRa"
+  ],
+  "chassisSlug": "lactiplantibacillus-plantarum",
+  "input": {
+    "analyte": "Riboflavin / FMN (vitamin B2)",
+    "category": "clinical-gut",
+    "detects": "Riboflavin/FMN in food, supplements, and the gut",
+    "operatingRange": "FMN riboswitch responds at nM-\u00b5M"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-\u03c9 (CRISPRa activator)",
+    "sensorMechanism": "The natural FMN riboswitch binds flavin mononucleotide and modulates downstream expression.",
+    "signalFlow": "FMN/B2 -> FMN riboswitch gates sgRNA expression -> dCas9-activator amplifies the reporter (CRISPRa) -> fluorescence reports B2 level.",
+    "logicType": "BUFFER"
+  },
+  "parts": [
+    {
+      "name": "FMN riboswitch",
+      "role": "rbs",
+      "source": "Natural FMN (RFN) riboswitch (Winkler/Breaker)",
+      "notes": "Place upstream of the sgRNA."
+    },
+    {
+      "name": "sgRNA (riboswitch-controlled)",
+      "role": "sgRNA",
+      "source": "designed for CRISPRa upstream of a weak promoter"
+    },
+    {
+      "name": "sgRNA scaffold (SpCas9)",
+      "role": "sgRNA",
+      "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+      "source": "Standard SpCas9 scaffold"
+    },
+    {
+      "name": "P11 constitutive promoter",
+      "role": "promoter",
+      "source": "L. plantarum constitutive promoter",
+      "notes": "Drives the riboswitch-sgRNA transcript."
+    },
+    {
+      "name": "dCas9-\u03c9 activator",
+      "role": "dCas9",
+      "source": "CRISPRa (Bikard et al. 2013); CRISPRi in lactobacilli"
+    },
+    {
+      "name": "mCherry reporter",
+      "role": "reporter",
+      "source": "standard fluorophore"
+    }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "mCherry",
+    "readout": "Fluorescence (plate reader)",
+    "result": "Fluorescence increases with riboflavin."
+  },
+  "performance": {
+    "validated": false,
+    "notes": "The FMN riboswitch is a well-characterised natural B2 sensor; integrated CRISPRa device is a design template. L. plantarum itself produces riboflavin (food-fortification relevance)."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "Auxotrophy (alr/dapA) and food-grade containment; GRAS probiotic host.",
+    "fieldDeployable": false,
+    "notes": "GRAS, gut-persistent probiotic."
+  },
+  "buildSteps": [
+    {
+      "order": 1,
+      "stage": "design",
+      "title": "Design sgRNA",
+      "description": "Target/position the sgRNA; check L. plantarum WCFS1 off-targets."
+    },
+    {
+      "order": 2,
+      "stage": "assembly",
+      "title": "Assemble units",
+      "description": "Sensor -> sgRNA; dCas9; reporter. Use the host's standard toolkit."
+    },
+    {
+      "order": 3,
+      "stage": "transformation",
+      "title": "Transform L. plantarum WCFS1",
+      "description": "Transform, select, and confirm low background."
+    },
+    {
+      "order": 4,
+      "stage": "induction",
+      "title": "Expose to sample",
+      "description": "Incubate with the sample plus a riboflavin standard curve."
+    },
+    {
+      "order": 5,
+      "stage": "readout",
+      "title": "Read result",
+      "description": "Relate signal to concentration."
+    }
+  ],
+  "provenance": {
+    "source": "Design template combining the natural FMN riboswitch with L. plantarum CRISPRa",
+    "partsSources": [
+      "Winkler/Breaker (FMN riboswitch)",
+      "Bikard et al. 2013, NAR (CRISPRa)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

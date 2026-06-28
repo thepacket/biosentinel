@@ -1,0 +1,121 @@
+{
+  "id": "cadmium-crispri-cglutamicum",
+  "name": "Cadmium sensor (CadR + CRISPRi)",
+  "slug": "cadmium-crispri-cglutamicum",
+  "shortDescription": "Detects cadmium in industrial wastewater. A CadR/CadC metal-responsive regulator gates a CRISPRi circuit driving a fluorescent reporter, in the robust GRAS industrial chassis Corynebacterium glutamicum.",
+  "status": "template",
+  "tags": [
+    "cadmium",
+    "heavy-metal",
+    "industrial",
+    "wastewater",
+    "environmental",
+    "CRISPRi"
+  ],
+  "chassisSlug": "corynebacterium-glutamicum",
+  "input": {
+    "analyte": "Cadmium Cd(II)",
+    "category": "environmental",
+    "detects": "Cadmium in industrial wastewater",
+    "operatingRange": "CadR/CadC respond from sub-\u00b5M to \u00b5M Cd(II)"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "A CadR/CadC-family metalloregulator switches the cad promoter on cadmium binding.",
+    "signalFlow": "Cd(II) -> CadR switches Pcad -> anti-reporter sgRNA -> CRISPRi inverts a constitutive reporter (NOT). Pair an inverter for turn-on.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    {
+      "name": "CadR regulator",
+      "role": "regulator",
+      "source": "Cadmium-resistance (cad) operon regulator"
+    },
+    {
+      "name": "Pcad promoter",
+      "role": "promoter",
+      "source": "cad operon promoter"
+    },
+    {
+      "name": "sgRNA",
+      "role": "sgRNA",
+      "source": "designed against / upstream of the reporter promoter"
+    },
+    {
+      "name": "sgRNA scaffold (SpCas9)",
+      "role": "sgRNA",
+      "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+      "source": "Standard SpCas9 scaffold"
+    },
+    {
+      "name": "dCas9",
+      "role": "dCas9",
+      "source": "Cleto et al. 2016 (CRISPRi in C. glutamicum)"
+    },
+    {
+      "name": "sfGFP",
+      "role": "reporter",
+      "source": "Pedelacq et al. 2006"
+    }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Green fluorescence (plate reader)",
+    "result": "Fluorescence change reports cadmium."
+  },
+  "performance": {
+    "validated": false,
+    "notes": "CadR/CadC cadmium sensing and C. glutamicum CRISPRi are validated separately; integrated device is a design template. C. glutamicum tolerates harsh industrial samples."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "Auxotrophic containment; GRAS industrial host.",
+    "fieldDeployable": true,
+    "notes": "GRAS, robust for industrial wastewater monitoring."
+  },
+  "buildSteps": [
+    {
+      "order": 1,
+      "stage": "design",
+      "title": "Design sgRNA",
+      "description": "Target/position the sgRNA; check C. glutamicum off-targets."
+    },
+    {
+      "order": 2,
+      "stage": "assembly",
+      "title": "Assemble units",
+      "description": "Sensor -> sgRNA; dCas9; reporter. Use the host's standard toolkit."
+    },
+    {
+      "order": 3,
+      "stage": "transformation",
+      "title": "Transform C. glutamicum",
+      "description": "Transform, select, and confirm low background."
+    },
+    {
+      "order": 4,
+      "stage": "induction",
+      "title": "Expose to sample",
+      "description": "Incubate with the sample plus a cadmium standard curve."
+    },
+    {
+      "order": 5,
+      "stage": "readout",
+      "title": "Read result",
+      "description": "Relate signal to concentration."
+    }
+  ],
+  "provenance": {
+    "source": "Design template combining a CadR cadmium-sensing module with C. glutamicum CRISPRi",
+    "partsSources": [
+      "CadR/CadC cadmium-resistance literature",
+      "Cleto et al. 2016 (CRISPRi in C. glutamicum)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "id": "phosphate-crispra-cyano",
+  "name": "Self-powered phosphate sensor (SphS/SphR + CRISPRa)",
+  "slug": "phosphate-crispra-cyano",
+  "shortDescription": "A self-powered sensor for phosphate status in water (eutrophication-relevant). The native cyanobacterial SphS/SphR phosphate two-component system gates a CRISPRa circuit driving a fluorescent reporter, in photosynthetic Synechocystis.",
+  "status": "template",
+  "tags": [
+    "phosphate",
+    "eutrophication",
+    "water-quality",
+    "environmental",
+    "self-powered",
+    "cyanobacteria",
+    "CRISPRa"
+  ],
+  "chassisSlug": "synechocystis-6803",
+  "input": {
+    "analyte": "Inorganic phosphate (Pi)",
+    "category": "environmental",
+    "detects": "Phosphate availability in water (low Pi triggers the Pho response)",
+    "operatingRange": "SphS/SphR responds across the phosphate-limited transition"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-\u03c9 (CRISPRa activator)",
+    "sensorMechanism": "Under phosphate limitation SphS phosphorylates SphR, activating Pho-regulon promoters (e.g. PpstS).",
+    "signalFlow": "Low Pi -> SphS/SphR activates a Pho promoter -> sgRNA -> dCas9-activator amplifies the reporter (CRISPRa) -> fluorescence reports phosphate status. Self-powered.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    {
+      "name": "SphS/SphR two-component system",
+      "role": "regulator",
+      "source": "Native Synechocystis sph (Pho regulon)"
+    },
+    {
+      "name": "PpstS promoter",
+      "role": "promoter",
+      "source": "Synechocystis pst promoter"
+    },
+    {
+      "name": "sgRNA",
+      "role": "sgRNA",
+      "source": "designed against / upstream of the reporter promoter"
+    },
+    {
+      "name": "sgRNA scaffold (SpCas9)",
+      "role": "sgRNA",
+      "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+      "source": "Standard SpCas9 scaffold"
+    },
+    {
+      "name": "dCas9-\u03c9 activator",
+      "role": "dCas9",
+      "source": "Synechocystis CRISPRa (Yao et al. 2016 toolkit)"
+    },
+    {
+      "name": "sfGFP",
+      "role": "reporter",
+      "source": "Pedelacq et al. 2006"
+    }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Green fluorescence (field fluorimeter)",
+    "result": "Fluorescence reflects phosphate status."
+  },
+  "performance": {
+    "validated": false,
+    "notes": "SphS/SphR phosphate sensing and Synechocystis CRISPRi-a are validated separately; integrated device is a design template. Reports phosphate status (inverse to abundance)."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Light/CO2-dependent growth; add inducible-essential containment.",
+    "fieldDeployable": true,
+    "notes": "Self-powered; suited to surface-water eutrophication surveys."
+  },
+  "buildSteps": [
+    {
+      "order": 1,
+      "stage": "design",
+      "title": "Design sgRNA",
+      "description": "Target/position the sgRNA; check Synechocystis 6803 off-targets."
+    },
+    {
+      "order": 2,
+      "stage": "assembly",
+      "title": "Assemble units",
+      "description": "Sensor -> sgRNA; dCas9; reporter. Use the host's standard toolkit."
+    },
+    {
+      "order": 3,
+      "stage": "transformation",
+      "title": "Transform Synechocystis 6803",
+      "description": "Transform, select, and confirm low background."
+    },
+    {
+      "order": 4,
+      "stage": "induction",
+      "title": "Expose to sample",
+      "description": "Incubate with the sample plus a phosphate standard curve."
+    },
+    {
+      "order": 5,
+      "stage": "readout",
+      "title": "Read result",
+      "description": "Relate signal to concentration."
+    }
+  ],
+  "provenance": {
+    "source": "Design template combining the native Synechocystis SphS/SphR phosphate system with CRISPRa",
+    "partsSources": [
+      "Hirani et al. / SphS-SphR phosphate regulation (Synechocystis)",
+      "Yao et al. 2016 (CRISPRi in Synechocystis)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "id": "arsenic-crispri-cyano",
+  "name": "Self-powered arsenic sensor (ArsR + CRISPRi)",
+  "slug": "arsenic-crispri-cyano",
+  "shortDescription": "A self-powered water arsenic sensor. The native cyanobacterial ArsR regulator gates a CRISPRi circuit driving a fluorescent reporter, in photosynthetic Synechocystis \u2014 which runs on light and CO2, so it can be deployed long-term without added nutrients.",
+  "status": "template",
+  "tags": [
+    "arsenic",
+    "heavy-metal",
+    "water",
+    "environmental",
+    "self-powered",
+    "cyanobacteria",
+    "CRISPRi"
+  ],
+  "chassisSlug": "synechocystis-6803",
+  "input": {
+    "analyte": "Arsenite As(III)",
+    "category": "environmental",
+    "detects": "Inorganic arsenic in water",
+    "operatingRange": "ArsR responds around the 10 \u00b5g/L WHO limit and above"
+  },
+  "sensing": {
+    "strategy": "CRISPRi-repression",
+    "casProtein": "dCas9 (S. pyogenes, catalytically dead)",
+    "sensorMechanism": "Arsenite binds the cyanobacterial ArsR repressor, de-repressing the ars promoter.",
+    "signalFlow": "As(III) -> ArsR releases Pars -> anti-reporter sgRNA -> CRISPRi inverts a constitutive reporter (NOT). Pair an inverter for turn-on. Powered by photosynthesis.",
+    "logicType": "NOT"
+  },
+  "parts": [
+    {
+      "name": "ArsR regulator",
+      "role": "regulator",
+      "source": "Native Synechocystis arsR (ars operon)"
+    },
+    {
+      "name": "Pars promoter",
+      "role": "promoter",
+      "source": "Synechocystis ars promoter"
+    },
+    {
+      "name": "sgRNA",
+      "role": "sgRNA",
+      "source": "designed against / upstream of the reporter promoter"
+    },
+    {
+      "name": "sgRNA scaffold (SpCas9)",
+      "role": "sgRNA",
+      "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+      "source": "Standard SpCas9 scaffold"
+    },
+    {
+      "name": "dCas9",
+      "role": "dCas9",
+      "source": "Yao et al. 2016 (CRISPRi in Synechocystis)"
+    },
+    {
+      "name": "sfGFP",
+      "role": "reporter",
+      "source": "Pedelacq et al. 2006"
+    }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "sfGFP",
+    "readout": "Green fluorescence (field fluorimeter)",
+    "result": "Fluorescence change reports arsenic."
+  },
+  "performance": {
+    "validated": false,
+    "notes": "Cyanobacterial ArsR arsenic sensing and Synechocystis CRISPRi are validated separately; integrated device is a design template. Photoautotroph enables self-powered, long-term deployment."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": false,
+    "biocontainment": "Light/CO2-dependent growth; add inducible-essential containment for outdoor use.",
+    "fieldDeployable": true,
+    "notes": "Self-powered (photosynthesis)."
+  },
+  "buildSteps": [
+    {
+      "order": 1,
+      "stage": "design",
+      "title": "Design sgRNA",
+      "description": "Target/position the sgRNA; check Synechocystis 6803 off-targets."
+    },
+    {
+      "order": 2,
+      "stage": "assembly",
+      "title": "Assemble units",
+      "description": "Sensor -> sgRNA; dCas9; reporter. Use the host's standard toolkit."
+    },
+    {
+      "order": 3,
+      "stage": "transformation",
+      "title": "Transform Synechocystis 6803",
+      "description": "Transform, select, and confirm low background."
+    },
+    {
+      "order": 4,
+      "stage": "induction",
+      "title": "Expose to sample",
+      "description": "Incubate with the sample plus a arsenic standard curve."
+    },
+    {
+      "order": 5,
+      "stage": "readout",
+      "title": "Read result",
+      "description": "Relate signal to concentration."
+    }
+  ],
+  "provenance": {
+    "source": "Design template combining the native cyanobacterial ArsR arsenic sensor with Synechocystis CRISPRi",
+    "partsSources": [
+      "Cyanobacterial ars / ArsR literature",
+      "Yao et al. 2016 (CRISPRi in Synechocystis)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}

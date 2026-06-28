@@ -1,0 +1,121 @@
+{
+  "id": "lysine-crispra-cglutamicum",
+  "name": "Lysine sensor (LysG + CRISPRa)",
+  "slug": "lysine-crispra-cglutamicum",
+  "shortDescription": "Detects L-lysine \u2014 the flagship amino-acid product of C. glutamicum. The native LysG transcriptional sensor (used in the classic pSenLys biosensor) gates a CRISPRa circuit driving a fluorescent reporter, for strain screening and process monitoring.",
+  "status": "template",
+  "tags": [
+    "lysine",
+    "amino-acid",
+    "bioprocess",
+    "industrial",
+    "chemical",
+    "CRISPRa"
+  ],
+  "chassisSlug": "corynebacterium-glutamicum",
+  "input": {
+    "analyte": "L-lysine",
+    "category": "chemical",
+    "detects": "Intracellular/extracellular L-lysine (and basic amino acids) for strain screening and fermentation monitoring",
+    "operatingRange": "LysG sensor responds across mM lysine"
+  },
+  "sensing": {
+    "strategy": "CRISPRa-activation",
+    "casProtein": "dCas9-\u03c9 (CRISPRa activator)",
+    "sensorMechanism": "LysG (LysR-family) activates the lysE promoter in response to L-lysine (and arginine/histidine).",
+    "signalFlow": "L-lysine -> LysG activates PlysE -> sgRNA -> dCas9-activator amplifies the reporter (CRISPRa) -> fluorescence rises with lysine. Basis of FACS-based producer screening.",
+    "logicType": "amplifier"
+  },
+  "parts": [
+    {
+      "name": "LysG regulator",
+      "role": "regulator",
+      "source": "Native C. glutamicum lysG (LysR family); Binder et al. 2012 (pSenLys)"
+    },
+    {
+      "name": "PlysE promoter",
+      "role": "promoter",
+      "source": "C. glutamicum lysE promoter"
+    },
+    {
+      "name": "sgRNA",
+      "role": "sgRNA",
+      "source": "designed against / upstream of the reporter promoter"
+    },
+    {
+      "name": "sgRNA scaffold (SpCas9)",
+      "role": "sgRNA",
+      "sequence": "GTTTTAGAGCTAGAAATAGCAAGTTAAAATAAGGCTAGTCCGTTATCAACTTGAAAAAGTGGCACCGAGTCGGTGC",
+      "source": "Standard SpCas9 scaffold"
+    },
+    {
+      "name": "dCas9-\u03c9 activator",
+      "role": "dCas9",
+      "source": "Cleto et al. 2016 (CRISPRi/a in C. glutamicum)"
+    },
+    {
+      "name": "eYFP",
+      "role": "reporter",
+      "source": "fluorophore for FACS screening"
+    }
+  ],
+  "output": {
+    "type": "fluorescent",
+    "reporterGene": "eYFP",
+    "readout": "Fluorescence (plate reader / FACS)",
+    "result": "Fluorescence scales with lysine \u2014 enabling single-cell producer screening."
+  },
+  "performance": {
+    "validated": false,
+    "notes": "The LysG/lysE amino-acid biosensor (pSenLys) is validated for FACS-based strain screening; the CRISPRa-amplified version is a design template. Also responds to arginine/histidine."
+  },
+  "safety": {
+    "biosafetyLevel": 1,
+    "grasChassis": true,
+    "biocontainment": "Auxotrophic containment; GRAS industrial host.",
+    "fieldDeployable": false,
+    "notes": "GRAS industrial host; bioprocess/QC application."
+  },
+  "buildSteps": [
+    {
+      "order": 1,
+      "stage": "design",
+      "title": "Design sgRNA",
+      "description": "Target/position the sgRNA; check C. glutamicum off-targets."
+    },
+    {
+      "order": 2,
+      "stage": "assembly",
+      "title": "Assemble units",
+      "description": "Sensor -> sgRNA; dCas9; reporter. Use the host's standard toolkit."
+    },
+    {
+      "order": 3,
+      "stage": "transformation",
+      "title": "Transform C. glutamicum",
+      "description": "Transform, select, and confirm low background."
+    },
+    {
+      "order": 4,
+      "stage": "induction",
+      "title": "Expose to sample",
+      "description": "Incubate with the sample plus a lysine standard curve."
+    },
+    {
+      "order": 5,
+      "stage": "readout",
+      "title": "Read result",
+      "description": "Relate signal to concentration."
+    }
+  ],
+  "provenance": {
+    "source": "Design template combining the LysG/lysE lysine biosensor with C. glutamicum CRISPRa",
+    "partsSources": [
+      "Binder et al. 2012, Genome Biol (LysG/pSenLys amino-acid biosensor)",
+      "Cleto et al. 2016 (CRISPRi in C. glutamicum)"
+    ],
+    "license": "Parts per their original sources; design template CC BY 4.0",
+    "addedBy": "seed",
+    "dateAdded": "2026-06-28"
+  }
+}
