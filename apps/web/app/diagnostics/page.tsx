@@ -11,7 +11,7 @@ export default function DiagnosticsPage() {
           <p>
             Design a <strong>nucleic-acid detection</strong> assay — DETECTR (Cas12a), SHERLOCK (Cas13a/d), or a dCas9-binding
             sensor. Paste a pathogen target (or load a legacy example), and get ranked detection crRNAs plus a matched
-            RPA pre-amplification primer pair. Engine adapted from CRISPR Studio; complements the whole-cell library.
+            RPA pre-amplification primer pair — complementing the whole-cell library.
           </p>
         </div>
       </section>

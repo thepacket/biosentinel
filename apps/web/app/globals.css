@@ -17,7 +17,7 @@
   --base-t: #f87171;
 }
 
-/* Per-base DNA/RNA colouring (CRISPR Studio palette) */
+/* Per-base DNA/RNA colouring */
 .b-A { color: var(--base-a); }
 .b-C { color: var(--base-c); }
 .b-G { color: var(--base-g); }

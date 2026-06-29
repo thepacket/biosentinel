@@ -18,7 +18,7 @@ export default function GuidesPage() {
           <p>
             Design and check the sgRNA for a CRISPRi/CRISPRa biosensor — no prior expertise needed. Paste your target (or load
             an example), get ranked guides, and confirm each one is unique to your host. Off-target scoring uses an authentic
-            CFD / MIT engine (adapted from CRISPR Studio).
+            CFD / MIT engine.
           </p>
         </div>
       </section>
