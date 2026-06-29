@@ -1,6 +1,6 @@
 # Comparative Analysis — Biosentinel vs. the field
 
-_Last updated: 2026-06-28_
+_Last updated: 2026-06-29_
 
 Biosentinel pivoted from in-vitro CRISPR-Dx (see [`competitive-analysis.md`](competitive-analysis.md),
 now covering the *legacy* assay library) to a **whole-cell CRISPR biosensor design studio**.
@@ -36,6 +36,8 @@ in a product**. That gap is exactly where Biosentinel sits.
 | **Visual circuit diagram** + **SBOL parts track** | ✅ | ✅ (Cello SBOL) | ✅ (SBOL) | ❌ | ⚠️ maps/sequence |
 | **Logic topologies** (AND/OR/band-pass/memory/ratiometric) | ✅ as designs | ✅ as synthesis | ❌ | ❌ | ❌ |
 | Reusable **parts registry** (incl. reporters) feeding the designer | ✅ 21 parts | ⚠️ via SynBioHub | ✅ huge | ✅ | ⚠️ |
+| **sgRNA design + off-target** (MIT/CFD, auto-fetched host genome) | ✅ | ❌ | ❌ | ❌ no CRISPR | ⚠️ editing guides |
+| **In-vitro CRISPR-Dx designer** (DETECTR/SHERLOCK + RPA primers + SNP typing) | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Beginner-friendly (hobbyist + pro) | ✅ | ❌ expert | ⚠️ | ⚠️ | ⚠️ |
 | **Biophysical part tuning** (RBS/promoter strength) | ❌ | ⚠️ | ❌ | ✅ best-in-class | ❌ |
 | **Formal logic synthesis + ODE simulation** | ❌ | ✅ best-in-class | ❌ | ❌ | ❌ |
@@ -58,8 +60,20 @@ in a product**. That gap is exactly where Biosentinel sits.
    assume Verilog and modeling expertise; registries assume you already know what to build.
 4. **Breadth of hosts and topologies in one place** — 9 chassis (incl. eukaryotic yeast and
    self-powered cyanobacteria) × 6 circuit topologies, all browsable and filterable.
+5. **It now spans in-vitro too.** A built-in **guide-RNA designer** (spacer enumeration +
+   MIT/CFD off-target scoring against an auto-fetched host genome) and an **in-vitro CRISPR-Dx
+   designer** (DETECTR/SHERLOCK detection crRNAs, RPA pre-amplification primers, SNP
+   discrimination, cross-reactivity) — so the tool covers living biosensors *and* nucleic-acid
+   diagnostics, which no single competitor does.
 
-## 4. Where competitors are ahead (our roadmap)
+## 4. Recently closed (vs. earlier versions)
+
+- **sgRNA design + off-target scoring** — designs used to say "design the sgRNA"; there is now a
+  guide-RNA designer with an authentic MIT/CFD off-target engine and host-genome auto-fetch.
+- **In-vitro detection + amplification design** — DETECTR/SHERLOCK crRNA design and RPA primer
+  design (the originally-underserved amplification step) are now built.
+
+## 5. Where competitors are still ahead (roadmap)
 
 - **Biophysical part tuning** — De Novo DNA's RBS/Promoter Calculators predict expression
   strength. Biosentinel has no quantitative part model. *→ integrate or link out.*
@@ -68,13 +82,12 @@ in a product**. That gap is exactly where Biosentinel sits.
   *→ add a simple circuit simulator / Cello bridge.*
 - **SBOL *data* interoperability** — we render SBOL *visual* glyphs but don't import/export the
   SBOL data model or sync with SynBioHub. *→ add SBOL2/3 export.*
-- **Cloning / assembly output** — Benchling/SnapGene produce ready-to-order constructs and ELN
-  records. Biosentinel stops at the design. *→ generate assembly-ready sequences + ordering sheets.*
-- **sgRNA design engine** — CHOPCHOP/CRISPOR do spacer design + off-target scoring; our designs
-  say "design the sgRNA." *→ embed a guide-design step.*
-- **Validation** — our designs are *templates* (real cited parts, integrated pattern), not
-  experimentally validated devices; Cello gate libraries are characterized. *→ add validated
-  devices and measured performance where available.*
+- **Cloning / assembly + ELN** — the in-vitro side now outputs orderable crRNAs + RPA primers,
+  but the whole-cell side stops at the design (no assembly-ready plasmid / ELN). *→ generate
+  assembly-ready sequences + ordering sheets.*
+- **Persistence** — clones/drafts download as JSON; there are no accounts or saved projects yet.
+- **Validation** — most designs are *templates* (real cited parts, integrated pattern), not
+  experimentally validated devices. *→ add validated devices and measured performance.*
 
 ## 5. One-line positioning
 

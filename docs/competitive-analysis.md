@@ -1,6 +1,13 @@
-# CRISPR Biosensor Design — Competitive Analysis
+# CRISPR Biosensor Design — Competitive Analysis (in-vitro CRISPR-Dx)
 
 _Last updated: 2026-06-28_
+
+> **Scope note.** This is the original analysis of the **in-vitro nucleic-acid
+> detection (CRISPR-Dx)** landscape — SHERLOCK/DETECTR-style assays. Biosentinel
+> has since become primarily a **whole-cell** biosensor studio (see
+> [`comparative-analysis.md`](comparative-analysis.md)); this in-vitro work now
+> lives on the `/diagnostics` page and in `data/legacy-assays/`. The analysis
+> below remains accurate for that diagnostics side.
 
 ## 1. Scope & framing
 

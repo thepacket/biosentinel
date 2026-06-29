@@ -11,31 +11,46 @@ and safety profile, and can be cloned and adapted.
 > organisms (the schema enforces `biosafetyLevel == 1`). Designs marked *template*
 > combine individually-validated parts into a CRISPR circuit pattern.
 
-See [`docs/competitive-analysis.md`](docs/competitive-analysis.md) for context.
-A **legacy** in-vitro CRISPR-Dx assay library (SHERLOCK / DETECTR) is retained
-under `data/legacy-assays/` and served at `/api/legacy/assays`.
+See [`docs/comparative-analysis.md`](docs/comparative-analysis.md) for where this
+sits vs. other tools. [`docs/competitive-analysis.md`](docs/competitive-analysis.md)
+covers the in-vitro CRISPR-Dx landscape (the `/diagnostics` + legacy side).
 
 ## Status
 
-- ✅ Data model — [`chassis.schema.json`](packages/schema/chassis.schema.json) (BSL-1 enforced) + [`biosensor.schema.json`](packages/schema/biosensor.schema.json)
-- ✅ Safe-chassis catalog — `data/chassis/` (E. coli K-12, B. subtilis 168, E. coli Nissle 1917, L. lactis, P. putida KT2440)
-- ✅ Whole-cell CRISPR biosensor designs — `data/biosensors/` (arsenic, mercury, P. aeruginosa quorum, gut thiosulfate)
-- ✅ FastAPI backend — chassis + biosensor + legacy endpoints, schema-validated, referential integrity + BSL-1 guardrail
-- ✅ Next.js UI — design library with safety badges + analyte/chassis/strategy filters, design detail (chassis · sensing · parts · output · safety · build steps), chassis catalog
-- ✅ Parts registry (`/parts`) + designer (`/design`) + **Guide RNA designer (`/guides`)** — sgRNA enumeration + off-target scoring (MIT/CFD)
-- ✅ **In-vitro CRISPR-Dx designer (`/diagnostics`)** — DETECTR/SHERLOCK detection crRNAs + RPA pre-amplification primers; legacy assays load as examples
+The app spans whole-cell biosensing **and** in-vitro diagnostics. Current
+contents: **62 designs · 9 chassis · 21 parts · 4 legacy assays**.
+
+**Data & model**
+- Schemas — [`chassis.schema.json`](packages/schema/chassis.schema.json) (BSL-1 enforced), [`biosensor.schema.json`](packages/schema/biosensor.schema.json), [`part.schema.json`](packages/schema/part.schema.json), legacy `assay.schema.json`
+- Safe-chassis catalog (9) — E. coli K-12, B. subtilis 168, E. coli Nissle 1917, L. lactis, P. putida KT2440, S. cerevisiae (yeast), Synechocystis (cyanobacteria), L. plantarum, C. glutamicum
+- 62 whole-cell CRISPR biosensor designs across environmental / pathogen / clinical-gut / chemical, and six circuit topologies (single, AND, OR, band-pass, memory, ratiometric)
+- 21-part genetic registry — reporters, promoters, dCas9/Cas variants, sgRNA scaffold, riboswitches, RBS, terminator
+
+**App (pages)**
+- `/` **Designs** — library with safety badges + analyte / strategy / design-type / chassis filters (sticky navigator)
+- `/biosensors/[slug]` — design detail: pipeline, genetic-circuit diagram, SBOL parts track, sensing, parts, output, safety, build steps; clone-to-edit + "Open in designer"
+- `/chassis` — safe-chassis catalog + per-chassis detail
+- `/parts` — genetic-parts registry + detail (links to the designs that use each part)
+- `/design` — guided **Designer**: recombine a real sensing module + chassis + CRISPR strategy + reporter into a schema-valid draft
+- `/guides` — **Guide RNA designer**: ranked spacers + on-target heuristic; off-target scoring (MIT/CFD) against a pasted reference or an auto-fetched host genome; guided/advanced modes; sequence highlight overlays
+- `/diagnostics` — **in-vitro CRISPR-Dx designer**: DETECTR/SHERLOCK detection crRNAs, RPA pre-amplification primers, SNP discrimination, cross-reactivity; legacy assays load as examples
+
+**Backend** — FastAPI: chassis / biosensor / parts / legacy endpoints (schema-validated, BSL-1 + referential-integrity guardrails) plus `guides/design`, `guides/offtarget`, `guides/host-offtarget`. Serves the static frontend on the same port.
+
+**Throughout** — per-base DNA/RNA colouring, click-to-enlarge diagrams, themed dark UI.
 
 ## Repo layout
 
 ```
-packages/schema/    chassis.schema.json + biosensor.schema.json (+ legacy assay.schema.json)
+packages/schema/    chassis + biosensor + part schemas (+ legacy assay schema)
 data/chassis/       safe BSL-1/GRAS chassis catalog (JSON)
 data/biosensors/    whole-cell CRISPR biosensor designs (JSON)
-data/parts/         reusable genetic-parts registry incl. reporters (JSON)
-data/legacy-assays/ retained in-vitro CRISPR-Dx assays
-services/api/       FastAPI — chassis/biosensor/legacy endpoints + validation
-apps/web/           Next.js (App Router, TS, static export) — library + detail + chassis
-docs/               Competitive analysis and design notes
+data/parts/         genetic-parts registry, incl. reporters (JSON)
+data/legacy-assays/ in-vitro CRISPR-Dx assays (examples for /diagnostics)
+services/api/       FastAPI — endpoints + schema validation + guide/off-target engine
+apps/web/           Next.js (App Router, TS, static export) — all pages + components
+docs/               competitive & comparative analyses
+LICENSE · THIRD_PARTY_LICENSES.md · data/LICENSE
 ```
 
 ## Run it (development)
@@ -65,9 +80,9 @@ In development the pages read the catalog straight from `data/chassis/` and
 
 ## Production build & deploy (Fly.io)
 
-Production is a **single image, single port** (the [quantiom](../quantiom) pattern):
-a multi-stage Docker build compiles the Next.js **static export** and FastAPI
-serves both the SPA (`/`) and the API (`/api/*`) on port 8000. Scales to zero.
+Production is a **single image, single port**: a multi-stage Docker build
+compiles the Next.js **static export** and FastAPI serves both the SPA (`/`) and
+the API (`/api/*`) on port 8000. Scales to zero.
 
 ```bash
 # build + run the production image locally

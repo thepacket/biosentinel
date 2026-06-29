@@ -21,3 +21,7 @@ Planned example assays to add (with verified sequences from primary sources — 
 
 When adding: copy an existing JSON, replace sequences verbatim from the source, set
 `provenance.url`, and run the schema check (see repo README).
+
+> Tip: the **in-vitro CRISPR-Dx designer** (`/diagnostics`) can design DETECTR/
+> SHERLOCK detection crRNAs and RPA primers from any pasted target — useful for
+> drafting these backlog assays before transcribing the published sequences.
