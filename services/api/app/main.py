@@ -316,6 +316,49 @@ def guides_offtarget(req: OffTargetReq) -> dict[str, Any]:
     }
 
 
+class HostOffTargetReq(BaseModel):
+    spacer: str
+    casId: str = "spcas9"
+    chassisSlug: str
+    maxMismatches: int = Field(4, ge=0, le=6)
+
+
+@app.post("/api/guides/host-offtarget")
+def guides_host_offtarget(req: HostOffTargetReq) -> dict[str, Any]:
+    """Off-target scan against a chassis's own genome, fetched from NCBI by accession."""
+    try:
+        profile = get_profile(req.casId)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    spacer = req.spacer.upper().replace("U", "T")
+    if len(spacer) != profile.spacer_length or any(b not in "ACGT" for b in spacer):
+        raise HTTPException(status_code=400, detail=f"spacer must be {profile.spacer_length} A/C/G/T bases")
+    c = _chassis_by_slug(req.chassisSlug)
+    if not c:
+        raise HTTPException(status_code=404, detail=f"No chassis '{req.chassisSlug}'")
+    accession = (c.get("engineering") or {}).get("genomeAccession")
+    if not guide_design.genome_fetchable(accession):
+        raise HTTPException(status_code=400, detail=f"Genome auto-fetch isn't available for {c['name']} (accession {accession}). Paste a region instead.")
+    try:
+        fasta = guide_design.fetch_genome_fasta(accession)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Could not fetch genome {accession}: {e}")
+    records = parse_fasta(fasta)
+    res = ot.search(spacer, profile, records, req.maxMismatches)
+    return {
+        "host": c["name"], "accession": accession,
+        "mitSpecificity": res.mit_specificity, "cfdSpecificity": res.cfd_specificity,
+        "cfdApplicable": profile.cfd_applicable, "onTargetCount": res.on_target_count,
+        "offTargetCount": len(res.hits), "scannedBp": res.scanned_bp, "truncated": res.truncated,
+        "topHits": [
+            {"record": h.record, "strand": h.strand, "start": h.start, "mismatches": h.mismatches,
+             "sequence": h.sequence, "pam": h.pam, "mitScore": round(h.mit_score, 1),
+             "cfdScore": (round(h.cfd_score, 3) if h.cfd_score is not None else None)}
+            for h in res.hits[:10]
+        ],
+    }
+
+
 @app.get("/api/legacy/assays")
 def list_legacy() -> dict[str, Any]:
     return {"count": len(legacy()), "items": legacy()}

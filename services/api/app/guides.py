@@ -11,11 +11,36 @@ off-target binding risk.
 """
 from __future__ import annotations
 
+import urllib.request
 from dataclasses import dataclass, asdict
+from functools import lru_cache
 from typing import Any
 
 from .crispr_studio.cas import CasProfile, get_profile
 from .crispr_studio.genome import matches_iupac, parse_fasta, reverse_complement
+
+
+def genome_fetchable(accession: str | None) -> bool:
+    """RefSeq nucleotide accessions (NC_/NZ_/NG_) can be fetched from NCBI;
+    assembly accessions (GCF_/GCA_) cannot be efetched directly."""
+    return bool(accession) and accession[:3] in ("NC_", "NZ_", "NG_")
+
+
+@lru_cache(maxsize=8)
+def fetch_genome_fasta(accession: str) -> str:
+    """Fetch a genome/sequence FASTA from NCBI by accession (cached in memory)."""
+    if not genome_fetchable(accession):
+        raise ValueError(f"genome auto-fetch not available for accession '{accession}'")
+    url = (
+        "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+        f"?db=nuccore&id={accession}&rettype=fasta&retmode=text"
+    )
+    req = urllib.request.Request(url, headers={"User-Agent": "Biosentinel/1.0"})
+    with urllib.request.urlopen(req, timeout=45) as r:  # noqa: S310 (fixed NCBI host)
+        text = r.read().decode("utf-8", "replace")
+    if not text.startswith(">"):
+        raise ValueError("NCBI did not return a FASTA record")
+    return text
 
 
 @dataclass
