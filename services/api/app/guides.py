@@ -86,23 +86,29 @@ def _evaluate(spacer: str) -> tuple[int, list[str]]:
     return max(score, 0), warnings
 
 
-def _scan(seq: str, strand: str, profile: CasProfile) -> list[GuideCandidate]:
+def _scan(seq: str, strand: str, profile: CasProfile, total_len: int) -> list[GuideCandidate]:
+    """Scan one strand. `start` is always reported in top-strand coordinates so
+    a guide's footprint can be highlighted on the original target."""
     L, P = profile.spacer_length, len(profile.pam)
     out: list[GuideCandidate] = []
+
+    def add(local_start: int, proto: str, pam: str) -> None:
+        start = local_start if strand == "+" else total_len - (local_start + L)
+        score, warns = _evaluate(proto)
+        out.append(GuideCandidate(proto, pam, strand, start, _gc(proto), score, warns))
+
     if profile.pam_side == "3prime":
         for j in range(L, len(seq) - P + 1):
             proto, pam = seq[j - L : j], seq[j : j + P]
             if "N" in proto or not matches_iupac(pam, profile.pam):
                 continue
-            score, warns = _evaluate(proto)
-            out.append(GuideCandidate(proto, pam, strand, j - L, _gc(proto), score, warns))
+            add(j - L, proto, pam)
     else:  # 5' PAM (Cas12a): PAM then protospacer
         for j in range(0, len(seq) - P - L + 1):
             pam, proto = seq[j : j + P], seq[j + P : j + P + L]
             if "N" in proto or not matches_iupac(pam, profile.pam):
                 continue
-            score, warns = _evaluate(proto)
-            out.append(GuideCandidate(proto, pam, strand, j, _gc(proto), score, warns))
+            add(j + P, proto, pam)
     return out
 
 
@@ -115,7 +121,8 @@ def design_guides(target: str, cas_id: str, count: int = 20) -> dict[str, Any]:
     if len(seq) < profile.spacer_length + len(profile.pam):
         raise ValueError("target sequence is too short for this Cas")
 
-    cands = _scan(seq, "+", profile) + _scan(reverse_complement(seq), "-", profile)
+    n = len(seq)
+    cands = _scan(seq, "+", profile, n) + _scan(reverse_complement(seq), "-", profile, n)
     # de-dup identical spacers, keep the best-scoring instance
     best: dict[str, GuideCandidate] = {}
     for c in cands:

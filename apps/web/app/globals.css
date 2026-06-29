@@ -25,6 +25,18 @@
 .b-U { color: var(--base-t); }
 .b-N { color: var(--muted); }
 
+/* Sequence view with protospacer / PAM / window highlight bands */
+.seqview {
+  font-family: var(--mono); font-size: 12.5px; line-height: 1.95; word-break: break-all;
+  background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; overflow-x: auto;
+}
+.seqctx { color: var(--muted); }
+.hl-window { background: rgba(110, 168, 254, 0.16); }
+.hl-proto { background: rgba(63, 182, 168, 0.26); border-radius: 2px; }
+.hl-pam { background: rgba(251, 191, 36, 0.32); border-radius: 2px; font-weight: 700; }
+.seq-legend { display: flex; gap: 16px; font-size: 11px; color: var(--muted); margin: 6px 0 0; flex-wrap: wrap; }
+.seq-legend i { display: inline-block; width: 11px; height: 11px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+
 * { box-sizing: border-box; }
 
 /* Themed scrollbars to match the dark UI */

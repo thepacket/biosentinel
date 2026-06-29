@@ -14,6 +14,7 @@ import {
 } from "@/lib/crispr-dx/biosensor";
 import DetectionMapTrack from "./DetectionMapTrack";
 import Dna from "./Dna";
+import SequenceView, { type Band } from "./SequenceView";
 
 type Example = { slug: string; name: string; platform?: string; gene?: string; casType?: string; sequence: string };
 
@@ -84,6 +85,27 @@ export default function DiagnosticsDesigner({ examples }: { examples: Example[] 
     setCross(crossReactivity(selected, profile, clean(background), 5).slice(0, 12));
   }
 
+  // Highlight bands for the selected guide's footprint on the target.
+  function bands(): Band[] {
+    if (!selected) return [];
+    const b: Band[] = [];
+    if (ampl?.forward && ampl?.reverse) b.push({ start: ampl.ampliconStart, end: ampl.ampliconEnd, className: "hl-window" });
+    b.push({ start: selected.protospacerStart, end: selected.protospacerEnd, className: "hl-proto" });
+    const P = selected.recognitionSeq.length;
+    const rec = profile.recognition;
+    if (P > 0) {
+      if (rec.kind === "PFS") b.push({ start: selected.protospacerEnd, end: selected.protospacerEnd + 1, className: "hl-pam" });
+      else if (rec.kind === "PAM") {
+        const fivePrime = rec.side === "5prime";
+        const onLeft = selected.strand === "+" ? fivePrime : !fivePrime;
+        b.push(onLeft
+          ? { start: selected.protospacerStart - P, end: selected.protospacerStart, className: "hl-pam" }
+          : { start: selected.protospacerEnd, end: selected.protospacerEnd + P, className: "hl-pam" });
+      }
+    }
+    return b;
+  }
+
   return (
     <div>
       <div className="step">
@@ -130,6 +152,23 @@ export default function DiagnosticsDesigner({ examples }: { examples: Example[] 
                 ))}
               </tbody>
             </table>
+            {selected && (
+              <div style={{ marginTop: 14 }}>
+                <div className="seq-name">Selected guide on the target</div>
+                <SequenceView
+                  seq={seq}
+                  highlights={bands()}
+                  focus={{ start: selected.protospacerStart, end: selected.protospacerEnd }}
+                  legend={
+                    <div className="seq-legend">
+                      <span><i className="hl-proto" />protospacer (crRNA target)</span>
+                      {selected.recognitionSeq && <span><i className="hl-pam" />{profile.recognition.kind === "PFS" ? "PFS" : "PAM"}</span>}
+                      {ampl?.forward && ampl?.reverse && <span><i className="hl-window" />RPA amplicon</span>}
+                    </div>
+                  }
+                />
+              </div>
+            )}
             <p className="footnote" style={{ marginTop: 8 }}>Reporter: {profile.reporter ?? "—"}. Score favours a moderate GC band, low self-structure, and no long homopolymers.</p>
           </section>
 

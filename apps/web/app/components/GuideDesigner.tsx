@@ -2,6 +2,10 @@
 
 import { Fragment, useState } from "react";
 import Dna from "./Dna";
+import SequenceView, { type Band } from "./SequenceView";
+
+const cleanT = (raw: string) =>
+  raw.split(/\r?\n/).filter((l) => !l.startsWith(">")).join("").toUpperCase().replace(/U/g, "T").replace(/[^ACGTN]/g, "");
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 
@@ -40,9 +44,10 @@ export default function GuideDesigner({ targetParts, chassisGenomes }: { targetP
   const [maxGc, setMaxGc] = useState(100);
   const [strandFilter, setStrandFilter] = useState<"both" | "+" | "-">("both");
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [selIdx, setSelIdx] = useState(0);
 
   async function design() {
-    setLoading(true); setErr(""); setCands(null); setOt({}); setExpanded(null);
+    setLoading(true); setErr(""); setCands(null); setOt({}); setExpanded(null); setSelIdx(0);
     try {
       const res = await fetch(`${API_BASE}/api/guides/design`, {
         method: "POST", headers: { "Content-Type": "application/json" },
@@ -87,6 +92,18 @@ export default function GuideDesigner({ targetParts, chassisGenomes }: { targetP
   const isSp = casId === "spcas9";
   const fetchableHosts = chassisGenomes.filter((c) => c.fetchable);
   const shown = (cands ?? []).filter((c) => c.gc >= minGc && c.gc <= maxGc && (strandFilter === "both" || c.strand === strandFilter));
+  const sel = shown[selIdx] ?? shown[0];
+  const cleanedTarget = cleanT(target);
+  const guideBands = (): Band[] => {
+    if (!sel) return [];
+    const L = sel.spacer.length;
+    const b: Band[] = [{ start: sel.start, end: sel.start + L, className: "hl-proto" }];
+    const P = sel.pam.length;
+    const fivePrime = casId === "ascas12a";
+    const onLeft = sel.strand === "+" ? fivePrime : !fivePrime;
+    if (P > 0) b.push(onLeft ? { start: sel.start - P, end: sel.start, className: "hl-pam" } : { start: sel.start + L, end: sel.start + L + P, className: "hl-pam" });
+    return b;
+  };
   const spec = (o: OT) => (o.cfdApplicable && o.cfdSpecificity != null ? o.cfdSpecificity : o.mitSpecificity);
 
   return (
@@ -183,12 +200,12 @@ export default function GuideDesigner({ targetParts, chassisGenomes }: { targetP
           <table className="parts">
             <thead><tr><th>Spacer (5′→3′)</th><th>PAM</th><th>Strand</th><th>GC</th><th>Score</th><th>Unique?</th></tr></thead>
             <tbody>
-              {shown.map((c) => {
+              {shown.map((c, i) => {
                 const o = ot[c.spacer];
                 const obj = o && o !== "loading" && o !== "err" ? (o as OT) : null;
                 return (
                   <Fragment key={c.spacer + c.strand + c.start}>
-                    <tr>
+                    <tr onClick={() => setSelIdx(i)} style={{ cursor: "pointer", background: i === selIdx ? "var(--panel-2, #18202c)" : undefined }}>
                       <td>
                         <Dna seq={c.spacer} />
                         {c.warnings.length > 0 && <div style={{ color: "var(--warn)", fontSize: 11 }}>{c.warnings.join("; ")}</div>}
@@ -240,6 +257,18 @@ export default function GuideDesigner({ targetParts, chassisGenomes }: { targetP
               })}
             </tbody>
           </table>
+
+          {sel && cleanedTarget && (
+            <div style={{ marginTop: 14 }}>
+              <div className="seq-name">Selected guide on the target <span style={{ color: "var(--muted)", fontWeight: 400 }}>(click a row to change)</span></div>
+              <SequenceView
+                seq={cleanedTarget}
+                highlights={guideBands()}
+                focus={{ start: sel.start, end: sel.start + sel.spacer.length }}
+                legend={<div className="seq-legend"><span><i className="hl-proto" />protospacer</span><span><i className="hl-pam" />PAM</span></div>}
+              />
+            </div>
+          )}
 
           {isSp && shown[0] && (
             <div className="seq-row" style={{ marginTop: 16 }}>
