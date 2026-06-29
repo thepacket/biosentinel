@@ -21,6 +21,8 @@ const BIOSENSOR_DIR =
   process.env.BIOSENSORS_DESIGN_DIR || path.resolve(process.cwd(), "../../data/biosensors");
 const PARTS_DIR =
   process.env.BIOSENSORS_PARTS_DIR || path.resolve(process.cwd(), "../../data/parts");
+const LEGACY_DIR =
+  process.env.BIOSENSORS_LEGACY_DIR || path.resolve(process.cwd(), "../../data/legacy-assays");
 
 function readDir<T>(dir: string): T[] {
   if (!fs.existsSync(dir)) return [];
@@ -86,6 +88,23 @@ function biosensorSummary(b: Biosensor): BiosensorSummary {
     biosafetyLevel: b.safety.biosafetyLevel,
     grasChassis: b.safety.grasChassis,
   };
+}
+
+// ---- Legacy in-vitro CRISPR-Dx examples (for the diagnostics designer) ----
+
+export type LegacyExample = {
+  slug: string; name: string; platform?: string; gene?: string; casType?: string; sequence: string;
+};
+
+export function getLegacyExamples(): LegacyExample[] {
+  return readDir<any>(LEGACY_DIR)
+    .filter((a) => a?.target?.ampliconSequence)
+    .map((a) => ({
+      slug: a.slug, name: a.name, platform: a.platform,
+      gene: a.target?.geneSymbol, casType: a.crispr?.casType,
+      sequence: a.target.ampliconSequence as string,
+    }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 // ---- Parts catalog ----
