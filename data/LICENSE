@@ -1,0 +1,20 @@
+Curated data license — Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+Copyright (c) 2026 Andre Paquette
+
+The curated content in this directory — biosensor designs (`data/biosensors/`),
+the safe-chassis catalog (`data/chassis/`), the genetic-parts registry
+(`data/parts/`), and the legacy in-vitro assay set (`data/legacy-assays/`) — is
+licensed under CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+
+You are free to share and adapt this data for any purpose, provided you give
+appropriate credit.
+
+Note: the underlying biological sequences, genetic parts, and sensing modules
+referenced here originate from the primary scientific literature and registries
+cited in each record's `provenance` field, and remain subject to their original
+sources and terms. Designs marked `status: "template"` combine individually
+published parts into a circuit pattern and are not validated devices.
+
+(The application source code in this repository is licensed under the MIT
+License — see the top-level `LICENSE`.)

@@ -111,3 +111,13 @@ Run the validator after any change. Never fabricate biological sequences.
 
 > Research / educational use only. Engineer responsibly and follow your
 > institution's biosafety rules before any lab or field work.
+
+## License
+
+- **Code** — MIT License (see [`LICENSE`](LICENSE)).
+- **Curated data** (`data/` — designs, chassis catalog, parts registry) —
+  Creative Commons Attribution 4.0 (CC BY 4.0); see [`data/LICENSE`](data/LICENSE).
+- Third-party dependencies and the published methods this builds on are listed
+  in [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md).
+
+Copyright (c) 2026 Andre Paquette.
