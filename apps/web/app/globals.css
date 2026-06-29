@@ -27,6 +27,13 @@
 
 * { box-sizing: border-box; }
 
+/* Themed scrollbars to match the dark UI */
+* { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 6px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: #34425c; }
+
 html, body {
   margin: 0;
   padding: 0;
