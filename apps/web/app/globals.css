@@ -72,8 +72,13 @@ a:hover { text-decoration: underline; }
 .hero h1 { font-size: 30px; margin: 0 0 8px; }
 .hero p { color: var(--muted); margin: 0; max-width: 720px; }
 
-.layout { display: grid; grid-template-columns: 220px 1fr; gap: 28px; padding: 28px 0 64px; }
-@media (max-width: 800px) { .layout { grid-template-columns: 1fr; } }
+.layout { display: grid; grid-template-columns: 220px 1fr; gap: 28px; padding: 28px 0 64px; align-items: start; }
+/* Keep the filter/navigator panel pinned while the designs scroll. */
+.filters { position: sticky; top: 18px; align-self: start; max-height: calc(100vh - 36px); overflow-y: auto; }
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  .filters { position: static; max-height: none; overflow: visible; }
+}
 
 .filters h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin: 18px 0 8px; }
 .filter-btn {
