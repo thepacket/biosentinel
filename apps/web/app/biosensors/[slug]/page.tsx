@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getAllBiosensors, getBiosensorBySlug } from "@/lib/data";
 import { circuitPropsFromBiosensor, REPORTER_BY_GENE } from "@/lib/designer";
 import CloneButton from "../../components/CloneButton";
+import Dna from "../../components/Dna";
 import CircuitDiagram from "../../components/CircuitDiagram";
 import PartsTrack from "../../components/PartsTrack";
 
@@ -170,7 +171,7 @@ export default function BiosensorPage({ params }: { params: { slug: string } }) 
                     <td>
                       <strong>{p.name}</strong>
                       {p.notes && <div style={{ color: "var(--muted)", fontSize: 12 }}>{p.notes}</div>}
-                      {p.sequence && <div className="partseq">{p.sequence}</div>}
+                      {p.sequence && <div className="partseq"><Dna seq={p.sequence} className="" /></div>}
                     </td>
                     <td><span className="role-tag">{p.role}</span></td>
                     <td style={{ color: "var(--muted)", fontSize: 12.5 }}>{p.partId ?? p.source ?? ""}</td>

@@ -13,6 +13,7 @@ import {
   type DetectionGuide,
 } from "@/lib/crispr-dx/biosensor";
 import DetectionMapTrack from "./DetectionMapTrack";
+import Dna from "./Dna";
 
 type Example = { slug: string; name: string; platform?: string; gene?: string; casType?: string; sequence: string };
 
@@ -119,10 +120,10 @@ export default function DiagnosticsDesigner({ examples }: { examples: Example[] 
               <tbody>
                 {guides.map((g) => (
                   <tr key={g.id} onClick={() => setSelected(g)} style={{ cursor: "pointer", background: g.id === selected?.id ? "var(--panel-2, #18202c)" : undefined }}>
-                    <td className="partseq" style={{ color: "var(--accent)" }}>{g.spacer}</td>
+                    <td><Dna seq={g.spacer} /></td>
                     <td>{g.strand}</td>
                     <td>{g.protospacerStart}–{g.protospacerEnd}</td>
-                    <td className="partseq">{g.recognitionSeq || "—"}</td>
+                    <td>{g.recognitionSeq ? <Dna seq={g.recognitionSeq} /> : "—"}</td>
                     <td><strong>{g.detection.score}</strong></td>
                     <td style={{ color: "var(--warn)", fontSize: 12 }}>{g.detection.flags.join(", ")}</td>
                   </tr>
@@ -139,8 +140,8 @@ export default function DiagnosticsDesigner({ examples }: { examples: Example[] 
               <table className="parts">
                 <thead><tr><th>Primer</th><th>Sequence (5′→3′)</th><th>Tm</th><th>GC</th></tr></thead>
                 <tbody>
-                  <tr><td><strong>Forward</strong></td><td className="partseq">{ampl.forward?.sequence ?? "—"}</td><td>{ampl.forward ? `${ampl.forward.tm}°C` : "—"}</td><td>{ampl.forward ? `${Math.round(ampl.forward.gc * 100)}%` : "—"}</td></tr>
-                  <tr><td><strong>Reverse</strong></td><td className="partseq">{ampl.reverse?.sequence ?? "—"}</td><td>{ampl.reverse ? `${ampl.reverse.tm}°C` : "—"}</td><td>{ampl.reverse ? `${Math.round(ampl.reverse.gc * 100)}%` : "—"}</td></tr>
+                  <tr><td><strong>Forward</strong></td><td>{ampl.forward ? <Dna seq={ampl.forward.sequence} /> : "—"}</td><td>{ampl.forward ? `${ampl.forward.tm}°C` : "—"}</td><td>{ampl.forward ? `${Math.round(ampl.forward.gc * 100)}%` : "—"}</td></tr>
+                  <tr><td><strong>Reverse</strong></td><td>{ampl.reverse ? <Dna seq={ampl.reverse.sequence} /> : "—"}</td><td>{ampl.reverse ? `${ampl.reverse.tm}°C` : "—"}</td><td>{ampl.reverse ? `${Math.round(ampl.reverse.gc * 100)}%` : "—"}</td></tr>
                 </tbody>
               </table>
               {ampl.forward && ampl.reverse && <p className="footnote">Amplicon: {ampl.ampliconStart}–{ampl.ampliconEnd} ({ampl.ampliconLength} bp).</p>}
@@ -150,7 +151,7 @@ export default function DiagnosticsDesigner({ examples }: { examples: Example[] 
           {/* Specificity checks on the selected guide */}
           <section className="block">
             <h2>Specificity checks <span style={{ color: "var(--muted)", fontWeight: 400, fontSize: 14 }}>(on the selected guide)</span></h2>
-            <p className="footnote" style={{ marginTop: 0 }}>Selected: <span className="partseq" style={{ color: "var(--accent)" }}>{selected?.spacer}</span></p>
+            <p className="footnote" style={{ marginTop: 0 }}>Selected: {selected ? <Dna seq={selected.spacer} /> : null}</p>
 
             <h3 style={{ fontSize: 14, marginTop: 16 }}>Variant discrimination (SNP typing)</h3>
             <p className="hint" style={{ margin: "0 0 6px" }}>Paste the same target region carrying a variant (SNP). We check whether the selected guide tells the alleles apart, and whether a synthetic mismatch (Gootenberg 2017) sharpens it.</p>
@@ -172,7 +173,7 @@ export default function DiagnosticsDesigner({ examples }: { examples: Example[] 
                 <thead><tr><th>Position</th><th>Strand</th><th>Sequence</th><th>Mismatches</th><th>Predicted activity</th></tr></thead>
                 <tbody>
                   {cross.map((h, i) => (
-                    <tr key={i}><td>{h.start}</td><td>{h.strand}</td><td className="partseq">{h.sequence}</td><td>{h.mismatches}</td>
+                    <tr key={i}><td>{h.start}</td><td>{h.strand}</td><td><Dna seq={h.sequence} /></td><td>{h.mismatches}</td>
                       <td style={{ color: h.activity > 0.3 ? "var(--warn)" : "var(--muted)" }}>{Math.round(h.activity * 100)}%</td></tr>
                   ))}
                 </tbody>

@@ -11,7 +11,19 @@
   --dna: #38bdf8;
   --warn: #f4b860;
   --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  --base-a: #34d399;
+  --base-c: #60a5fa;
+  --base-g: #fbbf24;
+  --base-t: #f87171;
 }
+
+/* Per-base DNA/RNA colouring (CRISPR Studio palette) */
+.b-A { color: var(--base-a); }
+.b-C { color: var(--base-c); }
+.b-G { color: var(--base-g); }
+.b-T { color: var(--base-t); }
+.b-U { color: var(--base-t); }
+.b-N { color: var(--muted); }
 
 * { box-sizing: border-box; }
 

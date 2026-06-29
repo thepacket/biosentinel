@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useState } from "react";
+import Dna from "./Dna";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "";
 
@@ -189,10 +190,10 @@ export default function GuideDesigner({ targetParts, chassisGenomes }: { targetP
                   <Fragment key={c.spacer + c.strand + c.start}>
                     <tr>
                       <td>
-                        <span className="partseq" style={{ color: "var(--accent)" }}>{c.spacer}</span>
+                        <Dna seq={c.spacer} />
                         {c.warnings.length > 0 && <div style={{ color: "var(--warn)", fontSize: 11 }}>{c.warnings.join("; ")}</div>}
                       </td>
-                      <td className="partseq">{c.pam}</td>
+                      <td><Dna seq={c.pam} /></td>
                       <td>{c.strand}</td>
                       <td style={{ color: c.gc < 30 || c.gc > 75 ? "var(--warn)" : "var(--muted)" }}>{c.gc}%</td>
                       <td><strong>{c.score}</strong></td>
@@ -224,7 +225,7 @@ export default function GuideDesigner({ targetParts, chassisGenomes }: { targetP
                                 {obj.topHits.map((h, i) => (
                                   <tr key={i}>
                                     <td>{h.record}</td><td>{h.strand}</td><td>{h.start.toLocaleString()}</td><td>{h.mismatches}</td>
-                                    <td className="partseq">{h.sequence}</td><td className="partseq">{h.pam}</td>
+                                    <td><Dna seq={h.sequence} /></td><td><Dna seq={h.pam} /></td>
                                     <td>{h.mitScore}</td><td>{h.cfdScore ?? "—"}</td>
                                   </tr>
                                 ))}
@@ -243,7 +244,7 @@ export default function GuideDesigner({ targetParts, chassisGenomes }: { targetP
           {isSp && shown[0] && (
             <div className="seq-row" style={{ marginTop: 16 }}>
               <div className="seq-name">{guided ? "Order this — the full sgRNA for your top guide" : "Full sgRNA for the top guide (spacer + SpCas9 scaffold)"}</div>
-              <div className="seq"><span style={{ color: "var(--accent)" }}>{shown[0].spacer}</span><span style={{ color: "var(--muted)" }}>{SCAFFOLD}</span></div>
+              <div className="seq"><Dna seq={shown[0].spacer} className="" /><span style={{ color: "var(--muted)" }}>{SCAFFOLD}</span></div>
               {guided && <p className="footnote" style={{ marginTop: 6 }}>Copy this and order it as a synthetic gene / oligo from your DNA supplier, then clone it under an sgRNA promoter in your design.</p>}
             </div>
           )}

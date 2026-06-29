@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getAllParts, getPartBySlug } from "@/lib/data";
+import Dna from "../../components/Dna";
 
 export function generateStaticParams() {
   return getAllParts().map((p) => ({ slug: p.slug }));
@@ -58,7 +59,7 @@ export default function PartPage({ params }: { params: { slug: string } }) {
           {p.sequence && (
             <div className="seq-row" style={{ marginTop: 12 }}>
               <div className="seq-name">Sequence</div>
-              <div className="seq">{p.sequence}</div>
+              <div className="seq"><Dna seq={p.sequence} className="" /></div>
             </div>
           )}
         </section>
